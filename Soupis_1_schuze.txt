@@ -3,22 +3,22 @@
 ------------------------------------------------------
 
 ------------
--- OBECNĚ --
+-- OBECNE --
 ------------
--Psát v Python 2 (ale mrknout na 2to3)
--Zajistit si analyzátory Pythonu (pyLint, style check, PEP8...)
--Používat verzovačku (GIT)
--Fungovat na Fedorách (18-20) -> předpokládaně na 19
+-Psat v Python 2 (ale mrknout na 2to3)
+-Zajistit si analyzatory Pythonu (pyLint, style check, PEP8...)
+-Pouzivat verzovacku (GIT)
+-Fungovat na Fedorách (18-20) -> predpokladane na 19
      -REL6 -> centOS 6 <-
--Hlídat rozumnost knihoven
+-Hlidat rozumnost knihoven
      -resici dany problem dobre
      -udrzovane (prevence bit-rot)
 -Licence GNU GPL 2 nebo 3
      -Guide na commandline od GNU
 -Nastudovat PostgreSQL
--ODBC - rozhraní databáze, connect
--Mrknout na existující komerční grafická řešení
--(Snaha učinit případné přepnutí na jinou databázi co nejjednodušší)
+-ODBC - rozhrani databaze, connect
+-Mrknout na existujici komercni graficka reseni
+-(Snaha ucinit pripadne prepnuti na jinou databazi co nejjednodussi)
 -Verzovaci system (jak zdrojak, tak text prace).
 
 
@@ -40,8 +40,8 @@
 -------------
 -- 1. TOOL --
 -------------
--Vlastní jazyk mezisouboru, čitelný .txt (asi)
--Jazyk doménově specifický, gramatiku nějak
+-Vlastni jazyk mezisouboru, citelny .txt (asi)
+-Jazyk domenove specificky, gramatiku nejak
 
 -----------------------
 -- JAZYK MEZISOUBORU --
@@ -52,19 +52,19 @@
 -------------
 -- 2. TOOL --
 -------------
--Generovat texťák (možnost kontroly), nebo rovnou do dtb(?)
- (Oboje možné přes přepínače)
+-Generovat textak (možnost kontroly), nebo rovnou do dtb(?)
+ (Oboje mozne pres prepinace)
  
  
 ---------------
--- BAKALÁŘKA --
+-- BAKALARKA --
 ---------------
--Práce v LaTeXu, odkazy BibTeX
--Nejdřív víceméně hrnout, formátovat později
+-Prace v LaTeXu, odkazy BibTeX
+-Nejdriv vicemene hrnout, formatovat pozdeji
 
 
 -----------------
--- K PROŘEŠENÍ --
+-- K PRORESENI --
 -----------------
--Jazyk výsledné práce?
--Připojit se k live databázi, nebo jen analyzovat dump?
+-Jazyk vysledne prace?
+-Pripojit se k live databazi, nebo jen analyzovat dump?
