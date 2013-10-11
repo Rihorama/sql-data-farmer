@@ -1,0 +1,70 @@
+------------------------------------------------------
+--- AUTOMATIC SQL DATABASE CONTENT GENERATION TOOL ---
+------------------------------------------------------
+
+------------
+-- OBECNĚ --
+------------
+-Psát v Python 2 (ale mrknout na 2to3)
+-Zajistit si analyzátory Pythonu (pyLint, style check, PEP8...)
+-Používat verzovačku (GIT)
+-Fungovat na Fedorách (18-20) -> předpokládaně na 19
+     -REL6 -> centOS 6 <-
+-Hlídat rozumnost knihoven
+     -resici dany problem dobre
+     -udrzovane (prevence bit-rot)
+-Licence GNU GPL 2 nebo 3
+     -Guide na commandline od GNU
+-Nastudovat PostgreSQL
+-ODBC - rozhraní databáze, connect
+-Mrknout na existující komerční grafická řešení
+-(Snaha učinit případné přepnutí na jinou databázi co nejjednodušší)
+-Verzovaci system (jak zdrojak, tak text prace).
+
+
+------------
+-- PYTHON --
+------------
+-PEP 8: http://www.python.org/dev/peps/pep-0008/
+-pep8.py: http://pypi.python.org/pypi/pep8/
+-pylint: http://www.logilab.org/project/pylint
+-pychecker: http://pychecker.sourceforge.net/
+     -mozne problemy, na analyzu kodu ho naimportuje
+      (vykona, mozne neprijemne vedlajsie efekty)
+-pyflakes... mozno trochu moc jednoduche.
+
+-Pozriet sa, ci pouzivany editor nezvlada integraciu
+ s niektorymi z tychto toolov.
+
+
+-------------
+-- 1. TOOL --
+-------------
+-Vlastní jazyk mezisouboru, čitelný .txt (asi)
+-Jazyk doménově specifický, gramatiku nějak
+
+-----------------------
+-- JAZYK MEZISOUBORU --
+-----------------------
+-Za precteni by mohlo stat
+ http://martinfowler.com/books/dsl.html
+
+-------------
+-- 2. TOOL --
+-------------
+-Generovat texťák (možnost kontroly), nebo rovnou do dtb(?)
+ (Oboje možné přes přepínače)
+ 
+ 
+---------------
+-- BAKALÁŘKA --
+---------------
+-Práce v LaTeXu, odkazy BibTeX
+-Nejdřív víceméně hrnout, formátovat později
+
+
+-----------------
+-- K PROŘEŠENÍ --
+-----------------
+-Jazyk výsledné práce?
+-Připojit se k live databázi, nebo jen analyzovat dump?
