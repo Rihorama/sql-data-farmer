@@ -1,0 +1,27 @@
+OBSAH:
+
+(Podìkování)
+1. Úvod
+2. Existující øešení
+     2.1 SQL Data Generator (Redgate)
+     2.2 Data Generator for MySQL (Datanamic)
+     2.3 …?
+3. Specifikace
+     3.1 Jazyk
+     3.2 Databáze
+     3.3 Standardy
+     3.4 OS
+4. Návrh
+     4.1 Doménovì specifické jazyky
+	 4.2 Definice jazyka mezisouboru
+     4.3 Tool 1
+     4.4 Tool 2
+5. Implementace
+     5.1 Tool 1
+     5.2 Mezisoubor
+     5.3 Tool 2
+6. Testování
+7. Závìr
+
+(Použitá literatura)
+(Pøílohy)

@@ -1,0 +1,9 @@
+ÚVOD
+
+Informaèní technologie v souèasné dobì udávají tempo naší spoleènosti. S jejich pøíchodem na scénu se pojí i vznik databázových systémù umožòujících ukládání a správu dat. Databáze jsou dnes nedílnou souèastí témìø každé aplikace a  jejich testování tedy pochopitelnì hraje dùležitou roli pøi ladìní celého systému.  Má-li však být funkènost ovìøena dostateènì, musí být databáze naplnìna relevantním množstvím vzorových dat. Ruèní realizace je èasovì nároèná, lidský faktor do ní nevyhnutelnì zanáší chyby a její použtelnost rapidnì klesá s rostoucím objemem testovacích dat. Vzniká potøeba automatického plnìní databáze.
+
+Smyslem této bakaláøské práce je navrhnout, implementovat a zdokumentovat dvojici nástrojù, které uživateli umožní naplnit databázi zvoleným množstvím smysluplných dat. První nástroj sloužící k analýze zdrojové databáze vygeneruje mezisoubor definující strukturu tabulek a typ dat, kterými mají být plnìny. Mezisoubor bude psán v doménovì specifickém jazyce pro tento úèel vytvoøeném a uživatel bude mít možnost jeho jednotlivé èásti upravovat podle vlastního uvážení, pøípadnì ho zcela vytvoøit na základì uvedených pravidel. Tento soubor bude vstupem druhému nástroji, který na jeho základì v kombinaci se vstupními parametry provede plnìní databáze, nebo vygenerování pøíslušného databázového dumpu.
+
+V této práci se nejprve zamìøím na existující komerèní øešení dané problematiky, jejich analýzu a zhodnocení. Dále se budu zabývat specifikací prostøedí, pro které budou zamýšlené nástroje vyvíjeny, následnì jejich návrhem a také teorií doménovì specifických jazykù, která mi umožní vhodnì navrhnout jazyk potøebný pro mezisoubor. Pokraèovat budu rozborem samotné implementace obou nástrojù a definicí jazyka mezisouboru. Práce bude zakonèena kapitolou vìnovanou testování výsledného produktu a závìrem.
+
+
