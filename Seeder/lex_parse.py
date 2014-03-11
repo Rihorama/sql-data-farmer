@@ -4,9 +4,19 @@
 import sys
 import ply.lex as lex
 import ply.yacc as yacc
+import class_table as table
 
 
 sys.path.insert(0,"../..")
+
+
+#table variables
+table_list = []
+new_table = None
+
+attr_list = []
+new_attribute = None
+    
 
 ##
 #function to see the tokens
@@ -29,6 +39,9 @@ def input_lex(lexer, data):
 
 def dsl_parser(f):
     
+    
+    
+    
 
     #----LEXER PART-------
 
@@ -49,7 +62,6 @@ def dsl_parser(f):
         'EOL',
         'LPAREN',
         'RPAREN',
-        'NAME'
     ] + list(reserved.values())
 
     # Tokens
@@ -73,7 +85,7 @@ def dsl_parser(f):
     # A rule for New Line - to tokenize and count as well
 
     def t_EOL(t):
-        r'\n+'
+        r'\n'
         t.lexer.lineno += len(t.value)
         return t
 
@@ -94,8 +106,8 @@ def dsl_parser(f):
             TYPE sedm
             FILL ahaha()
             
-    input_lex(lexer, data)
-    '''
+    input_lex(lexer, f.read())'''
+    
 
 
 
@@ -105,64 +117,100 @@ def dsl_parser(f):
     #Rules
     
     def p_dsl(p):
-        'dsl : tableBlock moreBlocks'
-        print("DSL")
+        'dsl : tableBlock moreBlocks'        
+        for table in table_list:
+            table.print_table()
+        
 
     def p_moreBlocks(p):
         '''moreBlocks : moreBlocks tableBlock
                       | empty'''
-        print("moreBlocks")
+                      
+        global new_table
+        global attr_list        
+        new_table.attr_list = attr_list   #adds complete list of attributes
+        
 
     def p_tableBlock(p):
-        'tableBlock : tableHeader attributeBlock moreAttributes'
-        print("tableBlock")
+        'tableBlock : tableHeader attributeBlock moreAttributes'        
+        table_list.append(new_table)
+        
                     
     def p_moreAttributes(p): 
         '''moreAttributes : moreAttributes attributeBlock
                           | empty'''  
-        print("moreAttributes")
+        
 
     def p_tableHeader(p):
-        'tableHeader : TABLE COLON IDENTIFIER LPAREN NUMBER RPAREN EOL'
-        print("tableHeader")
+        'tableHeader : TABLE COLON IDENTIFIER LPAREN NUMBER RPAREN endline'
+        
+        global new_table
+        new_table = table.Table() # creates new table instance
+        new_table.name = p[3]     # coresponds to the IDENTIFIER token
+        
+        global attr_list
+        attr_list = []            # inicializes empty list for this table
+        
 
     def p_attributeBlock(p):
         'attributeBlock : attributeName dataType fillMethod'
-        print("attributeBlock")
+        
+        global new_attribute
+        global attr_list        
+        attr_list.append(new_attribute)
+        
 
     def p_attributeName(p):
-        'attributeName : DOUBLE_COLON IDENTIFIER EOL'
-        print("attributeName")
+        'attributeName : DOUBLE_COLON IDENTIFIER endline'
+        
+        global new_attribute
+        new_attribute = table.Attribute()   #new attribute instance
+        new_attribute.name = p[2]
+        
 
     def p_dataType(p):
-        'dataType : TYPE IDENTIFIER EOL'
-        print("dataType")
+        'dataType : TYPE IDENTIFIER endline'
+        
+        global new_attribute
+        new_attribute.data_type = p[2]
+        
 
     def p_fillMethod(p):
-        'fillMethod : FILL IDENTIFIER LPAREN parameters RPAREN EOL'
-        print("fillMethod")
+        'fillMethod : FILL IDENTIFIER LPAREN parameters RPAREN endline'
+        
 
     def p_parameters(p):
         '''parameters : parameters parameter
                       | empty'''
-        print("parameters")
+        
                     
     def p_parameter(p):
         'parameter : IDENTIFIER'
-        print("parameter")
+        
+        
+    def p_endline(p):
+        'endline : EOL extraEndline'
+        
+    def p_extraEndline(p):
+        '''extraEndline : EOL extraEndline
+                        | empty'''
+        
         
     def p_empty(p):
         'empty :'
         pass
         
+        
     def p_error(p): 
-        print("Syntax error at '%s'" % p)
+        print("Syntax error. Trouble with " + repr(str(p.value)) + " on line " + str(p.lineno))
 
     #build parser
     yacc.yacc()
     
     #parse the given file
     yacc.parse(f.read())
+    
+    
     
     
 
