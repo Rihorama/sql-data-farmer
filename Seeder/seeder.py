@@ -1,13 +1,13 @@
 #!/usr/bin/python
 
 import argparse
-import lex_parse
+import lex_parse as parser
 
 #arguments
-parser = argparse.ArgumentParser()
-parser.add_argument("file", help="Insert a file.")
+arg_parser = argparse.ArgumentParser()
+arg_parser.add_argument("file", help="Insert a file.")
 
-args = parser.parse_args()
+args = arg_parser.parse_args()
 
 print(args.file)
 
@@ -24,6 +24,4 @@ except IOError:
 #for line in f:
 #  print line
 
-lexer = lex_parse.build_lex()
-
-lex_parse.input_lex(lexer,f)
+parser.dsl_parser(f)
