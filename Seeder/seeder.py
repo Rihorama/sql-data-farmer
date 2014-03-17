@@ -2,6 +2,7 @@
 
 import argparse
 import lex_parse as parser
+from values_generator import filler
 
 
 #arguments
@@ -26,4 +27,9 @@ except IOError:
 #  print line
 
 
-parser.dsl_parser(f)
+table_list = parser.dsl_parser(f)
+
+for table in table_list:
+    
+    #table.print_table()
+    filler(table)

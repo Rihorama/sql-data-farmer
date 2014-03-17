@@ -5,6 +5,7 @@ import sys
 import ply.lex as lex
 import ply.yacc as yacc
 import class_table as table
+import re
 
 
 sys.path.insert(0,"../..")
@@ -16,6 +17,9 @@ new_table = None
 
 attr_list = []
 new_attribute = None
+
+#error flag
+err = False
     
 
 ##
@@ -31,6 +35,13 @@ def input_lex(lexer, data):
         tok = lexer.token()
         if not tok: break      # No more input
         print tok
+
+##
+#Debug printer
+##
+def debug(string):
+    #print string
+    pass
 
 
 ##
@@ -50,7 +61,21 @@ def dsl_parser(f):
         'TABLE' : 'TABLE',
         'TYPE' : 'TYPE',
         'FILL' : 'FILL',
-        'CONSTRAINT' : 'CONSTRAINT'
+        'CONSTRAINT' : 'CONSTRAINT',
+        
+        'NOT NULL' : 'CONSTR_WORDS',
+        'UNIQUE' : 'CONSTR_WORDS',
+        'PRIMARY KEY' : 'CONSTR_WORDS',
+        'FOREIGN KEY' : 'CONSTR_WORDS',
+        
+        'VARCHAR' : 'TYPE_1PARAM',   #CHARACTER VARYING
+        'BIT' :     'TYPE_1PARAM', 
+        'CHAR' : 'TYPE_1PARAM',      #CHARACTER
+        'BOOLEAN' : 'TYPE_NOPARAM',      #BOOL
+        'INT' : 'TYPE_NOPARAM',          #INT, INT4
+        
+        'fm_basic' : 'FILL_METHOD_NOPARAM' 
+        
     }
 
     # List of token names.   This is always required
@@ -63,6 +88,8 @@ def dsl_parser(f):
         'LPAREN',
         'RPAREN',
     ] + list(reserved.values())
+    
+    literals = [ ',' ]
 
     # Tokens
     t_DOUBLE_COLON   = r'\:\:'
@@ -94,20 +121,25 @@ def dsl_parser(f):
 
     # Error handling rule
     def t_error(t):
-        print ("Illegal character '%s' at line '%s'" % t.value[0], t.lineno)
+        print ("Illegal character '%s' at line '%s'" %(t.value[0], t.lineno))
+        
+        global err
+        err = True    #sets the flag
+
         t.lexer.skip(1)
         
     # Build the lexer
-    lexer = lex.lex()
+    lexer = lex.lex(reflags=re.IGNORECASE)  #will be case insensitive
 
-    '''
-    data = TABLE:tabulka(50)
-            ::atribut
-            TYPE sedm
-            FILL ahaha()
-            
-    input_lex(lexer, f.read())'''
     
+            
+    #input_lex(lexer, f.read())
+    #f.seek(0)
+    
+    
+    global err
+    if err:
+        exit()
 
 
 
@@ -118,8 +150,7 @@ def dsl_parser(f):
     
     def p_dsl(p):
         'dsl : tableBlock moreBlocks'        
-        for table in table_list:
-            table.print_table()
+        debug("dsl")
         
 
     def p_moreBlocks(p):
@@ -128,17 +159,20 @@ def dsl_parser(f):
                       
         global new_table
         global attr_list        
-        new_table.attr_list = attr_list   #adds complete list of attributes
+        new_table.attr_list = attr_list   # adds complete list of attributes
+        new_table.count_attributes()      # stores the count of attributes in table.attr_count
+        debug("moreBlocks")
         
 
     def p_tableBlock(p):
         'tableBlock : tableHeader attributeBlock moreAttributes'        
         table_list.append(new_table)
-        
+        debug("tableBlock")
                     
     def p_moreAttributes(p): 
         '''moreAttributes : moreAttributes attributeBlock
-                          | empty'''  
+                          | empty'''
+        debug("moreAttributes")
         
 
     def p_tableHeader(p):
@@ -146,10 +180,12 @@ def dsl_parser(f):
         
         global new_table
         new_table = table.Table() # creates new table instance
+        new_table.fill_count = p[5]
         new_table.name = p[3]     # coresponds to the IDENTIFIER token
         
         global attr_list
         attr_list = []            # inicializes empty list for this table
+        debug("tableHeader")
         
 
     def p_attributeBlock(p):
@@ -157,7 +193,8 @@ def dsl_parser(f):
         
         global new_attribute
         global attr_list        
-        attr_list.append(new_attribute)
+        attr_list.append(new_attribute)   #appends the new attribute
+        debug("attributeBlock")
         
 
     def p_attributeName(p):
@@ -166,34 +203,52 @@ def dsl_parser(f):
         global new_attribute
         new_attribute = table.Attribute()   #new attribute instance
         new_attribute.name = p[2]
+        debug("attributeName")
         
 
     def p_dataType(p):
-        'dataType : TYPE IDENTIFIER endline'
-        
+        'dataType : TYPE dtypes endline'
+        debug("dataType")
+    
+    
+    def p_dtypes(p):
+        '''dtypes : TYPE_NOPARAM
+                  | TYPE_1PARAM LPAREN NUMBER RPAREN'''
+                  
         global new_attribute
-        new_attribute.data_type = p[2]
+        new_attribute.data_type = p[1]
+        new_attribute.parameters = []             #inicializes to no parameters
+        
+        if len(p) == 5:                           #stands for "DTYPE (1_param)"
+            new_attribute.parameters.append(p[3]) #appends the parameter
+            
+        debug("dtypes")
         
 
     def p_fillMethod(p):
-        'fillMethod : FILL IDENTIFIER LPAREN parameters RPAREN endline'
+        'fillMethod : FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline'
         
+        global new_attribute
+        new_attribute.fill_method = p[2].lower()
+        debug("fillMethod")
 
     def p_parameters(p):
         '''parameters : parameters parameter
                       | empty'''
-        
+        debug("parameters")
                     
     def p_parameter(p):
         'parameter : IDENTIFIER'
-        
+        debug("parameter")
         
     def p_endline(p):
         'endline : EOL extraEndline'
+        debug("endline")
         
     def p_extraEndline(p):
         '''extraEndline : EOL extraEndline
                         | empty'''
+        debug("extraEndline")
         
         
     def p_empty(p):
@@ -203,12 +258,22 @@ def dsl_parser(f):
         
     def p_error(p): 
         print("Syntax error. Trouble with " + repr(str(p.value)) + " on line " + str(p.lineno))
+        
+        global err
+        err = True     #sets the flag
+        #print "Bad function call at line", p.lineno(1)
 
     #build parser
     yacc.yacc()
     
     #parse the given file
     yacc.parse(f.read())
+    
+    if err:
+        exit()
+        
+    
+    return table_list  #returns the tables we've recognized
     
     
     
