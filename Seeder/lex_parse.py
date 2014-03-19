@@ -6,6 +6,9 @@ import ply.lex as lex
 import ply.yacc as yacc
 import class_table as table
 import re
+from printer import debug
+from printer import errprint
+from printer import ERRCODE
 
 
 sys.path.insert(0,"../..")
@@ -36,12 +39,37 @@ def input_lex(lexer, data):
         if not tok: break      # No more input
         print tok
 
+
+
 ##
-#Debug printer
+#function to check valid parameters for fill method
 ##
-def debug(string):
-    #print string
-    pass
+def check_valid(attr):
+    
+    if attr.fill_method == 'fm_regex':
+        
+        check_regex_compatibility(attr)           #check if regex method can be used with given data type
+        try:
+            re.compile(str(attr.fill_parameters[0]))   #check if the given parameter is a valid regex
+        except re.error:
+            msg = "Semantic Error: Wrong parameter given to fill method '" + new_attribute.fill_method \
+                  + "' in table '" + new_table.name + "', attribute '" + new_attribute.name + "'.\n"
+            errprint(msg, ERRCODE["SEMANTIC"])
+
+
+##
+#function to check if the fm_method is used in combination with allowed data types
+##
+def check_regex_compatibility(attr):
+    
+    print attr.data_type
+    if not attr.data_type in ("VARCHAR", "CHAR", "INT"):        
+        
+        msg = "Semantic Error: The given fill method '" + new_attribute.fill_method \
+               + "' incompatible with the given data type '" + new_attribute.data_type \
+                  + "' in table '" + new_table.name + "', attribute '" + new_attribute.name + "'.\n"
+        errprint(msg, ERRCODE["SEMANTIC"])
+
 
 
 ##
@@ -74,7 +102,8 @@ def dsl_parser(f):
         'BOOLEAN' : 'TYPE_NOPARAM',      #BOOL
         'INT' : 'TYPE_NOPARAM',          #INT, INT4
         
-        'fm_basic' : 'FILL_METHOD_NOPARAM' 
+        'fm_basic' : 'FILL_METHOD_NOPARAM',
+        'fm_regex' : 'FILL_METHOD_1PARAM'
         
     }
 
@@ -87,6 +116,7 @@ def dsl_parser(f):
         'EOL',
         'LPAREN',
         'RPAREN',
+        'REGEX',
     ] + list(reserved.values())
     
     literals = [ ',' ]
@@ -96,6 +126,12 @@ def dsl_parser(f):
     t_COLON  = r'\:'
     t_LPAREN  = r'\('
     t_RPAREN  = r'\)'
+    
+    
+    # A rule for regular expressions
+    def t_REGEX(t):
+        r'r\'[ 0-9A-Za-z#$%=@!{},`~&*()<>?.:;_|^/+\t\r\n\[\]"-]*\''
+        return t
 
     # A rule for Identifier tokens
     def t_IDENTIFIER(t):
@@ -110,12 +146,11 @@ def dsl_parser(f):
         return t
 
     # A rule for New Line - to tokenize and count as well
-
     def t_EOL(t):
         r'\n'
         t.lexer.lineno += len(t.value)
         return t
-
+    
     # A string containing ignored characters (spaces and tabs)
     t_ignore  = ' \t'
 
@@ -133,8 +168,8 @@ def dsl_parser(f):
 
     
             
-    #input_lex(lexer, f.read())
-    #f.seek(0)
+    input_lex(lexer, f.read())
+    f.seek(0)
     
     
     global err
@@ -226,11 +261,23 @@ def dsl_parser(f):
         
 
     def p_fillMethod(p):
-        'fillMethod : FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline'
+        '''fillMethod : FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline
+                      | FILL FILL_METHOD_1PARAM LPAREN parameter RPAREN endline'''
         
         global new_attribute
         new_attribute.fill_method = p[2].lower()
         debug("fillMethod")
+        
+        if len(p) == 7:     #one parameter
+            print p[4]
+            new_attribute.fill_parameters.append(p[4])
+            print new_attribute.fill_parameters
+            
+            
+        #check validity of parameters
+        check_valid(new_attribute)            
+            
+
 
     def p_parameters(p):
         '''parameters : parameters parameter
@@ -238,7 +285,9 @@ def dsl_parser(f):
         debug("parameters")
                     
     def p_parameter(p):
-        'parameter : IDENTIFIER'
+        '''parameter : IDENTIFIER
+                     | REGEX'''
+        p[0] = p[1]                 #returns the value in p[0]
         debug("parameter")
         
     def p_endline(p):

@@ -1,6 +1,7 @@
 
 import class_table
 from method_basic import fm_basic
+from method_regex import fm_regex
 import sys
 
 
@@ -10,9 +11,9 @@ import sys
 def get_values(table):
     
     values = ""
-    
+
     for attr in table.attr_list:
-        
+                
         new_val = None
         
         func = 'new_val = ' + attr.fill_method + '(table,attr)'
@@ -26,7 +27,7 @@ def get_values(table):
         
         values = values + str(new_val) + ", "
    
-    values = values[:-2]       #removes the ',' from the end of the string    
+    values = values[:-2]       #removes the ',' from the end of the string  
     
     return values
     
@@ -34,7 +35,8 @@ def get_values(table):
     
 #takes the table and creates an insert string
 def filler(table):
-            
-    values = get_values(table)
-    string = "INSERT INTO " + table.name + "\n" + "VALUES (" + values + ")"
-    print string
+    
+    for i in range(0,table.fill_count):
+        values = get_values(table)
+        string = "INSERT INTO " + table.name + "\n" + "VALUES (" + values + ");\n"
+        print string

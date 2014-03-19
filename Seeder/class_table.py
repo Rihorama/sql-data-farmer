@@ -25,6 +25,7 @@ class Attribute:
     data_type = None
     parameters = []
     fill_method = None
+    fill_parameters = []
     
     ref_table = None
     ref_attribute = None
