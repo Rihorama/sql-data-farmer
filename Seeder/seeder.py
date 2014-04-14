@@ -2,7 +2,8 @@
 
 import argparse
 import lex_parse as parser
-from values_generator import filler
+from values_generator import iniciate_fk,db_filler
+from printer import errprint,ERRCODE
 
 
 #arguments
@@ -16,10 +17,11 @@ args = arg_parser.parse_args()
 
 #opening file
 try:
-  f = open(args.file, 'r')
+    f = open(args.file, 'r')
 
 except IOError:
-  print("No such file")
+    msg = "Input error: The given file of path '" + path + "' cannot be oppened."
+    errprint(msg, ERRCODE["INPUT"])
   
 
 #reading file
@@ -29,7 +31,9 @@ except IOError:
 
 table_list = parser.dsl_parser(f)
 
-for table in table_list:
-    
-    #table.print_table()
-    filler(table)
+
+#Close file
+f.close()
+
+iniciate_fk(table_list)
+db_filler(table_list)

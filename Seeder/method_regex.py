@@ -6,7 +6,7 @@ import sys
 
 #
 
-#Basic fill function
+#User-controlled fill function
 #Uses the given regex and returns a correct string
 #Now accepting CHAR, VARCHAR and INT (well, checking neccessary stuff for these)
 def fm_regex(table, attr):
@@ -16,8 +16,6 @@ def fm_regex(table, attr):
     regex = regex[2:-1]
    
     value = exrex.getone(regex)
-    
-    print value
 
     
     
@@ -25,8 +23,7 @@ def fm_regex(table, attr):
     #      the final result will be created by concatenating as many generated
     #      strings as neccessary and then cut to the desired length.
     #      On contrary - if the given regex produced longer result, it will be cut
-    if attr.data_type == "CHAR":
-        
+    if attr.data_type == "CHAR":        
         length = attr.parameters[0]
         
         while len(value) < length:
@@ -34,6 +31,13 @@ def fm_regex(table, attr):
         
         value = value[:length]
         
+        
+    elif attr.data_type == "VARCHAR":
+        length = attr.parameters[0]
+        
+        value = value[:length]
+      
+      
     elif attr.data_type == "INT":
         return value
     

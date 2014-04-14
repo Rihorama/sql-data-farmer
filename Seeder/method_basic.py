@@ -35,14 +35,17 @@ def basic_varchar(table, attr):
     string = exrex.getone(regex)
     x = random.randint(2,max_range) #randomly generates varchar length for this iteration from range 
     
-    value = string[:x]                #cuts the obtained string        
-     #TODO: check for white space at the end of string and delete it if yes
+    value = string[:x]                #cuts the obtained string
+    
+     #checks for white space at the end of string and deletes it if yes
+    if string[-1:] == ' ':
+        string = string[:-1]
 
     return "\'" + value + "\'"   #for string values
 
 
     
-    
+#TODO:change error printing here to the one using printer   
 #returns array of bit values of the given length
 def basic_bit(table, attr):
     
@@ -101,6 +104,9 @@ def basic_int(table, attr):
 
     regex = r'[-]?\d+'        
     value = exrex.getone(regex)
+    
+    while value == "-0":
+        value = exrex.getone(regex)
   
     return value
 

@@ -14,6 +14,8 @@ from printer import ERRCODE
 sys.path.insert(0,"../..")
 
 
+#TODO: Check newlines at the end of every error message
+
 #table variables
 table_list = []
 new_table = None
@@ -46,7 +48,9 @@ def input_lex(lexer, data):
 ##
 def check_valid(attr):
     
-    if attr.fill_method == 'fm_regex':
+    method = attr.fill_method
+    
+    if method == 'fm_regex':
         
         check_regex_compatibility(attr)           #check if regex method can be used with given data type
         try:
@@ -55,6 +59,35 @@ def check_valid(attr):
             msg = "Semantic Error: Wrong parameter given to fill method '" + new_attribute.fill_method \
                   + "' in table '" + new_table.name + "', attribute '" + new_attribute.name + "'.\n"
             errprint(msg, ERRCODE["SEMANTIC"])
+            
+            
+    elif method == 'fm_textbank':
+        if not attr.data_type in ("VARCHAR", "CHAR"):        
+        
+            msg = "Semantic Error: The given fill method '" + new_attribute.fill_method \
+                + "' incompatible with the given data type '" + new_attribute.data_type \
+                    + "' in table '" + new_table.name + "', attribute '" + new_attribute.name + "'.\n"
+            errprint(msg, ERRCODE["SEMANTIC"])
+            
+    
+    elif method == 'fm_reference':        
+        
+        global new_table
+        global FK_FLAG
+        
+        string = attr.fill_parameters[0]
+        pos = string.find(":")
+        
+        if pos == -1:       #didn't find the colon
+            msg = "Semantic Error: Wrong parameter given to fill method '" + new_attribute.fill_method \
+                + "' in table '" + new_table.name + "', attribute '" + new_attribute.name + "'.\n"
+            errprint(msg, ERRCODE["SEMANTIC"])
+        
+        new_table.fk = True                   #sets the flag that table contains a foreign key
+        attr.constraint_flag = True
+        attr.constraint_type = "foreign_key"
+        attr.fk_table = string[0:pos]     #gets what is before the colon
+        attr.fk_attribute = string[(pos+1):]
 
 
 ##
@@ -62,7 +95,6 @@ def check_valid(attr):
 ##
 def check_regex_compatibility(attr):
     
-    print attr.data_type
     if not attr.data_type in ("VARCHAR", "CHAR", "INT"):        
         
         msg = "Semantic Error: The given fill method '" + new_attribute.fill_method \
@@ -91,10 +123,9 @@ def dsl_parser(f):
         'FILL' : 'FILL',
         'CONSTRAINT' : 'CONSTRAINT',
         
-        'NOT NULL' : 'CONSTR_WORDS',
-        'UNIQUE' : 'CONSTR_WORDS',
-        'PRIMARY KEY' : 'CONSTR_WORDS',
-        'FOREIGN KEY' : 'CONSTR_WORDS',
+        'unique' : 'CONSTR_NOPARAM',
+        'primary_key' : 'CONSTR_NOPARAM',
+        'foreign_key' : 'CONSTR_NOPARAM',
         
         'VARCHAR' : 'TYPE_1PARAM',   #CHARACTER VARYING
         'BIT' :     'TYPE_1PARAM', 
@@ -103,7 +134,9 @@ def dsl_parser(f):
         'INT' : 'TYPE_NOPARAM',          #INT, INT4
         
         'fm_basic' : 'FILL_METHOD_NOPARAM',
-        'fm_regex' : 'FILL_METHOD_1PARAM'
+        'fm_regex' : 'FILL_METHOD_1PARAM',
+        'fm_textbank' : 'FILL_METHOD_1PARAM',
+        'fm_reference' : 'FILL_METHOD_1PARAM',
         
     }
 
@@ -117,6 +150,7 @@ def dsl_parser(f):
         'LPAREN',
         'RPAREN',
         'REGEX',
+        'PATH',
     ] + list(reserved.values())
     
     literals = [ ',' ]
@@ -151,6 +185,11 @@ def dsl_parser(f):
         t.lexer.lineno += len(t.value)
         return t
     
+    # A rule for file path
+    def t_PATH(t):
+        r'[a-zA-Z_0-9/\-\.]+'
+        return t
+    
     # A string containing ignored characters (spaces and tabs)
     t_ignore  = ' \t'
 
@@ -168,8 +207,8 @@ def dsl_parser(f):
 
     
             
-    input_lex(lexer, f.read())
-    f.seek(0)
+    #input_lex(lexer, f.read())
+    #f.seek(0)
     
     
     global err
@@ -224,11 +263,13 @@ def dsl_parser(f):
         
 
     def p_attributeBlock(p):
-        'attributeBlock : attributeName dataType fillMethod'
+        '''attributeBlock : attributeName dataType fillMethod
+                          | attributeName dataType fillMethod constraintPart'''
         
         global new_attribute
         global attr_list        
-        attr_list.append(new_attribute)   #appends the new attribute
+        attr_list.append(new_attribute)       #appends the new attribute
+        new_attribute.constraint_flag = False #nulls the flag
         debug("attributeBlock")
         
 
@@ -265,18 +306,30 @@ def dsl_parser(f):
                       | FILL FILL_METHOD_1PARAM LPAREN parameter RPAREN endline'''
         
         global new_attribute
-        new_attribute.fill_method = p[2].lower()
+        global new_table
+        new_attribute.fill_method = p[2].lower()    #lower case to be sure
         debug("fillMethod")
         
         if len(p) == 7:     #one parameter
-            print p[4]
+            new_attribute.fill_parameters = []          #clears the list
             new_attribute.fill_parameters.append(p[4])
-            print new_attribute.fill_parameters
             
             
         #check validity of parameters
-        check_valid(new_attribute)            
+        check_valid(new_attribute)
+        
+    def p_constraintPart(p):
+        '''constraintPart : CONSTRAINT CONSTR_NOPARAM endline'''
+        
+        global new_attribute
+        
+        if p[2] == "foreign_key":
             
+            if new_attribute.constraint_type != "foreign_key":      #this means the given fill method doesn't correspond
+                
+                msg = "Semantic Error: Foreign key constraint stated but wrong fill method '" + new_attribute.fill_method \
+                + "' given.\n"
+                errprint(msg, ERRCODE["SEMANTIC"])
 
 
     def p_parameters(p):
@@ -285,10 +338,16 @@ def dsl_parser(f):
         debug("parameters")
                     
     def p_parameter(p):
-        '''parameter : IDENTIFIER
-                     | REGEX'''
+        '''parameter : PATH
+                     | REGEX
+                     | IDENTIFIER
+                     | IDENTIFIER COLON IDENTIFIER'''
         p[0] = p[1]                 #returns the value in p[0]
         debug("parameter")
+        
+        if len(p) == 4:      #IDENTIFIER COLON IDENTIFIER variant
+            p[0] = p[1] + ":" + p[3]   #concatenates so it can be passed together
+        
         
     def p_endline(p):
         'endline : EOL extraEndline'
