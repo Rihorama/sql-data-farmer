@@ -127,7 +127,7 @@ def fm_basic(table, attr):
     elif attr.data_type == "CHAR":
         value = basic_char(table, attr)
         
-    elif attr.data_type == "BOOLEAN":
+    elif attr.data_type == "BOOL":
         value = basic_bool(table, attr)
         
     elif attr.data_type == "INT":

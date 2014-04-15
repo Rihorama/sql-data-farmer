@@ -14,6 +14,16 @@ TABLE_DICT = {}    #dictionary of all tables (name:object)
 
 #TODO: pripadne vyresit smazani seznamu promennych, kdyz uz nejsou treba
 
+#checks if the given value has not been used to fill this attribute yet.
+#returns True, if it's OK, False if it has been used
+def check_unique(attr,value):
+    
+    if value in attr.values_list:
+        return False
+    
+    return True
+
+
 
 # Finds the value list for the attribute that the foreign key points to
 # and randomly chooses and returns one value from it.
@@ -23,8 +33,10 @@ def get_foreign(attr):
     val_list = attr.fk_attribute.values_list
     
     length = len(val_list)
-    i = random.randint(0,length)          #randomly chooses one index
+    length_self = len(attr.values_list)
     
+    i = random.randint(0,length-1)          #randomly chooses one index  
+
     return val_list[i]
 
 
@@ -35,7 +47,7 @@ def get_values(table):
     values = ""
 
     for attr in table.attr_list:
-                
+        
         new_val = None
         
         if attr.constraint_type == "foreign_key":
@@ -51,15 +63,35 @@ def get_values(table):
                 sys.stderr.write("Internal error. Not defined fill method passed." \
                                  "Recovery not possible, the functionality of Seeder is inconsistent from now on.\n")            
                 exit()            
+        
+        
+        if attr.unique:            
+            timeout = 0
             
-        values = values + str(new_val) + ", "  #concatenates the new value with the rest and divides with a ','
+            while not check_unique(attr,new_val):      #validity check if there is unique/primary key constraint
+                if timeout >= 100:
+                    msg = "Runtime error: The timeout for finding new unique value for attribute '" + attr.name + "' exceeded.\n" \
+                          "Tip: Check if the given fill method offers enough unique values.\n"      
+                    errprint(msg, ERRCODE["RUNTIME"])
+                exec func                              #we call the method again (and again)
+                timeout += 1
         
-        if attr.fk_pointed:
-            attr.values_list.append(new_val)      #we will need these values for filling foreign key attributes
         
+        #NULL appearance chance
+        if attr.constraint_type == 'null':
+            
+            chance = random.randint(0,100)
+
+            if chance < attr.constraint_parameters[0]:
+                new_val = 'NULL'
+                
+
+        values = values + str(new_val) + ", "     #concatenates the new value with the rest and divides with a ','
         
+        if attr.fk_pointed or attr.unique:        #we will need these values either for filling foreign key attributes
+            attr.values_list.append(new_val)      #or to make sure each inserted value is unique        
         
-    values = values[:-2]       #removes the ',' from the end of the string  
+    values = values[:-2]       #removes the ',' from the end of the string once we end
     
     return values    
    
@@ -108,10 +140,13 @@ def db_filler(table_list):
     while i:    
         i = False  #changed to true if a table is left unfilled
         
-        for table in table_list:        
+        for table in table_list:            
             if table.solved == False:       #this table hasn't been filled yet
-                y = table_filler(table) #of one is true, it remains true
-                i = y or i
+                y = table_filler(table) 
+                i = y or i                  #if one is true, it remains true
+                
+                
+            
 
   
   #TODO: make some kind of timeout with a message if it exceedes

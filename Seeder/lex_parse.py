@@ -20,6 +20,7 @@ sys.path.insert(0,"../..")
 table_list = []
 new_table = None
 
+#attribute variables
 attr_list = []
 new_attribute = None
 
@@ -126,11 +127,12 @@ def dsl_parser(f):
         'unique' : 'CONSTR_NOPARAM',
         'primary_key' : 'CONSTR_NOPARAM',
         'foreign_key' : 'CONSTR_NOPARAM',
+        'null' : 'CONSTR_1PARAM',
         
         'VARCHAR' : 'TYPE_1PARAM',   #CHARACTER VARYING
         'BIT' :     'TYPE_1PARAM', 
         'CHAR' : 'TYPE_1PARAM',      #CHARACTER
-        'BOOLEAN' : 'TYPE_NOPARAM',      #BOOL
+        'BOOL' : 'TYPE_NOPARAM',      #BOOLEAN
         'INT' : 'TYPE_NOPARAM',          #INT, INT4
         
         'fm_basic' : 'FILL_METHOD_NOPARAM',
@@ -278,9 +280,11 @@ def dsl_parser(f):
         
         global new_attribute
         new_attribute = table.Attribute()   #new attribute instance
+        new_attribute.values_list = []
         new_attribute.name = p[2]
         debug("attributeName")
         
+#TODO: zkontrolovat, jestli tu musi byt reinicializace tech prazdnych listu po tvorbe nove instance
 
     def p_dataType(p):
         'dataType : TYPE dtypes endline'
@@ -319,7 +323,8 @@ def dsl_parser(f):
         check_valid(new_attribute)
         
     def p_constraintPart(p):
-        '''constraintPart : CONSTRAINT CONSTR_NOPARAM endline'''
+        '''constraintPart : CONSTRAINT CONSTR_NOPARAM endline
+                          | CONSTRAINT CONSTR_1PARAM LPAREN NUMBER RPAREN endline'''
         
         global new_attribute
         
@@ -330,6 +335,18 @@ def dsl_parser(f):
                 msg = "Semantic Error: Foreign key constraint stated but wrong fill method '" + new_attribute.fill_method \
                 + "' given.\n"
                 errprint(msg, ERRCODE["SEMANTIC"])
+                
+        else:
+            new_attribute.constraint_type = p[2]
+            new_attribute.constraint_flag = True
+            
+            if new_attribute.constraint_type == "primary_key" or new_attribute.constraint_type == "unique":
+                new_attribute.unique = True
+                
+        if len(p) == 7:            
+            new_attribute.constraint_parameters.append(p[4])     #keeping the parameters
+            
+            #TODO: checkovat, ze neni zadana spatna fill metoda 
 
 
     def p_parameters(p):
