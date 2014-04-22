@@ -1,9 +1,12 @@
 
 from printer import errprint,ERRCODE
+import sys
 
 
 FILL_CNT = 10
 NULL_FILL = 20
+
+
 DTYPE_DICT = {
     'character varying' : 'VARCHAR',
     'character' : 'CHAR',
@@ -74,18 +77,19 @@ def dsl_generator(table_list):
     #iniciates
     initiate_gen(table_list)
     
+    fd = sys.stdout
+    
     for table in table_list:
-        print "TABLE:" + table.name + "(" + str(FILL_CNT) + ")"
+        fd.write("TABLE:" + table.name + "(" + str(FILL_CNT) + ")\n")
         
         for attr in table.attr_list:
-            print "\t::" + attr.name
+            fd.write("\t::" + attr.name + "\n")            
+            fd.write(get_dtype_line(attr) + "\n")
+            fd.write(get_fill_line(attr) + "\n")
+            fd.write(get_constr_line(attr) + "\n")
             
-            print get_dtype_line(attr)
-            print get_fill_line(attr)
-            print get_constr_line(attr)
-            
-            print "\n\n"
-            
+        
+        fd.write("\n")    
 
 #Does everything necessary for the generator to work
 #checks constraint compatibility for each attribute
