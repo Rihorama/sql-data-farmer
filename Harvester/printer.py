@@ -22,7 +22,7 @@ ERRCODE = {
 ##
 def debug(msg):
 
-    print msg
+    #print msg
     pass
 
 

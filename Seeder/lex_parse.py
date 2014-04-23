@@ -28,6 +28,15 @@ new_attribute = None
 err = False
     
 
+
+#class to temporarily ignore stderr
+#done to hide those ply yacc warnings...
+class NullDevice():
+    def write(self, s):
+        pass
+
+
+
 ##
 #function to see the tokens
 ##
@@ -50,6 +59,7 @@ def input_lex(lexer, data):
 def check_valid(attr):
     
     method = attr.fill_method
+    global new_table
     
     if method == 'fm_regex':
         
@@ -73,7 +83,6 @@ def check_valid(attr):
     
     elif method == 'fm_reference':        
         
-        global new_table
         global FK_FLAG
         
         string = attr.fill_parameters[0]
@@ -204,14 +213,16 @@ def dsl_parser(f):
 
         t.lexer.skip(1)
         
+    #ignore stderr for a short while
+    original_stderr = sys.stderr  # keep a reference to STDERR
+    sys.stderr = NullDevice()  # redirect the real STDERR
+        
     # Build the lexer
-    lexer = lex.lex(reflags=re.IGNORECASE)  #will be case insensitive
+    lexer = lex.lex()  #will be case insensitive
+    
+    #getting ol'stderr back
+    sys.stderr = original_stderr
 
-    
-            
-    #input_lex(lexer, f.read())
-    #f.seek(0)
-    
     
     global err
     if err:

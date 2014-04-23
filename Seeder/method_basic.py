@@ -4,7 +4,7 @@ import exrex
 import random
 import sys
 
-
+FOUR_BYTE_MAX = 2147483647 
 
 # Max range lower than 8: one word will be generated in this range. 
 # Max range greater or equal to 8: more words generated.
@@ -101,12 +101,16 @@ def basic_bool(table, attr):
 
 
 def basic_int(table, attr):
-
-    regex = r'[-]?\d+'        
+    
+    flag = True
+    regex = r'[-]?\d+'
     value = exrex.getone(regex)
     
-    while value == "-0":
-        value = exrex.getone(regex)
+    while(int(value) > FOUR_BYTE_MAX or int(value) < -FOUR_BYTE_MAX):           
+        value = value[:-1]  #fitting the value to allowed range
+         
+    if value == "-0":
+        value = "0"
   
     return value
 

@@ -1,6 +1,7 @@
 
 from printer import errprint,ERRCODE
 import sys
+import os
 
 
 FILL_CNT = 10
@@ -52,7 +53,7 @@ def get_fill_line(attr):
 #creates a constraint line if necessary
 def get_constr_line(attr):
     
-    if not attr.constraint_flag:
+    if not attr.constraint_flag or attr.not_null:
         return ""
     
     line = "\t\tCONSTRAINT "
@@ -72,12 +73,22 @@ def get_constr_line(attr):
 
 #A function that generates the dsl file
 #according to the given table list
-def dsl_generator(table_list):
+def dsl_generator(table_list,DEST):
     
     #iniciates
     initiate_gen(table_list)
     
-    fd = sys.stdout
+    if(DEST == "file"):
+        home = os.path.expanduser('~')   #get the home directory for this user
+        pth = home + "/dsl.txt"          #creates the path representing ~/dsl.txt
+        try:
+            fd = open(pth, 'w')
+        except IOError:
+            msg = "Runtime error: Did not manage to create a destination file '~/dsl.txt'."
+            errprint(msg, ERRCODE["RUNTIME"])             
+    else:    
+        fd = sys.stdout
+    
     
     for table in table_list:
         fd.write("TABLE:" + table.name + "(" + str(FILL_CNT) + ")\n")

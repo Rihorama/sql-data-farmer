@@ -33,6 +33,16 @@ alter_attr = None
 #error flag
 err = False
 
+
+
+#class to temporarily ignore stderr
+#done to hide those ply yacc warnings...
+class NullDevice():
+    def write(self, s):
+        pass
+    
+
+
 ##
 #function to see the tokens
 ##
@@ -166,13 +176,15 @@ def sql_parser(f):
 
         t.lexer.skip(1)
         
+    #ignore stderr for a short while
+    original_stderr = sys.stderr  # keep a reference to STDERR
+    sys.stderr = NullDevice()  # redirect the real STDERR
+        
     # Build the lexer
     lexer = lex.lex()  #will be case insensitive
-
     
-            
-    #input_lex(lexer, f.read())
-    #f.seek(0)
+    #getting ol'stderr back
+    sys.stderr = original_stderr
     
     
     global err
