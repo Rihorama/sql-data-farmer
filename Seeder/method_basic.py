@@ -1,8 +1,10 @@
 
+import os
 import class_table
 import exrex
 import random
 import sys
+from method_textbank import fm_textbank
 
 FOUR_BYTE_MAX = 2147483647 
 
@@ -115,6 +117,17 @@ def basic_int(table, attr):
     return value
 
 
+def basic_text(table, attr):
+    
+    path = os.path.dirname(sys.argv[0]) + "/Textbank/sentence.txt"
+    
+    if len(attr.fill_parameters) == 0:     #the path hasn't been added yet
+        attr.fill_parameters.append(path)  #here we put the textbank path as a parameters so it can use fm_textbank
+    
+    value = fm_textbank(table,attr)
+    return value
+
+
 
 #Basic fill function
 #Recognizes the data type and uses it's basic method
@@ -136,5 +149,8 @@ def fm_basic(table, attr):
         
     elif attr.data_type == "INT":
         value = basic_int(table, attr)
+        
+    elif attr.data_type == "TEXT":
+        value = basic_text(table, attr)
         
     return value

@@ -5,9 +5,9 @@ _tabversion = '3.2'
 
 _lr_method = 'LALR'
 
-_lr_signature = '-\xa3\xfa\x99\xbd\x9fh\xa5\xec\xae\xe8\xac\xc7\x12\x9f\xc5'
+_lr_signature = '\xea_\xcb\xb2@\xe1\x9f\x0cto\xec\x170v\x91p'
     
-_lr_action_items = {'DTYPE_PART2':([13,18,],[25,31,]),'DTYPE_PART1':([6,],[13,]),'NUMBER':([26,32,45,50,],[37,37,37,37,]),'FOREIGN':([59,],[63,]),'REFERENCES':([71,],[72,]),'NULL':([12,14,16,17,18,25,27,30,31,39,40,43,44,51,53,58,61,],[-14,-13,-12,-33,-15,-19,40,-22,-18,-25,-24,51,-21,-23,-16,-20,-17,]),'ALTER':([2,7,8,19,20,21,23,34,55,],[-33,-3,-33,35,-2,-28,-4,-27,-29,]),'RPAREN':([12,14,16,17,18,25,27,30,31,37,39,40,44,46,51,52,53,57,58,61,68,69,75,],[-14,-13,-12,28,-15,-19,41,-22,-18,-26,-25,-24,-21,53,-23,58,-16,61,-20,-17,70,71,76,]),'SEMICOLON':([5,10,11,24,28,29,41,42,48,70,76,],[-33,-6,23,-5,-10,-8,-11,-9,55,-31,-32,]),'CONSTRAINT':([47,],[54,]),'CREATE':([0,2,7,8,20,23,],[3,-33,-3,3,-2,-4,]),'COMMA':([12,14,16,17,18,25,27,30,31,37,38,39,40,44,51,53,58,61,],[-14,-13,-12,29,-15,-19,42,-22,-18,-26,50,-25,-24,-21,-23,-16,-20,-17,]),'TABLE':([3,35,],[9,49,]),'IDENTIFIER':([1,5,9,10,11,24,28,29,36,41,42,54,56,66,67,72,74,],[6,-33,22,-6,6,-5,-10,-8,-7,-11,-9,59,60,68,69,73,75,]),'DTYPE_BOTH_1PARAM':([6,],[18,]),'$end':([2,4,7,8,19,20,21,23,34,55,],[-33,0,-3,-33,-1,-2,-28,-4,-27,-29,]),'DTYPE_SOLO':([6,],[12,]),'DTYPE_SOLO_1PARAM2':([6,],[15,]),'ADD':([33,60,],[47,-30,]),'LPAREN':([15,18,22,31,64,65,73,],[26,32,36,45,66,67,74,]),'UNIQUE':([12,14,16,17,18,25,27,30,31,39,40,44,51,53,58,61,],[-14,-13,-12,-33,-15,-19,39,-22,-18,-25,-24,-21,-23,-16,-20,-17,]),'PRIMARY':([59,],[62,]),'ONLY':([49,],[56,]),'KEY':([62,63,],[64,65,]),'NOT':([12,14,16,17,18,25,27,30,31,39,40,44,51,53,58,61,],[-14,-13,-12,-33,-15,-19,43,-22,-18,-25,-24,-21,-23,-16,-20,-17,]),}
+_lr_action_items = {'REGEX':([39,],[46,]),'TYPE_1PARAM':([12,],[20,]),'CONSTRAINT':([18,24,33,34,35,42,56,59,],[28,-27,-24,-26,-27,-25,-14,-15,]),'CONSTR_1PARAM':([28,],[37,]),'FILL_METHOD_1PARAM':([19,],[29,]),'FILL_METHOD_NOPARAM':([19,],[30,]),'NUMBER':([26,31,44,],[36,41,53,]),'RPAREN':([36,40,41,46,47,48,49,53,58,],[43,50,51,-21,-20,-22,55,57,-23,]),'EOL':([13,21,22,24,35,38,43,50,51,55,57,],[24,24,-12,35,35,24,24,24,-13,24,24,]),'DOUBLE_COLON':([1,7,14,15,18,24,25,27,33,34,35,42,45,52,56,59,60,],[6,-27,-6,6,-8,-27,-5,-9,-24,-26,-27,-25,-16,-7,-14,-15,-17,]),'COLON':([4,48,],[10,54,]),'TYPE_NOPARAM':([12,],[22,]),'LPAREN':([17,20,29,30,37,],[26,31,39,40,44,]),'PATH':([39,],[47,]),'FILL':([11,24,32,33,34,35,42,],[19,-27,-11,-24,-26,-27,-25,]),'TABLE':([0,2,7,8,9,14,15,16,18,24,25,27,33,34,35,42,45,56,59,60,],[4,-27,-27,-3,4,-6,-4,-2,-8,-27,-5,-9,-24,-26,-27,-25,-16,-14,-15,-17,]),'IDENTIFIER':([6,10,39,54,],[13,17,48,58,]),'TYPE':([5,23,24,33,34,35,42,],[12,-10,-27,-24,-26,-27,-25,]),'CONSTR_NOPARAM':([28,],[38,]),'$end':([2,3,7,8,9,14,15,16,18,24,25,27,33,34,35,42,45,56,59,60,],[-27,0,-27,-3,-1,-6,-4,-2,-8,-27,-5,-9,-24,-26,-27,-25,-16,-14,-15,-17,]),}
 
 _lr_action = { }
 for _k, _v in _lr_action_items.items():
@@ -16,7 +16,7 @@ for _k, _v in _lr_action_items.items():
       _lr_action[_x][_k] = _y
 del _lr_action_items
 
-_lr_goto_items = {'tableHeader':([0,8,],[1,1,]),'constraintPart':([17,],[27,]),'moreAlterBlocks':([8,],[19,]),'tableBlock':([0,8,],[2,20,]),'moreAttributes':([5,],[11,]),'dtypeTwopart':([6,],[14,]),'parameter':([26,32,45,50,],[38,46,52,57,]),'moreBlocks':([2,],[8,]),'dtypeSolo':([6,],[16,]),'dtypes':([6,],[17,]),'alterHeader':([19,],[33,]),'attributeBlock':([1,11,],[5,24,]),'alterBlock':([19,],[34,]),'root':([0,],[4,]),'alterBody':([33,],[48,]),'empty':([2,5,8,17,],[7,10,21,30,]),'constraints':([27,],[44,]),}
+_lr_goto_items = {'tableHeader':([0,9,],[1,1,]),'constraintPart':([18,],[27,]),'fillMethod':([11,],[18,]),'tableBlock':([0,9,],[2,16,]),'moreAttributes':([7,],[15,]),'dataType':([5,],[11,]),'attributeName':([1,15,],[5,5,]),'moreBlocks':([2,],[9,]),'dtypes':([12,],[21,]),'dsl':([0,],[3,]),'attributeBlock':([1,15,],[7,25,]),'endline':([13,21,38,43,50,55,57,],[23,32,45,52,56,59,60,]),'parameter':([39,],[49,]),'empty':([2,7,24,35,],[8,14,34,34,]),'extraEndline':([24,35,],[33,42,]),}
 
 _lr_goto = { }
 for _k, _v in _lr_goto_items.items():
@@ -25,38 +25,32 @@ for _k, _v in _lr_goto_items.items():
        _lr_goto[_x][_k] = _y
 del _lr_goto_items
 _lr_productions = [
-  ("S' -> root","S'",1,None,None,None),
-  ('root -> tableBlock moreBlocks moreAlterBlocks','root',3,'p_root','/home/re/sql-data-farmer/Harvester/lex_parse.py',190),
-  ('moreBlocks -> moreBlocks tableBlock','moreBlocks',2,'p_moreBlocks','/home/re/sql-data-farmer/Harvester/lex_parse.py',195),
-  ('moreBlocks -> empty','moreBlocks',1,'p_moreBlocks','/home/re/sql-data-farmer/Harvester/lex_parse.py',196),
-  ('tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON','tableBlock',4,'p_tableBlock','/home/re/sql-data-farmer/Harvester/lex_parse.py',206),
-  ('moreAttributes -> moreAttributes attributeBlock','moreAttributes',2,'p_moreAttributes','/home/re/sql-data-farmer/Harvester/lex_parse.py',211),
-  ('moreAttributes -> empty','moreAttributes',1,'p_moreAttributes','/home/re/sql-data-farmer/Harvester/lex_parse.py',212),
-  ('tableHeader -> CREATE TABLE IDENTIFIER LPAREN','tableHeader',4,'p_tableHeader','/home/re/sql-data-farmer/Harvester/lex_parse.py',217),
-  ('attributeBlock -> IDENTIFIER dtypes COMMA','attributeBlock',3,'p_attributeBlock','/home/re/sql-data-farmer/Harvester/lex_parse.py',230),
-  ('attributeBlock -> IDENTIFIER dtypes constraintPart COMMA','attributeBlock',4,'p_attributeBlock','/home/re/sql-data-farmer/Harvester/lex_parse.py',231),
-  ('attributeBlock -> IDENTIFIER dtypes RPAREN','attributeBlock',3,'p_attributeBlock','/home/re/sql-data-farmer/Harvester/lex_parse.py',232),
-  ('attributeBlock -> IDENTIFIER dtypes constraintPart RPAREN','attributeBlock',4,'p_attributeBlock','/home/re/sql-data-farmer/Harvester/lex_parse.py',233),
-  ('dtypes -> dtypeSolo','dtypes',1,'p_dtypes','/home/re/sql-data-farmer/Harvester/lex_parse.py',245),
-  ('dtypes -> dtypeTwopart','dtypes',1,'p_dtypes','/home/re/sql-data-farmer/Harvester/lex_parse.py',246),
-  ('dtypeSolo -> DTYPE_SOLO','dtypeSolo',1,'p_dtypeSolo','/home/re/sql-data-farmer/Harvester/lex_parse.py',260),
-  ('dtypeSolo -> DTYPE_BOTH_1PARAM','dtypeSolo',1,'p_dtypeSolo','/home/re/sql-data-farmer/Harvester/lex_parse.py',261),
-  ('dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN','dtypeSolo',4,'p_dtypeSolo','/home/re/sql-data-farmer/Harvester/lex_parse.py',262),
-  ('dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN','dtypeSolo',6,'p_dtypeSolo','/home/re/sql-data-farmer/Harvester/lex_parse.py',263),
-  ('dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2','dtypeTwopart',2,'p_dtypeTwopart','/home/re/sql-data-farmer/Harvester/lex_parse.py',281),
-  ('dtypeTwopart -> DTYPE_PART1 DTYPE_PART2','dtypeTwopart',2,'p_dtypeTwopart','/home/re/sql-data-farmer/Harvester/lex_parse.py',282),
-  ('dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN','dtypeTwopart',5,'p_dtypeTwopart','/home/re/sql-data-farmer/Harvester/lex_parse.py',283),
-  ('constraintPart -> constraintPart constraints','constraintPart',2,'p_constraintPart','/home/re/sql-data-farmer/Harvester/lex_parse.py',297),
-  ('constraintPart -> empty','constraintPart',1,'p_constraintPart','/home/re/sql-data-farmer/Harvester/lex_parse.py',298),
-  ('constraints -> NOT NULL','constraints',2,'p_constraints','/home/re/sql-data-farmer/Harvester/lex_parse.py',303),
-  ('constraints -> NULL','constraints',1,'p_constraints','/home/re/sql-data-farmer/Harvester/lex_parse.py',304),
-  ('constraints -> UNIQUE','constraints',1,'p_constraints','/home/re/sql-data-farmer/Harvester/lex_parse.py',305),
-  ('parameter -> NUMBER','parameter',1,'p_parameter','/home/re/sql-data-farmer/Harvester/lex_parse.py',321),
-  ('moreAlterBlocks -> moreAlterBlocks alterBlock','moreAlterBlocks',2,'p_moreAlterBlocks','/home/re/sql-data-farmer/Harvester/lex_parse.py',331),
-  ('moreAlterBlocks -> empty','moreAlterBlocks',1,'p_moreAlterBlocks','/home/re/sql-data-farmer/Harvester/lex_parse.py',332),
-  ('alterBlock -> alterHeader alterBody SEMICOLON','alterBlock',3,'p_alterBlock','/home/re/sql-data-farmer/Harvester/lex_parse.py',338),
-  ('alterHeader -> ALTER TABLE ONLY IDENTIFIER','alterHeader',4,'p_alterHeader','/home/re/sql-data-farmer/Harvester/lex_parse.py',344),
-  ('alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN','alterBody',8,'p_alterBody','/home/re/sql-data-farmer/Harvester/lex_parse.py',355),
-  ('alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN','alterBody',13,'p_alterBody','/home/re/sql-data-farmer/Harvester/lex_parse.py',356),
-  ('empty -> <empty>','empty',0,'p_empty','/home/re/sql-data-farmer/Harvester/lex_parse.py',407),
+  ("S' -> dsl","S'",1,None,None,None),
+  ('dsl -> tableBlock moreBlocks','dsl',2,'p_dsl','/home/re/sql-data-farmer/Seeder/lex_parse.py',240),
+  ('moreBlocks -> moreBlocks tableBlock','moreBlocks',2,'p_moreBlocks','/home/re/sql-data-farmer/Seeder/lex_parse.py',245),
+  ('moreBlocks -> empty','moreBlocks',1,'p_moreBlocks','/home/re/sql-data-farmer/Seeder/lex_parse.py',246),
+  ('tableBlock -> tableHeader attributeBlock moreAttributes','tableBlock',3,'p_tableBlock','/home/re/sql-data-farmer/Seeder/lex_parse.py',256),
+  ('moreAttributes -> moreAttributes attributeBlock','moreAttributes',2,'p_moreAttributes','/home/re/sql-data-farmer/Seeder/lex_parse.py',261),
+  ('moreAttributes -> empty','moreAttributes',1,'p_moreAttributes','/home/re/sql-data-farmer/Seeder/lex_parse.py',262),
+  ('tableHeader -> TABLE COLON IDENTIFIER LPAREN NUMBER RPAREN endline','tableHeader',7,'p_tableHeader','/home/re/sql-data-farmer/Seeder/lex_parse.py',267),
+  ('attributeBlock -> attributeName dataType fillMethod','attributeBlock',3,'p_attributeBlock','/home/re/sql-data-farmer/Seeder/lex_parse.py',280),
+  ('attributeBlock -> attributeName dataType fillMethod constraintPart','attributeBlock',4,'p_attributeBlock','/home/re/sql-data-farmer/Seeder/lex_parse.py',281),
+  ('attributeName -> DOUBLE_COLON IDENTIFIER endline','attributeName',3,'p_attributeName','/home/re/sql-data-farmer/Seeder/lex_parse.py',291),
+  ('dataType -> TYPE dtypes endline','dataType',3,'p_dataType','/home/re/sql-data-farmer/Seeder/lex_parse.py',302),
+  ('dtypes -> TYPE_NOPARAM','dtypes',1,'p_dtypes','/home/re/sql-data-farmer/Seeder/lex_parse.py',307),
+  ('dtypes -> TYPE_1PARAM LPAREN NUMBER RPAREN','dtypes',4,'p_dtypes','/home/re/sql-data-farmer/Seeder/lex_parse.py',308),
+  ('fillMethod -> FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline','fillMethod',5,'p_fillMethod','/home/re/sql-data-farmer/Seeder/lex_parse.py',321),
+  ('fillMethod -> FILL FILL_METHOD_1PARAM LPAREN parameter RPAREN endline','fillMethod',6,'p_fillMethod','/home/re/sql-data-farmer/Seeder/lex_parse.py',322),
+  ('constraintPart -> CONSTRAINT CONSTR_NOPARAM endline','constraintPart',3,'p_constraintPart','/home/re/sql-data-farmer/Seeder/lex_parse.py',338),
+  ('constraintPart -> CONSTRAINT CONSTR_1PARAM LPAREN NUMBER RPAREN endline','constraintPart',6,'p_constraintPart','/home/re/sql-data-farmer/Seeder/lex_parse.py',339),
+  ('parameters -> parameters parameter','parameters',2,'p_parameters','/home/re/sql-data-farmer/Seeder/lex_parse.py',365),
+  ('parameters -> empty','parameters',1,'p_parameters','/home/re/sql-data-farmer/Seeder/lex_parse.py',366),
+  ('parameter -> PATH','parameter',1,'p_parameter','/home/re/sql-data-farmer/Seeder/lex_parse.py',370),
+  ('parameter -> REGEX','parameter',1,'p_parameter','/home/re/sql-data-farmer/Seeder/lex_parse.py',371),
+  ('parameter -> IDENTIFIER','parameter',1,'p_parameter','/home/re/sql-data-farmer/Seeder/lex_parse.py',372),
+  ('parameter -> IDENTIFIER COLON IDENTIFIER','parameter',3,'p_parameter','/home/re/sql-data-farmer/Seeder/lex_parse.py',373),
+  ('endline -> EOL extraEndline','endline',2,'p_endline','/home/re/sql-data-farmer/Seeder/lex_parse.py',382),
+  ('extraEndline -> EOL extraEndline','extraEndline',2,'p_extraEndline','/home/re/sql-data-farmer/Seeder/lex_parse.py',386),
+  ('extraEndline -> empty','extraEndline',1,'p_extraEndline','/home/re/sql-data-farmer/Seeder/lex_parse.py',387),
+  ('empty -> <empty>','empty',0,'p_empty','/home/re/sql-data-farmer/Seeder/lex_parse.py',392),
 ]

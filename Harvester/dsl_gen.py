@@ -12,7 +12,8 @@ DTYPE_DICT = {
     'character varying' : 'VARCHAR',
     'character' : 'CHAR',
     'boolean' : 'BOOL',
-    'integer' : 'INT',   
+    'integer' : 'INT',
+    'text' : 'TEXT',
     }
 
 #creates a DSL line describing attribute's data type
@@ -53,7 +54,7 @@ def get_fill_line(attr):
 #creates a constraint line if necessary
 def get_constr_line(attr):
     
-    if not attr.constraint_flag or attr.not_null:
+    if not attr.constraint_flag or (attr.not_null and attr.constraint_cnt == 1):
         return ""
     
     line = "\t\tCONSTRAINT "

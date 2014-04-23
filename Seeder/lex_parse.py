@@ -143,6 +143,7 @@ def dsl_parser(f):
         'CHAR' : 'TYPE_1PARAM',      #CHARACTER
         'BOOL' : 'TYPE_NOPARAM',      #BOOLEAN
         'INT' : 'TYPE_NOPARAM',          #INT, INT4
+        'TEXT' : 'TYPE_NOPARAM',
         
         'fm_basic' : 'FILL_METHOD_NOPARAM',
         'fm_regex' : 'FILL_METHOD_1PARAM',
