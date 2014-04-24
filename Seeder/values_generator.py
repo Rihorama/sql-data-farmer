@@ -27,17 +27,44 @@ def check_unique(attr,value):
 
 # Finds the value list for the attribute that the foreign key points to
 # and randomly chooses and returns one value from it.
-def get_foreign(attr):
+def get_foreign(attr):   
     
-    #gets list of the desired values
-    val_list = attr.fk_attribute.values_list
+    if not attr.fk_assigned: #we encounter this attr for the first time
+        if attr.unique:
+            attr.fk_values = attr.fk_attribute.values_list[:]  #duplicates the values list
+        else:
+            attr.fk_values = attr.fk_attribute.values_list #only assigns the existing list
+        
+        attr.fk_assigned = True   #sets the flag - list of values has been set
+        
+        
+    #gets list of the desired values to easily work with
+    val_list = attr.fk_values
     
     length = len(val_list)
-    length_self = len(attr.values_list)
+    #length_self = len(attr.values_list)    I have no idea where did this come from xD
     
-    i = random.randint(0,length-1)          #randomly chooses one index  
+    
+    if length == 0:
+        i = 0                                   #we have one item left (unique-fk combo issue only)
+    else:
+        i = random.randint(0,length-1)          #randomly chooses one index, minus 1 counts with empty endline
+    
+    
+    if attr.unique:
+        if len(val_list) != 0:       #we have something to take from
+            value = val_list[i]
+            del val_list[i]          #removes the value so we can't use it again
+        else:
+            msg = "Input error: Unique foreign key attribute '" + attr.name + "' cannot be filled " \
+            + "as the source attribute '" \
+            + attr.fk_attribute.name + "' doesn't offer enough unique values.\n" \
+            + "NOTE: Seeder can only work with values it's generating in this run - not with any others.\n"
+            errprint(msg, ERRCODE["INPUT"])
+    else:
+        value = val_list[i] #we don't care if it's repeated
 
-    return val_list[i]
+    return value
 
 
 
@@ -50,7 +77,7 @@ def get_values(table):
         
         new_val = None
         
-        if attr.constraint_type == "foreign_key":
+        if attr.foreign_key:
             new_val = get_foreign(attr)
             
         else:
@@ -65,7 +92,8 @@ def get_values(table):
                 exit()            
         
         
-        if attr.unique:            
+        #fk solved separately, rest must be solved here
+        if (attr.unique and not attr.foreign_key) or attr.primary_key:            
             timeout = 0
             
             while not check_unique(attr,new_val):      #validity check if there is unique/primary key constraint
@@ -73,12 +101,13 @@ def get_values(table):
                     msg = "Runtime error: The timeout for finding new unique value for attribute '" + attr.name + "' exceeded.\n" \
                           "Tip: Check if the given fill method offers enough unique values.\n"      
                     errprint(msg, ERRCODE["RUNTIME"])
+                
                 exec func                              #we call the method again (and again)
                 timeout += 1
         
         
         #NULL appearance chance
-        if attr.constraint_type == 'null':
+        if attr.null == 'null':
             
             chance = random.randint(0,100)
 
@@ -104,7 +133,7 @@ def table_check(table):
     flag = True                         #all ok so far
     
     for attr in table.attr_list:
-        if attr.constraint_type == "foreign_key":
+        if attr.foreign_key:
             if not attr.fk_table.solved:    #this attribute can't be filled as the foreign table hasn't been solved yet
                 flag = False                #problem found
                 break
@@ -135,6 +164,8 @@ def table_filler(table):
 
 #main filling loop for all tables
 def db_filler(table_list):
+    
+    iniciate_fk(table_list)  #calls the iniciatiation
     
     i = True
     while i:    
@@ -180,7 +211,23 @@ def iniciate_fk(table_list):
             
             for attr in table.attr_list:    #we cycle over its attributes
                 
-                if attr.constraint_type == "foreign_key":
+                #first compatibility-of-constraints check
+                if attr.constraint_flag and attr.constraint_cnt > 1:
+                    #TODO:check if unique and primary key can be together
+                    check1 = attr.unique and attr.primary_key
+                    check2 = attr.null and attr.primary_key
+                    check3 = attr.null and attr.not_null
+                    
+                    check = check1 or check2 or check3
+                    
+                    if check:
+                        msg = "Input error: Not compatible constraints used for attribute '" \
+                            + attr.name + "', table '" + table.name + "'.\n"
+                        errprint(msg, ERRCODE["INPUT"]) 
+                
+                
+                #and the main part, getting the foreign key dependences done
+                if attr.foreign_key:
                                         
                     ftable_name = attr.fk_table     #stores the name of the foreign table and its attribute
                     fattr_name = attr.fk_attribute

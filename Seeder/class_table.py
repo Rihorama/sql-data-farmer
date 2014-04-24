@@ -35,12 +35,20 @@ class Attribute:
         
         self.constraint_flag = False
         self.constraint_type = ""
-        self.unique = False
         self.constraint_parameters = []
+        self.constraint_cnt = 0
+        
+        self.null = False
+        self.unique = False
+        self.not_null = False
+        self.primary_key = False
+        self.foreign_key = False
         
         #if this is a foreign key
         self.fk_table = None            #table where the foreign key points
         self.fk_attribute = None        #attribute where the foreign key points
+        self.fk_values = []             #used only for unique foreign key combo
+        self.fk_assigned = False        #flag to say we copied/assigned the desired list into fk_values already
         
         #if this is foreign-key-pointed
         self.fk_pointed = False

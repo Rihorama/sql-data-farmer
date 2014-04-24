@@ -62,8 +62,8 @@ class Attribute:
         self.fk_table = None            #table where the foreign key points
         self.fk_attribute = None        #attribute where the foreign key points
         
-        self.fill_method = None
-        self.fill_parameters = []
+        #self.fill_method = None
+        #self.fill_parameters = []
         
         #if this is foreign-key-pointed
         #self.fk_pointed = False
@@ -74,13 +74,15 @@ class Attribute:
      
     #sets the flag for the certain constraint    
     def set_constraint(self,constr):
-        
+                
         if constr == 'NULL':
             self.null = True
         elif constr == 'NOT NULL':
             self.not_null = True
         elif constr == 'PRIMARY KEY':
             self.primary_key = True
+        elif constr == 'UNIQUE':
+            self.unique = True
         else:
             self.foreign_key = True
         

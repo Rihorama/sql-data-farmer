@@ -164,8 +164,10 @@ def sql_parser(f):
         t.lexer.lineno += len(t.value)
         return t
     
-    # A string containing ignored characters (spaces, tabs and newlines)
+           
+    # A string containing ignored characters (spaces and tabs)
     t_ignore  = ' \t\n'
+        
 
     # Error handling rule
     def t_error(t):
@@ -358,24 +360,97 @@ def sql_parser(f):
         
         global alter_table
         if not p[4] in name_dict.keys():
-            msg = "Input error: Table '" + p[10] + "'given in ALTER part couldn't be found.\n"
+            msg = "Input error: Table '" + p[4] + "'given in ALTER part couldn't be found.\n"
             errprint(msg, ERRCODE["INPUT"])
         alter_table = name_dict[p[4]]
         
         
     def p_alterBody(p):
         '''alterBody : ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
-                     | ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN'''        
+                     | ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+                     | multi_attr_constr'''        
         debug("alterBody")
         
         global alter_attr
-        global alter_table
-        
+        global alter_table        
         alter_attr = None
-        constr = p[4] + ' ' + p[5]
+        alter_name = None
         
+        #the multi_attr constraint has been solved already
+        #this goes just for the KEYs
+        if len(p) != 2:
+        
+            constr = p[4] + " " + p[5]
+            
+            #finding the attribute to get altered
+            for attr in alter_table.attr_list:
+                if attr.name == p[7]:     #p[7] stands for the attribute name in both cases
+                    alter_attr = attr
+                    break
+            
+            #did we find anything?
+            if alter_attr == None:
+                msg = "Input error: Couldn't find the given attribute name '" + p[7] \
+                        + "' in the list of attributes of table '" + alter_table.name \
+                        + "' while processing a " + constr + ".\n"
+                errprint(msg, ERRCODE["INPUT"]) 
+            
+            
+            alter_attr.constraint_flag = True
+            alter_attr.constraint_cnt += 1    #increments the cnt
+            alter_attr.set_constraint(constr)      
+            
+            
+            #for foreign key
+            if p[4] == 'FOREIGN':
+                
+                #existence of foreign table check
+                if not p[10] in name_dict.keys():
+                    msg = "Input error: Foreign table '" + p[10] + "' couldn't be found.\n"
+                    errprint(msg, ERRCODE["INPUT"])       
+                    
+                alter_attr.fk_table = name_dict[p[10]]  #gets the foreign table object
+                
+                for attr in alter_attr.fk_table.attr_list:
+                    if attr.name == p[12]:
+                        alter_attr.fk_attribute = attr
+                        break
+                
+                #existence of foreign attribute check
+                if alter_attr.fk_attribute == None:
+                    msg = "Input error: Foreign attribute '" + p[12] \
+                            + "' couldn't be found in table '" + p[10] \
+                            + "' while processing a " + constr + ".\n"
+                    errprint(msg, ERRCODE["INPUT"])       
+    
+    
+    
+    #for alters that can apply on more attributes at once
+    def p_multi_attr_constr(p):
+        'multi_attr_constr : ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN'
+        debug("multi_attr_constr")
+        
+        
+    def p_multi_params(p):
+        '''multi_params : multi_params multi_1param
+                        | empty'''
+        debug("multi_params")
+               
+               
+    def p_multi_1param(p):
+        '''multi_1param : IDENTIFIER COMMA
+                        | IDENTIFIER'''
+        debug("multi_1param")
+        
+        global alter_attr
+        global alter_table        
+        alter_attr = None
+        alter_name = None
+        constr = "UNIQUE"
+        
+        #finding the attribute to get altered
         for attr in alter_table.attr_list:
-            if attr.name == p[7]:     #p[7] stands for the attribute name in both cases
+            if attr.name == p[1]:     #p[1] stands for the attribute name in both cases
                 alter_attr = attr
                 break
         
@@ -389,31 +464,11 @@ def sql_parser(f):
          
         alter_attr.constraint_flag = True
         alter_attr.constraint_cnt += 1    #increments the cnt
-        alter_attr.set_constraint(constr)      
+        alter_attr.set_constraint(constr)   
+                        
         
-        #for foreign key
-        if p[4] == 'FOREIGN':
-            
-            #existence of foreign table check
-            if not p[10] in name_dict.keys():
-                msg = "Input error: Foreign table '" + p[10] + "' couldn't be found.\n"
-                errprint(msg, ERRCODE["INPUT"])       
-                
-            alter_attr.fk_table = name_dict[p[10]]  #gets the foreign table object
-            
-            for attr in alter_attr.fk_table.attr_list:
-                if attr.name == p[12]:
-                    alter_attr.fk_attribute = attr
-                    break
-            
-            #existence of foreign attribute check
-            if alter_attr.fk_attribute == None:
-                msg = "Input error: Foreign attribute '" + p[12] \
-                        + "' couldn't be found in table '" + p[10] \
-                        + "' while processing a " + constr + ".\n"
-                errprint(msg, ERRCODE["INPUT"])       
-        
-        
+
+
         
     def p_empty(p):
         'empty :'

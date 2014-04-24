@@ -9,10 +9,12 @@ NULL_FILL = 20
 
 
 DTYPE_DICT = {
+    'bigint' : 'BIGINT',
+    'boolean' : 'BOOL',
     'character varying' : 'VARCHAR',
     'character' : 'CHAR',
-    'boolean' : 'BOOL',
     'integer' : 'INT',
+    'smallint' : 'SMALLINT',
     'text' : 'TEXT',
     }
 

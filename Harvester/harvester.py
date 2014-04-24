@@ -16,49 +16,71 @@ import tempfile
 #takes only CREATE TABLE queries and ALTER TABLE ONLY
 def preparse(f,tempf):
     
+    starts = ('CREATE TABLE','ALTER TABLE ONLY')
+    
     create = False                       #flag saying that at the moment we are not examining lines of CREATE TABLE query
     alter = False                        #nor ALTER TABLE ONLY query
     not_yet = False                      #True if we need to wait for semicolon
+    query = False
     
     for line in f:
-        li=line.strip()                  #get rid of whitespaces on both ends
-
-
-        if li.startswith("CREATE TABLE"):
-            if not li.endswith(";"): 
-                create = True                #the query continues over more lines
-            tempf.write(line)
-
-        elif li.startswith("ALTER TABLE ONLY"):
-            if li.endswith(";") and not "KEY" in li: #it's aparently not the alter we want
-                continue                             #we skip this iteration
-            elif li.endswith(";"):                   
-                tempf.write(line)                    #should contain KEY then
-            else:           
-                alter = True
-                save = line
+        li=line.strip()                  #get rid of whitespaces on both ends        
+        
+        if li.startswith(starts):
+            query = True                 #a query we might want
+            save = ""
             
-        #query continues    
-        elif create:
+            
+        if query:
+            save = save + line
+            
+            if li.endswith(";"):
+                query = False                
+                #if this alter is not of the ones we want, we continue
+                if li.startswith("ALTER TABLE ONLY") and not ("KEY" in save or "UNIQUE" in save):
+                    continue
+                #we want it, we write it
+                else:
+                    tempf.write(save)
+
+     
+    '''
+    if li.startswith("CREATE TABLE"):
+        if not li.endswith(";"): 
+            create = True                #the query continues over more lines
+        tempf.write(line)
+
+    elif li.startswith("ALTER TABLE ONLY"):
+        if li.endswith(";") and not "KEY" in li: #it's aparently not the alter we want
+            continue                             #we skip this iteration
+        elif li.endswith(";"):                   
+            tempf.write(line)                    #should contain KEY then
+        else:           
+            alter = True
+            save = line
+        
+    #query continues    
+    elif create:
+        tempf.write(line)
+        if li.endswith(";"):          #if this line ends with semicolon, the desired query ends
+            create = False            #we reset the flag
+    
+    #to filter only primary and foreign key alter queries        
+    elif alter:
+        if "KEY" in li:
+            tempf.write(save)
             tempf.write(line)
             if li.endswith(";"):          #if this line ends with semicolon, the desired query ends
-                create = False            #we reset the flag
-        
-        #to filter only primary and foreign key alter queries        
-        elif alter:
-            if "KEY" in li:
-                tempf.write(save)
-                tempf.write(line)
-                if li.endswith(";"):          #if this line ends with semicolon, the desired query ends
-                    alter = False             #we reset the flag
-                else:
-                    not_yet = True            #the query is what we want but we haven't reached the semicolon yet
+                alter = False             #we reset the flag
+            else:
+                not_yet = True            #the query is what we want but we haven't reached the semicolon yet
+                
+        elif not_yet:
+            tempf.write(line)
+            if li.endswith(";"):          #if this line edns with semicolon, the desired query ends
+                alter = False             #we reset the flag
+                not_yet = False'''
                     
-            elif not_yet:
-                tempf.write(line)
-                if li.endswith(";"):          #if this line edns with semicolon, the desired query ends
-                    alter = False             #we reset the flag
-                    not_yet = False
 
 
 
@@ -118,6 +140,7 @@ f.close()
 
 #Setting the position to the start of temp file
 tempf.seek(0)
+
 
 #Parse what's in temp file
 table_list = parser.sql_parser(tempf)

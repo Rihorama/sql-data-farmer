@@ -40,5 +40,5 @@ table_list = parser.dsl_parser(f)
 #Close file
 f.close()
 
-iniciate_fk(table_list)
+#Calls the db filler
 db_filler(table_list)

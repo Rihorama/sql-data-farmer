@@ -95,7 +95,9 @@ def check_valid(attr):
         
         new_table.fk = True                   #sets the flag that table contains a foreign key
         attr.constraint_flag = True
-        attr.constraint_type = "foreign_key"
+        attr.foreign_key = True
+        new_attribute.constraint_cnt += 1
+        
         attr.fk_table = string[0:pos]     #gets what is before the colon
         attr.fk_attribute = string[(pos+1):]
 
@@ -138,12 +140,14 @@ def dsl_parser(f):
         'foreign_key' : 'CONSTR_NOPARAM',
         'null' : 'CONSTR_1PARAM',
         
-        'VARCHAR' : 'TYPE_1PARAM',   #CHARACTER VARYING
+        'BIGINT' : 'TYPE_NOPARAM',    #INT8
         'BIT' :     'TYPE_1PARAM', 
-        'CHAR' : 'TYPE_1PARAM',      #CHARACTER
         'BOOL' : 'TYPE_NOPARAM',      #BOOLEAN
-        'INT' : 'TYPE_NOPARAM',          #INT, INT4
+        'CHAR' : 'TYPE_1PARAM',       #CHARACTER        
+        'INT' : 'TYPE_NOPARAM',       #INTEGER, INT4
+        'SMALLINT' : 'TYPE_NOPARAM',  #INT2
         'TEXT' : 'TYPE_NOPARAM',
+        'VARCHAR' : 'TYPE_1PARAM',    #CHARACTER VARYING
         
         'fm_basic' : 'FILL_METHOD_NOPARAM',
         'fm_regex' : 'FILL_METHOD_1PARAM',
@@ -333,32 +337,57 @@ def dsl_parser(f):
             
         #check validity of parameters
         check_valid(new_attribute)
-        
+    
+    
     def p_constraintPart(p):
-        '''constraintPart : CONSTRAINT CONSTR_NOPARAM endline
-                          | CONSTRAINT CONSTR_1PARAM LPAREN NUMBER RPAREN endline'''
+        '''constraintPart : CONSTRAINT constr moreConstr endline'''
+        
+    
+    def p_moreConstr(p):
+        '''moreConstr : constr moreConstr
+                      | empty'''    
+    
+    
+    def p_constr(p):
+        '''constr : CONSTR_NOPARAM
+                      | CONSTR_1PARAM LPAREN NUMBER RPAREN'''
         
         global new_attribute
         
-        if p[2] == "foreign_key":
-            
-            if new_attribute.constraint_type != "foreign_key":      #this means the given fill method doesn't correspond
+        if p[1] == "foreign_key":
+            if not new_attribute.foreign_key:      #this means the given fill method doesn't correspond
                 
                 msg = "Semantic Error: Foreign key constraint stated but wrong fill method '" + new_attribute.fill_method \
                 + "' given.\n"
                 errprint(msg, ERRCODE["SEMANTIC"])
+            new_attribute.constraint_cnt -= 1   #not mandatory to be stated so the count has been incremented already    
+                                                #it will be incr. later in this func, so we need to put it back -1
                 
-        else:
-            new_attribute.constraint_type = p[2]
-            new_attribute.constraint_flag = True
+        elif p[1] == "primary_key":
+            new_attribute.primary_key = True
+        elif p[1] == "unique":
+            new_attribute.unique = True
+        elif p[1] == "null":
+            new_attribute.null = True
+        elif p[1] == "not_null":
+            new_attribute.not_null = True            
             
-            if new_attribute.constraint_type == "primary_key" or new_attribute.constraint_type == "unique":
-                new_attribute.unique = True
-                
+        new_attribute.constraint_type = p[1]   #older version, not removing now, it could cause trouble
+        new_attribute.constraint_flag = True
+        new_attribute.constraint_cnt += 1
+        
+        
+        #TODO:check if it's really neccessary to make generator go more easy, feels chaotic here
+        if new_attribute.primary_key:
+            new_attribute.unique = True
+        
+        #useful for null only now
         if len(p) == 7:            
             new_attribute.constraint_parameters.append(p[4])     #keeping the parameters
             
-            #TODO: checkovat, ze neni zadana spatna fill metoda 
+        #TODO: checkovat, ze neni zadana spatna fill metoda 
+        
+        
 
 
     def p_parameters(p):

@@ -6,7 +6,11 @@ import random
 import sys
 from method_textbank import fm_textbank
 
-FOUR_BYTE_MAX = 2147483647 
+FOUR_BYTE_MAX = 2147483647
+TWO_BYTE_MAX = 32767
+EIGHT_BYTE_MAX = 9223372036854775807
+
+CURRENT_MAX = None
 
 # Max range lower than 8: one word will be generated in this range. 
 # Max range greater or equal to 8: more words generated.
@@ -108,13 +112,14 @@ def basic_int(table, attr):
     regex = r'[-]?\d+'
     value = exrex.getone(regex)
     
-    while(int(value) > FOUR_BYTE_MAX or int(value) < -FOUR_BYTE_MAX):           
+    while(int(value) > CURRENT_MAX or int(value) < -CURRENT_MAX):           
         value = value[:-1]  #fitting the value to allowed range
          
     if value == "-0":
         value = "0"
   
     return value
+
 
 
 def basic_text(table, attr):
@@ -148,6 +153,18 @@ def fm_basic(table, attr):
         value = basic_bool(table, attr)
         
     elif attr.data_type == "INT":
+        global CURRENT_MAX
+        CURRENT_MAX = FOUR_BYTE_MAX
+        value = basic_int(table, attr)
+        
+    elif attr.data_type == "SMALLINT":
+        global CURRENT_MAX
+        CURRENT_MAX = TWO_BYTE_MAX
+        value = basic_int(table, attr)
+        
+    elif attr.data_type == "BIGINT":
+        global CURRENT_MAX
+        CURRENT_MAX = EIGHT_BYTE_MAX
         value = basic_int(table, attr)
         
     elif attr.data_type == "TEXT":

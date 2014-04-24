@@ -1,75 +1,105 @@
 Created by PLY version 3.4 (http://www.dabeaz.com/ply)
 
+Unused terminals:
+
+    EOL
+    DTYPE_2PARAM
+    DTYPE_1PARAM
+
 Grammar
 
-Rule 0     S' -> dsl
-Rule 1     dsl -> tableBlock moreBlocks
+Rule 0     S' -> root
+Rule 1     root -> tableBlock moreBlocks moreAlterBlocks
 Rule 2     moreBlocks -> moreBlocks tableBlock
 Rule 3     moreBlocks -> empty
-Rule 4     tableBlock -> tableHeader attributeBlock moreAttributes
+Rule 4     tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON
 Rule 5     moreAttributes -> moreAttributes attributeBlock
 Rule 6     moreAttributes -> empty
-Rule 7     tableHeader -> TABLE COLON IDENTIFIER LPAREN NUMBER RPAREN endline
-Rule 8     attributeBlock -> attributeName dataType fillMethod
-Rule 9     attributeBlock -> attributeName dataType fillMethod constraintPart
-Rule 10    attributeName -> DOUBLE_COLON IDENTIFIER endline
-Rule 11    dataType -> TYPE dtypes endline
-Rule 12    dtypes -> TYPE_NOPARAM
-Rule 13    dtypes -> TYPE_1PARAM LPAREN NUMBER RPAREN
-Rule 14    fillMethod -> FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline
-Rule 15    fillMethod -> FILL FILL_METHOD_1PARAM LPAREN parameter RPAREN endline
-Rule 16    constraintPart -> CONSTRAINT CONSTR_NOPARAM endline
-Rule 17    constraintPart -> CONSTRAINT CONSTR_1PARAM LPAREN NUMBER RPAREN endline
-Rule 18    parameters -> parameters parameter
-Rule 19    parameters -> empty
-Rule 20    parameter -> PATH
-Rule 21    parameter -> REGEX
-Rule 22    parameter -> IDENTIFIER
-Rule 23    parameter -> IDENTIFIER COLON IDENTIFIER
-Rule 24    endline -> EOL extraEndline
-Rule 25    extraEndline -> EOL extraEndline
-Rule 26    extraEndline -> empty
-Rule 27    empty -> <empty>
+Rule 7     tableHeader -> CREATE TABLE IDENTIFIER LPAREN
+Rule 8     attributeBlock -> IDENTIFIER dtypes COMMA
+Rule 9     attributeBlock -> IDENTIFIER dtypes constraintPart COMMA
+Rule 10    attributeBlock -> IDENTIFIER dtypes RPAREN
+Rule 11    attributeBlock -> IDENTIFIER dtypes constraintPart RPAREN
+Rule 12    dtypes -> dtypeSolo
+Rule 13    dtypes -> dtypeTwopart
+Rule 14    dtypeSolo -> DTYPE_SOLO
+Rule 15    dtypeSolo -> DTYPE_BOTH_1PARAM
+Rule 16    dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN
+Rule 17    dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN
+Rule 18    dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2
+Rule 19    dtypeTwopart -> DTYPE_PART1 DTYPE_PART2
+Rule 20    dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN
+Rule 21    constraintPart -> constraintPart constraints
+Rule 22    constraintPart -> empty
+Rule 23    constraints -> NOT NULL
+Rule 24    constraints -> NULL
+Rule 25    constraints -> UNIQUE
+Rule 26    parameter -> NUMBER
+Rule 27    moreAlterBlocks -> moreAlterBlocks alterBlock
+Rule 28    moreAlterBlocks -> empty
+Rule 29    alterBlock -> alterHeader alterBody SEMICOLON
+Rule 30    alterHeader -> ALTER TABLE ONLY IDENTIFIER
+Rule 31    alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
+Rule 32    alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+Rule 33    alterBody -> multi_attr_constr
+Rule 34    multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
+Rule 35    multi_params -> multi_params multi_1param
+Rule 36    multi_params -> empty
+Rule 37    multi_1param -> IDENTIFIER COMMA
+Rule 38    multi_1param -> IDENTIFIER
+Rule 39    empty -> <empty>
 
 Terminals, with rules where they appear
 
-COLON                : 7 23
-CONSTRAINT           : 16 17
-CONSTR_1PARAM        : 17
-CONSTR_NOPARAM       : 16
-DOUBLE_COLON         : 10
-EOL                  : 24 25
-FILL                 : 14 15
-FILL_METHOD_1PARAM   : 15
-FILL_METHOD_NOPARAM  : 14
-IDENTIFIER           : 7 10 22 23 23
-LPAREN               : 7 13 14 15 17
-NUMBER               : 7 13 17
-PATH                 : 20
-REGEX                : 21
-RPAREN               : 7 13 14 15 17
-TABLE                : 7
-TYPE                 : 11
-TYPE_1PARAM          : 13
-TYPE_NOPARAM         : 12
+ADD                  : 31 32 34
+ALTER                : 30
+COMMA                : 8 9 17 37
+CONSTRAINT           : 31 32 34
+CREATE               : 7
+DTYPE_1PARAM         : 
+DTYPE_2PARAM         : 
+DTYPE_BOTH_1PARAM    : 15 16 18 20
+DTYPE_PART1          : 19
+DTYPE_PART2          : 18 19 20
+DTYPE_SOLO           : 14
+DTYPE_SOLO_1PARAM2   : 17
+EOL                  : 
+FOREIGN              : 32
+IDENTIFIER           : 7 8 9 10 11 30 31 31 32 32 32 32 34 37 38
+KEY                  : 31 32
+LPAREN               : 7 16 17 20 31 32 32 34
+NOT                  : 23
+NULL                 : 23 24
+NUMBER               : 26
+ONLY                 : 30
+PRIMARY              : 31
+REFERENCES           : 32
+RPAREN               : 10 11 16 17 20 31 32 32 34
+SEMICOLON            : 4 29
+TABLE                : 7 30
+UNIQUE               : 25 34
 error                : 
 
 Nonterminals, with rules where they appear
 
+alterBlock           : 27
+alterBody            : 29
+alterHeader          : 29
 attributeBlock       : 4 5
-attributeName        : 8 9
-constraintPart       : 9
-dataType             : 8 9
-dsl                  : 0
-dtypes               : 11
-empty                : 3 6 19 26
-endline              : 7 10 11 14 15 16 17
-extraEndline         : 24 25
-fillMethod           : 8 9
+constraintPart       : 9 11 21
+constraints          : 21
+dtypeSolo            : 12
+dtypeTwopart         : 13
+dtypes               : 8 9 10 11
+empty                : 3 6 22 28 36
+moreAlterBlocks      : 1 27
 moreAttributes       : 4 5
 moreBlocks           : 1 2
-parameter            : 15 18
-parameters           : 18
+multi_1param         : 35
+multi_attr_constr    : 33
+multi_params         : 34 35
+parameter            : 16 17 17 20
+root                 : 0
 tableBlock           : 1 2
 tableHeader          : 4
 
@@ -77,564 +107,818 @@ Parsing method: LALR
 
 state 0
 
-    (0) S' -> . dsl
-    (1) dsl -> . tableBlock moreBlocks
-    (4) tableBlock -> . tableHeader attributeBlock moreAttributes
-    (7) tableHeader -> . TABLE COLON IDENTIFIER LPAREN NUMBER RPAREN endline
+    (0) S' -> . root
+    (1) root -> . tableBlock moreBlocks moreAlterBlocks
+    (4) tableBlock -> . tableHeader attributeBlock moreAttributes SEMICOLON
+    (7) tableHeader -> . CREATE TABLE IDENTIFIER LPAREN
 
-    TABLE           shift and go to state 4
+    CREATE          shift and go to state 3
 
     tableHeader                    shift and go to state 1
     tableBlock                     shift and go to state 2
-    dsl                            shift and go to state 3
+    root                           shift and go to state 4
 
 state 1
 
-    (4) tableBlock -> tableHeader . attributeBlock moreAttributes
-    (8) attributeBlock -> . attributeName dataType fillMethod
-    (9) attributeBlock -> . attributeName dataType fillMethod constraintPart
-    (10) attributeName -> . DOUBLE_COLON IDENTIFIER endline
+    (4) tableBlock -> tableHeader . attributeBlock moreAttributes SEMICOLON
+    (8) attributeBlock -> . IDENTIFIER dtypes COMMA
+    (9) attributeBlock -> . IDENTIFIER dtypes constraintPart COMMA
+    (10) attributeBlock -> . IDENTIFIER dtypes RPAREN
+    (11) attributeBlock -> . IDENTIFIER dtypes constraintPart RPAREN
 
-    DOUBLE_COLON    shift and go to state 6
+    IDENTIFIER      shift and go to state 6
 
-    attributeName                  shift and go to state 5
-    attributeBlock                 shift and go to state 7
+    attributeBlock                 shift and go to state 5
 
 state 2
 
-    (1) dsl -> tableBlock . moreBlocks
+    (1) root -> tableBlock . moreBlocks moreAlterBlocks
     (2) moreBlocks -> . moreBlocks tableBlock
     (3) moreBlocks -> . empty
-    (27) empty -> .
+    (39) empty -> .
 
-    TABLE           reduce using rule 27 (empty -> .)
-    $end            reduce using rule 27 (empty -> .)
+    CREATE          reduce using rule 39 (empty -> .)
+    ALTER           reduce using rule 39 (empty -> .)
+    $end            reduce using rule 39 (empty -> .)
 
-    empty                          shift and go to state 8
-    moreBlocks                     shift and go to state 9
+    empty                          shift and go to state 7
+    moreBlocks                     shift and go to state 8
 
 state 3
 
-    (0) S' -> dsl .
+    (7) tableHeader -> CREATE . TABLE IDENTIFIER LPAREN
 
+    TABLE           shift and go to state 9
 
 
 state 4
 
-    (7) tableHeader -> TABLE . COLON IDENTIFIER LPAREN NUMBER RPAREN endline
+    (0) S' -> root .
 
-    COLON           shift and go to state 10
 
 
 state 5
 
-    (8) attributeBlock -> attributeName . dataType fillMethod
-    (9) attributeBlock -> attributeName . dataType fillMethod constraintPart
-    (11) dataType -> . TYPE dtypes endline
+    (4) tableBlock -> tableHeader attributeBlock . moreAttributes SEMICOLON
+    (5) moreAttributes -> . moreAttributes attributeBlock
+    (6) moreAttributes -> . empty
+    (39) empty -> .
 
-    TYPE            shift and go to state 12
+    SEMICOLON       reduce using rule 39 (empty -> .)
+    IDENTIFIER      reduce using rule 39 (empty -> .)
 
-    dataType                       shift and go to state 11
+    empty                          shift and go to state 10
+    moreAttributes                 shift and go to state 11
 
 state 6
 
-    (10) attributeName -> DOUBLE_COLON . IDENTIFIER endline
+    (8) attributeBlock -> IDENTIFIER . dtypes COMMA
+    (9) attributeBlock -> IDENTIFIER . dtypes constraintPart COMMA
+    (10) attributeBlock -> IDENTIFIER . dtypes RPAREN
+    (11) attributeBlock -> IDENTIFIER . dtypes constraintPart RPAREN
+    (12) dtypes -> . dtypeSolo
+    (13) dtypes -> . dtypeTwopart
+    (14) dtypeSolo -> . DTYPE_SOLO
+    (15) dtypeSolo -> . DTYPE_BOTH_1PARAM
+    (16) dtypeSolo -> . DTYPE_BOTH_1PARAM LPAREN parameter RPAREN
+    (17) dtypeSolo -> . DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN
+    (18) dtypeTwopart -> . DTYPE_BOTH_1PARAM DTYPE_PART2
+    (19) dtypeTwopart -> . DTYPE_PART1 DTYPE_PART2
+    (20) dtypeTwopart -> . DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN
 
-    IDENTIFIER      shift and go to state 13
+    DTYPE_SOLO      shift and go to state 12
+    DTYPE_BOTH_1PARAM shift and go to state 18
+    DTYPE_SOLO_1PARAM2 shift and go to state 15
+    DTYPE_PART1     shift and go to state 13
 
+    dtypes                         shift and go to state 17
+    dtypeSolo                      shift and go to state 16
+    dtypeTwopart                   shift and go to state 14
 
 state 7
 
-    (4) tableBlock -> tableHeader attributeBlock . moreAttributes
-    (5) moreAttributes -> . moreAttributes attributeBlock
-    (6) moreAttributes -> . empty
-    (27) empty -> .
-
-    DOUBLE_COLON    reduce using rule 27 (empty -> .)
-    TABLE           reduce using rule 27 (empty -> .)
-    $end            reduce using rule 27 (empty -> .)
-
-    empty                          shift and go to state 14
-    moreAttributes                 shift and go to state 15
-
-state 8
-
     (3) moreBlocks -> empty .
 
-    TABLE           reduce using rule 3 (moreBlocks -> empty .)
+    CREATE          reduce using rule 3 (moreBlocks -> empty .)
+    ALTER           reduce using rule 3 (moreBlocks -> empty .)
     $end            reduce using rule 3 (moreBlocks -> empty .)
 
 
-state 9
+state 8
 
-    (1) dsl -> tableBlock moreBlocks .
+    (1) root -> tableBlock moreBlocks . moreAlterBlocks
     (2) moreBlocks -> moreBlocks . tableBlock
-    (4) tableBlock -> . tableHeader attributeBlock moreAttributes
-    (7) tableHeader -> . TABLE COLON IDENTIFIER LPAREN NUMBER RPAREN endline
+    (27) moreAlterBlocks -> . moreAlterBlocks alterBlock
+    (28) moreAlterBlocks -> . empty
+    (4) tableBlock -> . tableHeader attributeBlock moreAttributes SEMICOLON
+    (39) empty -> .
+    (7) tableHeader -> . CREATE TABLE IDENTIFIER LPAREN
 
-    $end            reduce using rule 1 (dsl -> tableBlock moreBlocks .)
-    TABLE           shift and go to state 4
+    ALTER           reduce using rule 39 (empty -> .)
+    $end            reduce using rule 39 (empty -> .)
+    CREATE          shift and go to state 3
 
     tableHeader                    shift and go to state 1
-    tableBlock                     shift and go to state 16
+    moreAlterBlocks                shift and go to state 19
+    tableBlock                     shift and go to state 20
+    empty                          shift and go to state 21
+
+state 9
+
+    (7) tableHeader -> CREATE TABLE . IDENTIFIER LPAREN
+
+    IDENTIFIER      shift and go to state 22
+
 
 state 10
 
-    (7) tableHeader -> TABLE COLON . IDENTIFIER LPAREN NUMBER RPAREN endline
+    (6) moreAttributes -> empty .
 
-    IDENTIFIER      shift and go to state 17
+    SEMICOLON       reduce using rule 6 (moreAttributes -> empty .)
+    IDENTIFIER      reduce using rule 6 (moreAttributes -> empty .)
 
 
 state 11
 
-    (8) attributeBlock -> attributeName dataType . fillMethod
-    (9) attributeBlock -> attributeName dataType . fillMethod constraintPart
-    (14) fillMethod -> . FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline
-    (15) fillMethod -> . FILL FILL_METHOD_1PARAM LPAREN parameter RPAREN endline
+    (4) tableBlock -> tableHeader attributeBlock moreAttributes . SEMICOLON
+    (5) moreAttributes -> moreAttributes . attributeBlock
+    (8) attributeBlock -> . IDENTIFIER dtypes COMMA
+    (9) attributeBlock -> . IDENTIFIER dtypes constraintPart COMMA
+    (10) attributeBlock -> . IDENTIFIER dtypes RPAREN
+    (11) attributeBlock -> . IDENTIFIER dtypes constraintPart RPAREN
 
-    FILL            shift and go to state 19
+    SEMICOLON       shift and go to state 23
+    IDENTIFIER      shift and go to state 6
 
-    fillMethod                     shift and go to state 18
+    attributeBlock                 shift and go to state 24
 
 state 12
 
-    (11) dataType -> TYPE . dtypes endline
-    (12) dtypes -> . TYPE_NOPARAM
-    (13) dtypes -> . TYPE_1PARAM LPAREN NUMBER RPAREN
+    (14) dtypeSolo -> DTYPE_SOLO .
 
-    TYPE_NOPARAM    shift and go to state 22
-    TYPE_1PARAM     shift and go to state 20
+    COMMA           reduce using rule 14 (dtypeSolo -> DTYPE_SOLO .)
+    RPAREN          reduce using rule 14 (dtypeSolo -> DTYPE_SOLO .)
+    NOT             reduce using rule 14 (dtypeSolo -> DTYPE_SOLO .)
+    NULL            reduce using rule 14 (dtypeSolo -> DTYPE_SOLO .)
+    UNIQUE          reduce using rule 14 (dtypeSolo -> DTYPE_SOLO .)
 
-    dtypes                         shift and go to state 21
 
 state 13
 
-    (10) attributeName -> DOUBLE_COLON IDENTIFIER . endline
-    (24) endline -> . EOL extraEndline
+    (19) dtypeTwopart -> DTYPE_PART1 . DTYPE_PART2
 
-    EOL             shift and go to state 24
+    DTYPE_PART2     shift and go to state 25
 
-    endline                        shift and go to state 23
 
 state 14
 
-    (6) moreAttributes -> empty .
+    (13) dtypes -> dtypeTwopart .
 
-    DOUBLE_COLON    reduce using rule 6 (moreAttributes -> empty .)
-    TABLE           reduce using rule 6 (moreAttributes -> empty .)
-    $end            reduce using rule 6 (moreAttributes -> empty .)
+    COMMA           reduce using rule 13 (dtypes -> dtypeTwopart .)
+    RPAREN          reduce using rule 13 (dtypes -> dtypeTwopart .)
+    NOT             reduce using rule 13 (dtypes -> dtypeTwopart .)
+    NULL            reduce using rule 13 (dtypes -> dtypeTwopart .)
+    UNIQUE          reduce using rule 13 (dtypes -> dtypeTwopart .)
 
 
 state 15
 
-    (4) tableBlock -> tableHeader attributeBlock moreAttributes .
-    (5) moreAttributes -> moreAttributes . attributeBlock
-    (8) attributeBlock -> . attributeName dataType fillMethod
-    (9) attributeBlock -> . attributeName dataType fillMethod constraintPart
-    (10) attributeName -> . DOUBLE_COLON IDENTIFIER endline
-
-    TABLE           reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes .)
-    $end            reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes .)
-    DOUBLE_COLON    shift and go to state 6
-
-    attributeName                  shift and go to state 5
-    attributeBlock                 shift and go to state 25
-
-state 16
-
-    (2) moreBlocks -> moreBlocks tableBlock .
-
-    TABLE           reduce using rule 2 (moreBlocks -> moreBlocks tableBlock .)
-    $end            reduce using rule 2 (moreBlocks -> moreBlocks tableBlock .)
-
-
-state 17
-
-    (7) tableHeader -> TABLE COLON IDENTIFIER . LPAREN NUMBER RPAREN endline
+    (17) dtypeSolo -> DTYPE_SOLO_1PARAM2 . LPAREN parameter COMMA parameter RPAREN
 
     LPAREN          shift and go to state 26
 
 
-state 18
+state 16
 
-    (8) attributeBlock -> attributeName dataType fillMethod .
-    (9) attributeBlock -> attributeName dataType fillMethod . constraintPart
-    (16) constraintPart -> . CONSTRAINT CONSTR_NOPARAM endline
-    (17) constraintPart -> . CONSTRAINT CONSTR_1PARAM LPAREN NUMBER RPAREN endline
+    (12) dtypes -> dtypeSolo .
 
-    DOUBLE_COLON    reduce using rule 8 (attributeBlock -> attributeName dataType fillMethod .)
-    TABLE           reduce using rule 8 (attributeBlock -> attributeName dataType fillMethod .)
-    $end            reduce using rule 8 (attributeBlock -> attributeName dataType fillMethod .)
-    CONSTRAINT      shift and go to state 28
+    COMMA           reduce using rule 12 (dtypes -> dtypeSolo .)
+    RPAREN          reduce using rule 12 (dtypes -> dtypeSolo .)
+    NOT             reduce using rule 12 (dtypes -> dtypeSolo .)
+    NULL            reduce using rule 12 (dtypes -> dtypeSolo .)
+    UNIQUE          reduce using rule 12 (dtypes -> dtypeSolo .)
+
+
+state 17
+
+    (8) attributeBlock -> IDENTIFIER dtypes . COMMA
+    (9) attributeBlock -> IDENTIFIER dtypes . constraintPart COMMA
+    (10) attributeBlock -> IDENTIFIER dtypes . RPAREN
+    (11) attributeBlock -> IDENTIFIER dtypes . constraintPart RPAREN
+    (21) constraintPart -> . constraintPart constraints
+    (22) constraintPart -> . empty
+    (39) empty -> .
+
+  ! shift/reduce conflict for COMMA resolved as shift
+  ! shift/reduce conflict for RPAREN resolved as shift
+    COMMA           shift and go to state 29
+    RPAREN          shift and go to state 28
+    NOT             reduce using rule 39 (empty -> .)
+    NULL            reduce using rule 39 (empty -> .)
+    UNIQUE          reduce using rule 39 (empty -> .)
+
+  ! COMMA           [ reduce using rule 39 (empty -> .) ]
+  ! RPAREN          [ reduce using rule 39 (empty -> .) ]
 
     constraintPart                 shift and go to state 27
+    empty                          shift and go to state 30
+
+state 18
+
+    (15) dtypeSolo -> DTYPE_BOTH_1PARAM .
+    (16) dtypeSolo -> DTYPE_BOTH_1PARAM . LPAREN parameter RPAREN
+    (18) dtypeTwopart -> DTYPE_BOTH_1PARAM . DTYPE_PART2
+    (20) dtypeTwopart -> DTYPE_BOTH_1PARAM . DTYPE_PART2 LPAREN parameter RPAREN
+
+    COMMA           reduce using rule 15 (dtypeSolo -> DTYPE_BOTH_1PARAM .)
+    RPAREN          reduce using rule 15 (dtypeSolo -> DTYPE_BOTH_1PARAM .)
+    NOT             reduce using rule 15 (dtypeSolo -> DTYPE_BOTH_1PARAM .)
+    NULL            reduce using rule 15 (dtypeSolo -> DTYPE_BOTH_1PARAM .)
+    UNIQUE          reduce using rule 15 (dtypeSolo -> DTYPE_BOTH_1PARAM .)
+    LPAREN          shift and go to state 32
+    DTYPE_PART2     shift and go to state 31
+
 
 state 19
 
-    (14) fillMethod -> FILL . FILL_METHOD_NOPARAM LPAREN RPAREN endline
-    (15) fillMethod -> FILL . FILL_METHOD_1PARAM LPAREN parameter RPAREN endline
+    (1) root -> tableBlock moreBlocks moreAlterBlocks .
+    (27) moreAlterBlocks -> moreAlterBlocks . alterBlock
+    (29) alterBlock -> . alterHeader alterBody SEMICOLON
+    (30) alterHeader -> . ALTER TABLE ONLY IDENTIFIER
 
-    FILL_METHOD_NOPARAM shift and go to state 30
-    FILL_METHOD_1PARAM shift and go to state 29
+    $end            reduce using rule 1 (root -> tableBlock moreBlocks moreAlterBlocks .)
+    ALTER           shift and go to state 35
 
+    alterHeader                    shift and go to state 33
+    alterBlock                     shift and go to state 34
 
 state 20
 
-    (13) dtypes -> TYPE_1PARAM . LPAREN NUMBER RPAREN
+    (2) moreBlocks -> moreBlocks tableBlock .
 
-    LPAREN          shift and go to state 31
+    CREATE          reduce using rule 2 (moreBlocks -> moreBlocks tableBlock .)
+    ALTER           reduce using rule 2 (moreBlocks -> moreBlocks tableBlock .)
+    $end            reduce using rule 2 (moreBlocks -> moreBlocks tableBlock .)
 
 
 state 21
 
-    (11) dataType -> TYPE dtypes . endline
-    (24) endline -> . EOL extraEndline
+    (28) moreAlterBlocks -> empty .
 
-    EOL             shift and go to state 24
+    ALTER           reduce using rule 28 (moreAlterBlocks -> empty .)
+    $end            reduce using rule 28 (moreAlterBlocks -> empty .)
 
-    endline                        shift and go to state 32
 
 state 22
 
-    (12) dtypes -> TYPE_NOPARAM .
+    (7) tableHeader -> CREATE TABLE IDENTIFIER . LPAREN
 
-    EOL             reduce using rule 12 (dtypes -> TYPE_NOPARAM .)
+    LPAREN          shift and go to state 36
 
 
 state 23
 
-    (10) attributeName -> DOUBLE_COLON IDENTIFIER endline .
+    (4) tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON .
 
-    TYPE            reduce using rule 10 (attributeName -> DOUBLE_COLON IDENTIFIER endline .)
+    CREATE          reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON .)
+    ALTER           reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON .)
+    $end            reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON .)
 
 
 state 24
 
-    (24) endline -> EOL . extraEndline
-    (25) extraEndline -> . EOL extraEndline
-    (26) extraEndline -> . empty
-    (27) empty -> .
+    (5) moreAttributes -> moreAttributes attributeBlock .
 
-    EOL             shift and go to state 35
-    TYPE            reduce using rule 27 (empty -> .)
-    FILL            reduce using rule 27 (empty -> .)
-    DOUBLE_COLON    reduce using rule 27 (empty -> .)
-    TABLE           reduce using rule 27 (empty -> .)
-    $end            reduce using rule 27 (empty -> .)
-    CONSTRAINT      reduce using rule 27 (empty -> .)
+    SEMICOLON       reduce using rule 5 (moreAttributes -> moreAttributes attributeBlock .)
+    IDENTIFIER      reduce using rule 5 (moreAttributes -> moreAttributes attributeBlock .)
 
-    empty                          shift and go to state 34
-    extraEndline                   shift and go to state 33
 
 state 25
 
-    (5) moreAttributes -> moreAttributes attributeBlock .
+    (19) dtypeTwopart -> DTYPE_PART1 DTYPE_PART2 .
 
-    DOUBLE_COLON    reduce using rule 5 (moreAttributes -> moreAttributes attributeBlock .)
-    TABLE           reduce using rule 5 (moreAttributes -> moreAttributes attributeBlock .)
-    $end            reduce using rule 5 (moreAttributes -> moreAttributes attributeBlock .)
+    COMMA           reduce using rule 19 (dtypeTwopart -> DTYPE_PART1 DTYPE_PART2 .)
+    RPAREN          reduce using rule 19 (dtypeTwopart -> DTYPE_PART1 DTYPE_PART2 .)
+    NOT             reduce using rule 19 (dtypeTwopart -> DTYPE_PART1 DTYPE_PART2 .)
+    NULL            reduce using rule 19 (dtypeTwopart -> DTYPE_PART1 DTYPE_PART2 .)
+    UNIQUE          reduce using rule 19 (dtypeTwopart -> DTYPE_PART1 DTYPE_PART2 .)
 
 
 state 26
 
-    (7) tableHeader -> TABLE COLON IDENTIFIER LPAREN . NUMBER RPAREN endline
+    (17) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN . parameter COMMA parameter RPAREN
+    (26) parameter -> . NUMBER
 
-    NUMBER          shift and go to state 36
+    NUMBER          shift and go to state 37
 
+    parameter                      shift and go to state 38
 
 state 27
 
-    (9) attributeBlock -> attributeName dataType fillMethod constraintPart .
+    (9) attributeBlock -> IDENTIFIER dtypes constraintPart . COMMA
+    (11) attributeBlock -> IDENTIFIER dtypes constraintPart . RPAREN
+    (21) constraintPart -> constraintPart . constraints
+    (23) constraints -> . NOT NULL
+    (24) constraints -> . NULL
+    (25) constraints -> . UNIQUE
 
-    DOUBLE_COLON    reduce using rule 9 (attributeBlock -> attributeName dataType fillMethod constraintPart .)
-    TABLE           reduce using rule 9 (attributeBlock -> attributeName dataType fillMethod constraintPart .)
-    $end            reduce using rule 9 (attributeBlock -> attributeName dataType fillMethod constraintPart .)
+    COMMA           shift and go to state 42
+    RPAREN          shift and go to state 41
+    NOT             shift and go to state 43
+    NULL            shift and go to state 40
+    UNIQUE          shift and go to state 39
 
+    constraints                    shift and go to state 44
 
 state 28
 
-    (16) constraintPart -> CONSTRAINT . CONSTR_NOPARAM endline
-    (17) constraintPart -> CONSTRAINT . CONSTR_1PARAM LPAREN NUMBER RPAREN endline
+    (10) attributeBlock -> IDENTIFIER dtypes RPAREN .
 
-    CONSTR_NOPARAM  shift and go to state 38
-    CONSTR_1PARAM   shift and go to state 37
+    SEMICOLON       reduce using rule 10 (attributeBlock -> IDENTIFIER dtypes RPAREN .)
+    IDENTIFIER      reduce using rule 10 (attributeBlock -> IDENTIFIER dtypes RPAREN .)
 
 
 state 29
 
-    (15) fillMethod -> FILL FILL_METHOD_1PARAM . LPAREN parameter RPAREN endline
+    (8) attributeBlock -> IDENTIFIER dtypes COMMA .
 
-    LPAREN          shift and go to state 39
+    SEMICOLON       reduce using rule 8 (attributeBlock -> IDENTIFIER dtypes COMMA .)
+    IDENTIFIER      reduce using rule 8 (attributeBlock -> IDENTIFIER dtypes COMMA .)
 
 
 state 30
 
-    (14) fillMethod -> FILL FILL_METHOD_NOPARAM . LPAREN RPAREN endline
+    (22) constraintPart -> empty .
 
-    LPAREN          shift and go to state 40
+    COMMA           reduce using rule 22 (constraintPart -> empty .)
+    RPAREN          reduce using rule 22 (constraintPart -> empty .)
+    NOT             reduce using rule 22 (constraintPart -> empty .)
+    NULL            reduce using rule 22 (constraintPart -> empty .)
+    UNIQUE          reduce using rule 22 (constraintPart -> empty .)
 
 
 state 31
 
-    (13) dtypes -> TYPE_1PARAM LPAREN . NUMBER RPAREN
+    (18) dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 .
+    (20) dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 . LPAREN parameter RPAREN
 
-    NUMBER          shift and go to state 41
+    COMMA           reduce using rule 18 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 .)
+    RPAREN          reduce using rule 18 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 .)
+    NOT             reduce using rule 18 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 .)
+    NULL            reduce using rule 18 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 .)
+    UNIQUE          reduce using rule 18 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 .)
+    LPAREN          shift and go to state 45
 
 
 state 32
 
-    (11) dataType -> TYPE dtypes endline .
+    (16) dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN . parameter RPAREN
+    (26) parameter -> . NUMBER
 
-    FILL            reduce using rule 11 (dataType -> TYPE dtypes endline .)
+    NUMBER          shift and go to state 37
 
+    parameter                      shift and go to state 46
 
 state 33
 
-    (24) endline -> EOL extraEndline .
+    (29) alterBlock -> alterHeader . alterBody SEMICOLON
+    (31) alterBody -> . ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
+    (32) alterBody -> . ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (33) alterBody -> . multi_attr_constr
+    (34) multi_attr_constr -> . ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
 
-    CONSTRAINT      reduce using rule 24 (endline -> EOL extraEndline .)
-    DOUBLE_COLON    reduce using rule 24 (endline -> EOL extraEndline .)
-    TABLE           reduce using rule 24 (endline -> EOL extraEndline .)
-    $end            reduce using rule 24 (endline -> EOL extraEndline .)
-    FILL            reduce using rule 24 (endline -> EOL extraEndline .)
-    TYPE            reduce using rule 24 (endline -> EOL extraEndline .)
+    ADD             shift and go to state 47
 
+    alterBody                      shift and go to state 48
+    multi_attr_constr              shift and go to state 49
 
 state 34
 
-    (26) extraEndline -> empty .
+    (27) moreAlterBlocks -> moreAlterBlocks alterBlock .
 
-    TYPE            reduce using rule 26 (extraEndline -> empty .)
-    FILL            reduce using rule 26 (extraEndline -> empty .)
-    DOUBLE_COLON    reduce using rule 26 (extraEndline -> empty .)
-    TABLE           reduce using rule 26 (extraEndline -> empty .)
-    $end            reduce using rule 26 (extraEndline -> empty .)
-    CONSTRAINT      reduce using rule 26 (extraEndline -> empty .)
+    ALTER           reduce using rule 27 (moreAlterBlocks -> moreAlterBlocks alterBlock .)
+    $end            reduce using rule 27 (moreAlterBlocks -> moreAlterBlocks alterBlock .)
 
 
 state 35
 
-    (25) extraEndline -> EOL . extraEndline
-    (25) extraEndline -> . EOL extraEndline
-    (26) extraEndline -> . empty
-    (27) empty -> .
+    (30) alterHeader -> ALTER . TABLE ONLY IDENTIFIER
 
-    EOL             shift and go to state 35
-    TYPE            reduce using rule 27 (empty -> .)
-    FILL            reduce using rule 27 (empty -> .)
-    DOUBLE_COLON    reduce using rule 27 (empty -> .)
-    TABLE           reduce using rule 27 (empty -> .)
-    $end            reduce using rule 27 (empty -> .)
-    CONSTRAINT      reduce using rule 27 (empty -> .)
+    TABLE           shift and go to state 50
 
-    empty                          shift and go to state 34
-    extraEndline                   shift and go to state 42
 
 state 36
 
-    (7) tableHeader -> TABLE COLON IDENTIFIER LPAREN NUMBER . RPAREN endline
+    (7) tableHeader -> CREATE TABLE IDENTIFIER LPAREN .
 
-    RPAREN          shift and go to state 43
+    IDENTIFIER      reduce using rule 7 (tableHeader -> CREATE TABLE IDENTIFIER LPAREN .)
 
 
 state 37
 
-    (17) constraintPart -> CONSTRAINT CONSTR_1PARAM . LPAREN NUMBER RPAREN endline
+    (26) parameter -> NUMBER .
 
-    LPAREN          shift and go to state 44
+    RPAREN          reduce using rule 26 (parameter -> NUMBER .)
+    COMMA           reduce using rule 26 (parameter -> NUMBER .)
 
 
 state 38
 
-    (16) constraintPart -> CONSTRAINT CONSTR_NOPARAM . endline
-    (24) endline -> . EOL extraEndline
+    (17) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter . COMMA parameter RPAREN
 
-    EOL             shift and go to state 24
+    COMMA           shift and go to state 51
 
-    endline                        shift and go to state 45
 
 state 39
 
-    (15) fillMethod -> FILL FILL_METHOD_1PARAM LPAREN . parameter RPAREN endline
-    (20) parameter -> . PATH
-    (21) parameter -> . REGEX
-    (22) parameter -> . IDENTIFIER
-    (23) parameter -> . IDENTIFIER COLON IDENTIFIER
+    (25) constraints -> UNIQUE .
 
-    PATH            shift and go to state 47
-    REGEX           shift and go to state 46
-    IDENTIFIER      shift and go to state 48
+    COMMA           reduce using rule 25 (constraints -> UNIQUE .)
+    RPAREN          reduce using rule 25 (constraints -> UNIQUE .)
+    NOT             reduce using rule 25 (constraints -> UNIQUE .)
+    NULL            reduce using rule 25 (constraints -> UNIQUE .)
+    UNIQUE          reduce using rule 25 (constraints -> UNIQUE .)
 
-    parameter                      shift and go to state 49
 
 state 40
 
-    (14) fillMethod -> FILL FILL_METHOD_NOPARAM LPAREN . RPAREN endline
+    (24) constraints -> NULL .
 
-    RPAREN          shift and go to state 50
+    COMMA           reduce using rule 24 (constraints -> NULL .)
+    RPAREN          reduce using rule 24 (constraints -> NULL .)
+    NOT             reduce using rule 24 (constraints -> NULL .)
+    NULL            reduce using rule 24 (constraints -> NULL .)
+    UNIQUE          reduce using rule 24 (constraints -> NULL .)
 
 
 state 41
 
-    (13) dtypes -> TYPE_1PARAM LPAREN NUMBER . RPAREN
+    (11) attributeBlock -> IDENTIFIER dtypes constraintPart RPAREN .
 
-    RPAREN          shift and go to state 51
+    SEMICOLON       reduce using rule 11 (attributeBlock -> IDENTIFIER dtypes constraintPart RPAREN .)
+    IDENTIFIER      reduce using rule 11 (attributeBlock -> IDENTIFIER dtypes constraintPart RPAREN .)
 
 
 state 42
 
-    (25) extraEndline -> EOL extraEndline .
+    (9) attributeBlock -> IDENTIFIER dtypes constraintPart COMMA .
 
-    TYPE            reduce using rule 25 (extraEndline -> EOL extraEndline .)
-    FILL            reduce using rule 25 (extraEndline -> EOL extraEndline .)
-    DOUBLE_COLON    reduce using rule 25 (extraEndline -> EOL extraEndline .)
-    TABLE           reduce using rule 25 (extraEndline -> EOL extraEndline .)
-    $end            reduce using rule 25 (extraEndline -> EOL extraEndline .)
-    CONSTRAINT      reduce using rule 25 (extraEndline -> EOL extraEndline .)
+    SEMICOLON       reduce using rule 9 (attributeBlock -> IDENTIFIER dtypes constraintPart COMMA .)
+    IDENTIFIER      reduce using rule 9 (attributeBlock -> IDENTIFIER dtypes constraintPart COMMA .)
 
 
 state 43
 
-    (7) tableHeader -> TABLE COLON IDENTIFIER LPAREN NUMBER RPAREN . endline
-    (24) endline -> . EOL extraEndline
+    (23) constraints -> NOT . NULL
 
-    EOL             shift and go to state 24
+    NULL            shift and go to state 52
 
-    endline                        shift and go to state 52
 
 state 44
 
-    (17) constraintPart -> CONSTRAINT CONSTR_1PARAM LPAREN . NUMBER RPAREN endline
+    (21) constraintPart -> constraintPart constraints .
 
-    NUMBER          shift and go to state 53
+    COMMA           reduce using rule 21 (constraintPart -> constraintPart constraints .)
+    RPAREN          reduce using rule 21 (constraintPart -> constraintPart constraints .)
+    NOT             reduce using rule 21 (constraintPart -> constraintPart constraints .)
+    NULL            reduce using rule 21 (constraintPart -> constraintPart constraints .)
+    UNIQUE          reduce using rule 21 (constraintPart -> constraintPart constraints .)
 
 
 state 45
 
-    (16) constraintPart -> CONSTRAINT CONSTR_NOPARAM endline .
+    (20) dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN . parameter RPAREN
+    (26) parameter -> . NUMBER
 
-    DOUBLE_COLON    reduce using rule 16 (constraintPart -> CONSTRAINT CONSTR_NOPARAM endline .)
-    TABLE           reduce using rule 16 (constraintPart -> CONSTRAINT CONSTR_NOPARAM endline .)
-    $end            reduce using rule 16 (constraintPart -> CONSTRAINT CONSTR_NOPARAM endline .)
+    NUMBER          shift and go to state 37
 
+    parameter                      shift and go to state 53
 
 state 46
 
-    (21) parameter -> REGEX .
+    (16) dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter . RPAREN
 
-    RPAREN          reduce using rule 21 (parameter -> REGEX .)
+    RPAREN          shift and go to state 54
 
 
 state 47
 
-    (20) parameter -> PATH .
+    (31) alterBody -> ADD . CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
+    (32) alterBody -> ADD . CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (34) multi_attr_constr -> ADD . CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
 
-    RPAREN          reduce using rule 20 (parameter -> PATH .)
+    CONSTRAINT      shift and go to state 55
 
 
 state 48
 
-    (22) parameter -> IDENTIFIER .
-    (23) parameter -> IDENTIFIER . COLON IDENTIFIER
+    (29) alterBlock -> alterHeader alterBody . SEMICOLON
 
-    RPAREN          reduce using rule 22 (parameter -> IDENTIFIER .)
-    COLON           shift and go to state 54
+    SEMICOLON       shift and go to state 56
 
 
 state 49
 
-    (15) fillMethod -> FILL FILL_METHOD_1PARAM LPAREN parameter . RPAREN endline
+    (33) alterBody -> multi_attr_constr .
 
-    RPAREN          shift and go to state 55
+    SEMICOLON       reduce using rule 33 (alterBody -> multi_attr_constr .)
 
 
 state 50
 
-    (14) fillMethod -> FILL FILL_METHOD_NOPARAM LPAREN RPAREN . endline
-    (24) endline -> . EOL extraEndline
+    (30) alterHeader -> ALTER TABLE . ONLY IDENTIFIER
 
-    EOL             shift and go to state 24
+    ONLY            shift and go to state 57
 
-    endline                        shift and go to state 56
 
 state 51
 
-    (13) dtypes -> TYPE_1PARAM LPAREN NUMBER RPAREN .
+    (17) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA . parameter RPAREN
+    (26) parameter -> . NUMBER
 
-    EOL             reduce using rule 13 (dtypes -> TYPE_1PARAM LPAREN NUMBER RPAREN .)
+    NUMBER          shift and go to state 37
 
+    parameter                      shift and go to state 58
 
 state 52
 
-    (7) tableHeader -> TABLE COLON IDENTIFIER LPAREN NUMBER RPAREN endline .
+    (23) constraints -> NOT NULL .
 
-    DOUBLE_COLON    reduce using rule 7 (tableHeader -> TABLE COLON IDENTIFIER LPAREN NUMBER RPAREN endline .)
+    COMMA           reduce using rule 23 (constraints -> NOT NULL .)
+    RPAREN          reduce using rule 23 (constraints -> NOT NULL .)
+    NOT             reduce using rule 23 (constraints -> NOT NULL .)
+    NULL            reduce using rule 23 (constraints -> NOT NULL .)
+    UNIQUE          reduce using rule 23 (constraints -> NOT NULL .)
 
 
 state 53
 
-    (17) constraintPart -> CONSTRAINT CONSTR_1PARAM LPAREN NUMBER . RPAREN endline
+    (20) dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter . RPAREN
 
-    RPAREN          shift and go to state 57
+    RPAREN          shift and go to state 59
 
 
 state 54
 
-    (23) parameter -> IDENTIFIER COLON . IDENTIFIER
+    (16) dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN .
 
-    IDENTIFIER      shift and go to state 58
+    COMMA           reduce using rule 16 (dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN .)
+    RPAREN          reduce using rule 16 (dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN .)
+    NOT             reduce using rule 16 (dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN .)
+    NULL            reduce using rule 16 (dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN .)
+    UNIQUE          reduce using rule 16 (dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN .)
 
 
 state 55
 
-    (15) fillMethod -> FILL FILL_METHOD_1PARAM LPAREN parameter RPAREN . endline
-    (24) endline -> . EOL extraEndline
+    (31) alterBody -> ADD CONSTRAINT . IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
+    (32) alterBody -> ADD CONSTRAINT . IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (34) multi_attr_constr -> ADD CONSTRAINT . IDENTIFIER UNIQUE LPAREN multi_params RPAREN
 
-    EOL             shift and go to state 24
+    IDENTIFIER      shift and go to state 60
 
-    endline                        shift and go to state 59
 
 state 56
 
-    (14) fillMethod -> FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline .
+    (29) alterBlock -> alterHeader alterBody SEMICOLON .
 
-    CONSTRAINT      reduce using rule 14 (fillMethod -> FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline .)
-    DOUBLE_COLON    reduce using rule 14 (fillMethod -> FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline .)
-    TABLE           reduce using rule 14 (fillMethod -> FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline .)
-    $end            reduce using rule 14 (fillMethod -> FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline .)
+    ALTER           reduce using rule 29 (alterBlock -> alterHeader alterBody SEMICOLON .)
+    $end            reduce using rule 29 (alterBlock -> alterHeader alterBody SEMICOLON .)
 
 
 state 57
 
-    (17) constraintPart -> CONSTRAINT CONSTR_1PARAM LPAREN NUMBER RPAREN . endline
-    (24) endline -> . EOL extraEndline
+    (30) alterHeader -> ALTER TABLE ONLY . IDENTIFIER
 
-    EOL             shift and go to state 24
+    IDENTIFIER      shift and go to state 61
 
-    endline                        shift and go to state 60
 
 state 58
 
-    (23) parameter -> IDENTIFIER COLON IDENTIFIER .
+    (17) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter . RPAREN
 
-    RPAREN          reduce using rule 23 (parameter -> IDENTIFIER COLON IDENTIFIER .)
+    RPAREN          shift and go to state 62
 
 
 state 59
 
-    (15) fillMethod -> FILL FILL_METHOD_1PARAM LPAREN parameter RPAREN endline .
+    (20) dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN .
 
-    CONSTRAINT      reduce using rule 15 (fillMethod -> FILL FILL_METHOD_1PARAM LPAREN parameter RPAREN endline .)
-    DOUBLE_COLON    reduce using rule 15 (fillMethod -> FILL FILL_METHOD_1PARAM LPAREN parameter RPAREN endline .)
-    TABLE           reduce using rule 15 (fillMethod -> FILL FILL_METHOD_1PARAM LPAREN parameter RPAREN endline .)
-    $end            reduce using rule 15 (fillMethod -> FILL FILL_METHOD_1PARAM LPAREN parameter RPAREN endline .)
+    COMMA           reduce using rule 20 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN .)
+    RPAREN          reduce using rule 20 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN .)
+    NOT             reduce using rule 20 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN .)
+    NULL            reduce using rule 20 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN .)
+    UNIQUE          reduce using rule 20 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN .)
 
 
 state 60
 
-    (17) constraintPart -> CONSTRAINT CONSTR_1PARAM LPAREN NUMBER RPAREN endline .
+    (31) alterBody -> ADD CONSTRAINT IDENTIFIER . PRIMARY KEY LPAREN IDENTIFIER RPAREN
+    (32) alterBody -> ADD CONSTRAINT IDENTIFIER . FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (34) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER . UNIQUE LPAREN multi_params RPAREN
 
-    DOUBLE_COLON    reduce using rule 17 (constraintPart -> CONSTRAINT CONSTR_1PARAM LPAREN NUMBER RPAREN endline .)
-    TABLE           reduce using rule 17 (constraintPart -> CONSTRAINT CONSTR_1PARAM LPAREN NUMBER RPAREN endline .)
-    $end            reduce using rule 17 (constraintPart -> CONSTRAINT CONSTR_1PARAM LPAREN NUMBER RPAREN endline .)
+    PRIMARY         shift and go to state 64
+    FOREIGN         shift and go to state 65
+    UNIQUE          shift and go to state 63
 
+
+state 61
+
+    (30) alterHeader -> ALTER TABLE ONLY IDENTIFIER .
+
+    ADD             reduce using rule 30 (alterHeader -> ALTER TABLE ONLY IDENTIFIER .)
+
+
+state 62
+
+    (17) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN .
+
+    COMMA           reduce using rule 17 (dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN .)
+    RPAREN          reduce using rule 17 (dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN .)
+    NOT             reduce using rule 17 (dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN .)
+    NULL            reduce using rule 17 (dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN .)
+    UNIQUE          reduce using rule 17 (dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN .)
+
+
+state 63
+
+    (34) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE . LPAREN multi_params RPAREN
+
+    LPAREN          shift and go to state 66
+
+
+state 64
+
+    (31) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY . KEY LPAREN IDENTIFIER RPAREN
+
+    KEY             shift and go to state 67
+
+
+state 65
+
+    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN . KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+
+    KEY             shift and go to state 68
+
+
+state 66
+
+    (34) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN . multi_params RPAREN
+    (35) multi_params -> . multi_params multi_1param
+    (36) multi_params -> . empty
+    (39) empty -> .
+
+    RPAREN          reduce using rule 39 (empty -> .)
+    IDENTIFIER      reduce using rule 39 (empty -> .)
+
+    multi_params                   shift and go to state 69
+    empty                          shift and go to state 70
+
+state 67
+
+    (31) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY . LPAREN IDENTIFIER RPAREN
+
+    LPAREN          shift and go to state 71
+
+
+state 68
+
+    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY . LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+
+    LPAREN          shift and go to state 72
+
+
+state 69
+
+    (34) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params . RPAREN
+    (35) multi_params -> multi_params . multi_1param
+    (37) multi_1param -> . IDENTIFIER COMMA
+    (38) multi_1param -> . IDENTIFIER
+
+    RPAREN          shift and go to state 74
+    IDENTIFIER      shift and go to state 73
+
+    multi_1param                   shift and go to state 75
+
+state 70
+
+    (36) multi_params -> empty .
+
+    RPAREN          reduce using rule 36 (multi_params -> empty .)
+    IDENTIFIER      reduce using rule 36 (multi_params -> empty .)
+
+
+state 71
+
+    (31) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN . IDENTIFIER RPAREN
+
+    IDENTIFIER      shift and go to state 76
+
+
+state 72
+
+    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN . IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+
+    IDENTIFIER      shift and go to state 77
+
+
+state 73
+
+    (37) multi_1param -> IDENTIFIER . COMMA
+    (38) multi_1param -> IDENTIFIER .
+
+    COMMA           shift and go to state 78
+    RPAREN          reduce using rule 38 (multi_1param -> IDENTIFIER .)
+    IDENTIFIER      reduce using rule 38 (multi_1param -> IDENTIFIER .)
+
+
+state 74
+
+    (34) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN .
+
+    SEMICOLON       reduce using rule 34 (multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN .)
+
+
+state 75
+
+    (35) multi_params -> multi_params multi_1param .
+
+    RPAREN          reduce using rule 35 (multi_params -> multi_params multi_1param .)
+    IDENTIFIER      reduce using rule 35 (multi_params -> multi_params multi_1param .)
+
+
+state 76
+
+    (31) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER . RPAREN
+
+    RPAREN          shift and go to state 79
+
+
+state 77
+
+    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER . RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+
+    RPAREN          shift and go to state 80
+
+
+state 78
+
+    (37) multi_1param -> IDENTIFIER COMMA .
+
+    RPAREN          reduce using rule 37 (multi_1param -> IDENTIFIER COMMA .)
+    IDENTIFIER      reduce using rule 37 (multi_1param -> IDENTIFIER COMMA .)
+
+
+state 79
+
+    (31) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN .
+
+    SEMICOLON       reduce using rule 31 (alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN .)
+
+
+state 80
+
+    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN . REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+
+    REFERENCES      shift and go to state 81
+
+
+state 81
+
+    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES . IDENTIFIER LPAREN IDENTIFIER RPAREN
+
+    IDENTIFIER      shift and go to state 82
+
+
+state 82
+
+    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER . LPAREN IDENTIFIER RPAREN
+
+    LPAREN          shift and go to state 83
+
+
+state 83
+
+    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN . IDENTIFIER RPAREN
+
+    IDENTIFIER      shift and go to state 84
+
+
+state 84
+
+    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER . RPAREN
+
+    RPAREN          shift and go to state 85
+
+
+state 85
+
+    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN .
+
+    SEMICOLON       reduce using rule 32 (alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN .)
+
+WARNING: 
+WARNING: Conflicts:
+WARNING: 
+WARNING: shift/reduce conflict for COMMA in state 17 resolved as shift
+WARNING: shift/reduce conflict for RPAREN in state 17 resolved as shift
