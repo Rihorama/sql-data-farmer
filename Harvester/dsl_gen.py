@@ -10,10 +10,19 @@ NULL_FILL = 20
 
 DTYPE_DICT = {
     'bigint' : 'BIGINT',
+    'bit' : 'BIT',
+    'bit varying' : 'VARBIT',
     'boolean' : 'BOOL',
+    'box' : 'BOX',
     'character varying' : 'VARCHAR',
     'character' : 'CHAR',
+    'circle' : 'CIRCLE',
     'integer' : 'INT',
+    #'line' : 'LINE',
+    'lseg' : 'LSEG',
+    'path' : 'PATH',
+    'point' : 'POINT',
+    'polygon' : 'POLYGON',
     'smallint' : 'SMALLINT',
     'text' : 'TEXT',
     }

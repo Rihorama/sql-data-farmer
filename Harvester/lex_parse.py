@@ -29,6 +29,9 @@ param_list = []
 alter_table = None
 alter_attr = None
 
+TO_ADD = ['character varying','bit varying'] 
+ADD_VAL = 8          #number to be a generic parameter for types stated above
+
 
 #error flag
 err = False
@@ -98,8 +101,8 @@ def sql_parser(f):
         'precision' : 'DTYPE_PART2',
         'inet' : 'DTYPE_SOLO',
         'integer' : 'DTYPE_SOLO',
-        'interval' : 'DTYPE_2PARAM',    #2PARAM: two mandatory parameters
-        'line' : 'DTYPE_SOLO',
+        'interval' : 'DTYPE_2PARAM',    #2PARAM: two ??mandatory parameters
+        #'line' : 'DTYPE_SOLO',
         'lseg' : 'DTYPE_SOLO',
         'macaddr' : 'DTYPE_SOLO',
         'money' : 'DTYPE_SOLO',
@@ -304,6 +307,12 @@ def sql_parser(f):
         
         if len(p) == 6:   #variant: DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN
             param_list.append(p[4])
+        
+        
+        global TO_ADD   
+        global ADD_VAL
+        if p[0] in TO_ADD:                #we will add parameter for filling purposes
+            param_list.append(ADD_VAL)    #-> varchar(8) and varbit(8)
     
     
     

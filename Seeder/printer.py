@@ -9,6 +9,7 @@ ERRCODE = {
     "SYNTACTIC" : 3,
     "SEMANTIC" : 4,
     "RUNTIME" : 5,
+    "INTERNAL" : 6,
     }
           
 

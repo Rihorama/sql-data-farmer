@@ -87,9 +87,10 @@ def get_values(table):
             try: 
                 exec func  #new_val = fill_method(attributes)
             except AttributeError:
-                sys.stderr.write("Internal error. Not defined fill method passed." \
-                                 "Recovery not possible, the functionality of Seeder is inconsistent from now on.\n")            
-                exit()            
+                msg = "Internal error. Trouble using '" + attr.fill_method + "' method on attribute '" \
+                      + attr.name + "', table '" + table.name + "'.\n" \
+                      + "NOTE: This may also be caused by a non existing method inserted.\n"
+                errprint(msg, ERRCODE["INTERNAL"])            
         
         
         #fk solved separately, rest must be solved here
@@ -118,7 +119,9 @@ def get_values(table):
         values = values + str(new_val) + ", "     #concatenates the new value with the rest and divides with a ','
         
         if attr.fk_pointed or attr.unique:        #we will need these values either for filling foreign key attributes
-            attr.values_list.append(new_val)      #or to make sure each inserted value is unique        
+            attr.values_list.append(new_val)      #or to make sure each inserted value is unique   
+            
+            
         
     values = values[:-2]       #removes the ',' from the end of the string once we end
     
@@ -154,8 +157,9 @@ def table_filler(table):
         values = get_values(table)
         string = "INSERT INTO " + table.name + "\n" + "VALUES (" + values + ");\n"
         print string
+        textbank_close(table)  #closes the file if it's opened
         
-    textbank_close()  #closes the file if it's opened
+    
     table.solved = True
     return False                 #no problems with this table
     

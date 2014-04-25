@@ -56,3 +56,7 @@ class Attribute:
         
         self.values_list = []           #this will store all values used for filling if neccessary
         
+        self.textbank_fd = None         #if filled using a textbank, the file descriptor will be stored here
+        self.textbank_open = False
+        self.textbank_linecnt = 0
+        
