@@ -2,8 +2,8 @@ Created by PLY version 3.4 (http://www.dabeaz.com/ply)
 
 Unused terminals:
 
-    EOL
     DTYPE_2PARAM
+    EOL
     DTYPE_1PARAM
 
 Grammar
@@ -12,7 +12,7 @@ Rule 0     S' -> root
 Rule 1     root -> tableBlock moreBlocks moreAlterBlocks
 Rule 2     moreBlocks -> moreBlocks tableBlock
 Rule 3     moreBlocks -> empty
-Rule 4     tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON
+Rule 4     tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON moreSequenceBlocks
 Rule 5     moreAttributes -> moreAttributes attributeBlock
 Rule 6     moreAttributes -> empty
 Rule 7     tableHeader -> CREATE TABLE IDENTIFIER LPAREN
@@ -35,26 +35,30 @@ Rule 23    constraints -> NOT NULL
 Rule 24    constraints -> NULL
 Rule 25    constraints -> UNIQUE
 Rule 26    parameter -> NUMBER
-Rule 27    moreAlterBlocks -> moreAlterBlocks alterBlock
-Rule 28    moreAlterBlocks -> empty
-Rule 29    alterBlock -> alterHeader alterBody SEMICOLON
-Rule 30    alterHeader -> ALTER TABLE ONLY IDENTIFIER
-Rule 31    alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
-Rule 32    alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-Rule 33    alterBody -> multi_attr_constr
-Rule 34    multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
-Rule 35    multi_params -> multi_params multi_1param
-Rule 36    multi_params -> empty
-Rule 37    multi_1param -> IDENTIFIER COMMA
-Rule 38    multi_1param -> IDENTIFIER
-Rule 39    empty -> <empty>
+Rule 27    moreSequenceBlocks -> moreSequenceBlocks sequenceBlock
+Rule 28    moreSequenceBlocks -> empty
+Rule 29    sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
+Rule 30    moreAlterBlocks -> moreAlterBlocks alterBlock
+Rule 31    moreAlterBlocks -> empty
+Rule 32    alterBlock -> alterHeader alterBody SEMICOLON
+Rule 33    alterHeader -> ALTER TABLE ONLY IDENTIFIER
+Rule 34    alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
+Rule 35    alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+Rule 36    alterBody -> multi_attr_constr
+Rule 37    multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
+Rule 38    multi_params -> multi_params multi_1param
+Rule 39    multi_params -> empty
+Rule 40    multi_1param -> IDENTIFIER COMMA
+Rule 41    multi_1param -> IDENTIFIER
+Rule 42    empty -> <empty>
 
 Terminals, with rules where they appear
 
-ADD                  : 31 32 34
-ALTER                : 30
-COMMA                : 8 9 17 37
-CONSTRAINT           : 31 32 34
+ADD                  : 34 35 37
+ALTER                : 33
+BY                   : 29
+COMMA                : 8 9 17 40
+CONSTRAINT           : 34 35 37
 CREATE               : 7
 DTYPE_1PARAM         : 
 DTYPE_2PARAM         : 
@@ -64,42 +68,47 @@ DTYPE_PART2          : 18 19 20
 DTYPE_SOLO           : 14
 DTYPE_SOLO_1PARAM2   : 17
 EOL                  : 
-FOREIGN              : 32
-IDENTIFIER           : 7 8 9 10 11 30 31 31 32 32 32 32 34 37 38
-KEY                  : 31 32
-LPAREN               : 7 16 17 20 31 32 32 34
+FOREIGN              : 35
+IDENTIFIER           : 7 8 9 10 11 29 29 29 33 34 34 35 35 35 35 37 40 41
+KEY                  : 34 35
+LPAREN               : 7 16 17 20 34 35 35 37
 NOT                  : 23
 NULL                 : 23 24
 NUMBER               : 26
-ONLY                 : 30
-PRIMARY              : 31
-REFERENCES           : 32
-RPAREN               : 10 11 16 17 20 31 32 32 34
-SEMICOLON            : 4 29
-TABLE                : 7 30
-UNIQUE               : 25 34
+ONLY                 : 33
+OWNED                : 29
+PERIOD               : 29
+PRIMARY              : 34
+REFERENCES           : 35
+RPAREN               : 10 11 16 17 20 34 35 35 37
+SEMICOLON            : 4 29 32
+SEQUENCE             : 29
+TABLE                : 7 33
+UNIQUE               : 25 37
 error                : 
 
 Nonterminals, with rules where they appear
 
-alterBlock           : 27
-alterBody            : 29
-alterHeader          : 29
+alterBlock           : 30
+alterBody            : 32
+alterHeader          : 32
 attributeBlock       : 4 5
 constraintPart       : 9 11 21
 constraints          : 21
 dtypeSolo            : 12
 dtypeTwopart         : 13
 dtypes               : 8 9 10 11
-empty                : 3 6 22 28 36
-moreAlterBlocks      : 1 27
+empty                : 3 6 22 28 31 39
+moreAlterBlocks      : 1 30
 moreAttributes       : 4 5
 moreBlocks           : 1 2
-multi_1param         : 35
-multi_attr_constr    : 33
-multi_params         : 34 35
+moreSequenceBlocks   : 4 27
+multi_1param         : 38
+multi_attr_constr    : 36
+multi_params         : 37 38
 parameter            : 16 17 17 20
 root                 : 0
+sequenceBlock        : 27
 tableBlock           : 1 2
 tableHeader          : 4
 
@@ -109,7 +118,7 @@ state 0
 
     (0) S' -> . root
     (1) root -> . tableBlock moreBlocks moreAlterBlocks
-    (4) tableBlock -> . tableHeader attributeBlock moreAttributes SEMICOLON
+    (4) tableBlock -> . tableHeader attributeBlock moreAttributes SEMICOLON moreSequenceBlocks
     (7) tableHeader -> . CREATE TABLE IDENTIFIER LPAREN
 
     CREATE          shift and go to state 3
@@ -120,7 +129,7 @@ state 0
 
 state 1
 
-    (4) tableBlock -> tableHeader . attributeBlock moreAttributes SEMICOLON
+    (4) tableBlock -> tableHeader . attributeBlock moreAttributes SEMICOLON moreSequenceBlocks
     (8) attributeBlock -> . IDENTIFIER dtypes COMMA
     (9) attributeBlock -> . IDENTIFIER dtypes constraintPart COMMA
     (10) attributeBlock -> . IDENTIFIER dtypes RPAREN
@@ -135,11 +144,11 @@ state 2
     (1) root -> tableBlock . moreBlocks moreAlterBlocks
     (2) moreBlocks -> . moreBlocks tableBlock
     (3) moreBlocks -> . empty
-    (39) empty -> .
+    (42) empty -> .
 
-    CREATE          reduce using rule 39 (empty -> .)
-    ALTER           reduce using rule 39 (empty -> .)
-    $end            reduce using rule 39 (empty -> .)
+    CREATE          reduce using rule 42 (empty -> .)
+    ALTER           reduce using rule 42 (empty -> .)
+    $end            reduce using rule 42 (empty -> .)
 
     empty                          shift and go to state 7
     moreBlocks                     shift and go to state 8
@@ -159,16 +168,16 @@ state 4
 
 state 5
 
-    (4) tableBlock -> tableHeader attributeBlock . moreAttributes SEMICOLON
+    (4) tableBlock -> tableHeader attributeBlock . moreAttributes SEMICOLON moreSequenceBlocks
     (5) moreAttributes -> . moreAttributes attributeBlock
     (6) moreAttributes -> . empty
-    (39) empty -> .
+    (42) empty -> .
 
-    SEMICOLON       reduce using rule 39 (empty -> .)
-    IDENTIFIER      reduce using rule 39 (empty -> .)
+    SEMICOLON       reduce using rule 42 (empty -> .)
+    IDENTIFIER      reduce using rule 42 (empty -> .)
 
-    empty                          shift and go to state 10
-    moreAttributes                 shift and go to state 11
+    empty                          shift and go to state 11
+    moreAttributes                 shift and go to state 10
 
 state 6
 
@@ -208,14 +217,14 @@ state 8
 
     (1) root -> tableBlock moreBlocks . moreAlterBlocks
     (2) moreBlocks -> moreBlocks . tableBlock
-    (27) moreAlterBlocks -> . moreAlterBlocks alterBlock
-    (28) moreAlterBlocks -> . empty
-    (4) tableBlock -> . tableHeader attributeBlock moreAttributes SEMICOLON
-    (39) empty -> .
+    (30) moreAlterBlocks -> . moreAlterBlocks alterBlock
+    (31) moreAlterBlocks -> . empty
+    (4) tableBlock -> . tableHeader attributeBlock moreAttributes SEMICOLON moreSequenceBlocks
+    (42) empty -> .
     (7) tableHeader -> . CREATE TABLE IDENTIFIER LPAREN
 
-    ALTER           reduce using rule 39 (empty -> .)
-    $end            reduce using rule 39 (empty -> .)
+    ALTER           reduce using rule 42 (empty -> .)
+    $end            reduce using rule 42 (empty -> .)
     CREATE          shift and go to state 3
 
     tableHeader                    shift and go to state 1
@@ -232,15 +241,7 @@ state 9
 
 state 10
 
-    (6) moreAttributes -> empty .
-
-    SEMICOLON       reduce using rule 6 (moreAttributes -> empty .)
-    IDENTIFIER      reduce using rule 6 (moreAttributes -> empty .)
-
-
-state 11
-
-    (4) tableBlock -> tableHeader attributeBlock moreAttributes . SEMICOLON
+    (4) tableBlock -> tableHeader attributeBlock moreAttributes . SEMICOLON moreSequenceBlocks
     (5) moreAttributes -> moreAttributes . attributeBlock
     (8) attributeBlock -> . IDENTIFIER dtypes COMMA
     (9) attributeBlock -> . IDENTIFIER dtypes constraintPart COMMA
@@ -251,6 +252,14 @@ state 11
     IDENTIFIER      shift and go to state 6
 
     attributeBlock                 shift and go to state 24
+
+state 11
+
+    (6) moreAttributes -> empty .
+
+    SEMICOLON       reduce using rule 6 (moreAttributes -> empty .)
+    IDENTIFIER      reduce using rule 6 (moreAttributes -> empty .)
+
 
 state 12
 
@@ -307,18 +316,18 @@ state 17
     (11) attributeBlock -> IDENTIFIER dtypes . constraintPart RPAREN
     (21) constraintPart -> . constraintPart constraints
     (22) constraintPart -> . empty
-    (39) empty -> .
+    (42) empty -> .
 
   ! shift/reduce conflict for COMMA resolved as shift
   ! shift/reduce conflict for RPAREN resolved as shift
     COMMA           shift and go to state 29
     RPAREN          shift and go to state 28
-    NOT             reduce using rule 39 (empty -> .)
-    NULL            reduce using rule 39 (empty -> .)
-    UNIQUE          reduce using rule 39 (empty -> .)
+    NOT             reduce using rule 42 (empty -> .)
+    NULL            reduce using rule 42 (empty -> .)
+    UNIQUE          reduce using rule 42 (empty -> .)
 
-  ! COMMA           [ reduce using rule 39 (empty -> .) ]
-  ! RPAREN          [ reduce using rule 39 (empty -> .) ]
+  ! COMMA           [ reduce using rule 42 (empty -> .) ]
+  ! RPAREN          [ reduce using rule 42 (empty -> .) ]
 
     constraintPart                 shift and go to state 27
     empty                          shift and go to state 30
@@ -342,9 +351,9 @@ state 18
 state 19
 
     (1) root -> tableBlock moreBlocks moreAlterBlocks .
-    (27) moreAlterBlocks -> moreAlterBlocks . alterBlock
-    (29) alterBlock -> . alterHeader alterBody SEMICOLON
-    (30) alterHeader -> . ALTER TABLE ONLY IDENTIFIER
+    (30) moreAlterBlocks -> moreAlterBlocks . alterBlock
+    (32) alterBlock -> . alterHeader alterBody SEMICOLON
+    (33) alterHeader -> . ALTER TABLE ONLY IDENTIFIER
 
     $end            reduce using rule 1 (root -> tableBlock moreBlocks moreAlterBlocks .)
     ALTER           shift and go to state 35
@@ -363,10 +372,10 @@ state 20
 
 state 21
 
-    (28) moreAlterBlocks -> empty .
+    (31) moreAlterBlocks -> empty .
 
-    ALTER           reduce using rule 28 (moreAlterBlocks -> empty .)
-    $end            reduce using rule 28 (moreAlterBlocks -> empty .)
+    ALTER           reduce using rule 31 (moreAlterBlocks -> empty .)
+    $end            reduce using rule 31 (moreAlterBlocks -> empty .)
 
 
 state 22
@@ -378,12 +387,18 @@ state 22
 
 state 23
 
-    (4) tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON .
+    (4) tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON . moreSequenceBlocks
+    (27) moreSequenceBlocks -> . moreSequenceBlocks sequenceBlock
+    (28) moreSequenceBlocks -> . empty
+    (42) empty -> .
 
-    CREATE          reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON .)
-    ALTER           reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON .)
-    $end            reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON .)
+    SEQUENCE        reduce using rule 42 (empty -> .)
+    CREATE          reduce using rule 42 (empty -> .)
+    ALTER           reduce using rule 42 (empty -> .)
+    $end            reduce using rule 42 (empty -> .)
 
+    moreSequenceBlocks             shift and go to state 37
+    empty                          shift and go to state 38
 
 state 24
 
@@ -409,9 +424,9 @@ state 26
     (17) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN . parameter COMMA parameter RPAREN
     (26) parameter -> . NUMBER
 
-    NUMBER          shift and go to state 37
+    NUMBER          shift and go to state 39
 
-    parameter                      shift and go to state 38
+    parameter                      shift and go to state 40
 
 state 27
 
@@ -422,13 +437,13 @@ state 27
     (24) constraints -> . NULL
     (25) constraints -> . UNIQUE
 
-    COMMA           shift and go to state 42
-    RPAREN          shift and go to state 41
-    NOT             shift and go to state 43
-    NULL            shift and go to state 40
-    UNIQUE          shift and go to state 39
+    COMMA           shift and go to state 44
+    RPAREN          shift and go to state 43
+    NOT             shift and go to state 45
+    NULL            shift and go to state 42
+    UNIQUE          shift and go to state 41
 
-    constraints                    shift and go to state 44
+    constraints                    shift and go to state 46
 
 state 28
 
@@ -467,7 +482,7 @@ state 31
     NOT             reduce using rule 18 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 .)
     NULL            reduce using rule 18 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 .)
     UNIQUE          reduce using rule 18 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 .)
-    LPAREN          shift and go to state 45
+    LPAREN          shift and go to state 47
 
 
 state 32
@@ -475,36 +490,36 @@ state 32
     (16) dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN . parameter RPAREN
     (26) parameter -> . NUMBER
 
-    NUMBER          shift and go to state 37
+    NUMBER          shift and go to state 39
 
-    parameter                      shift and go to state 46
+    parameter                      shift and go to state 48
 
 state 33
 
-    (29) alterBlock -> alterHeader . alterBody SEMICOLON
-    (31) alterBody -> . ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
-    (32) alterBody -> . ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-    (33) alterBody -> . multi_attr_constr
-    (34) multi_attr_constr -> . ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
+    (32) alterBlock -> alterHeader . alterBody SEMICOLON
+    (34) alterBody -> . ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
+    (35) alterBody -> . ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (36) alterBody -> . multi_attr_constr
+    (37) multi_attr_constr -> . ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
 
-    ADD             shift and go to state 47
+    ADD             shift and go to state 49
 
-    alterBody                      shift and go to state 48
-    multi_attr_constr              shift and go to state 49
+    alterBody                      shift and go to state 50
+    multi_attr_constr              shift and go to state 51
 
 state 34
 
-    (27) moreAlterBlocks -> moreAlterBlocks alterBlock .
+    (30) moreAlterBlocks -> moreAlterBlocks alterBlock .
 
-    ALTER           reduce using rule 27 (moreAlterBlocks -> moreAlterBlocks alterBlock .)
-    $end            reduce using rule 27 (moreAlterBlocks -> moreAlterBlocks alterBlock .)
+    ALTER           reduce using rule 30 (moreAlterBlocks -> moreAlterBlocks alterBlock .)
+    $end            reduce using rule 30 (moreAlterBlocks -> moreAlterBlocks alterBlock .)
 
 
 state 35
 
-    (30) alterHeader -> ALTER . TABLE ONLY IDENTIFIER
+    (33) alterHeader -> ALTER . TABLE ONLY IDENTIFIER
 
-    TABLE           shift and go to state 50
+    TABLE           shift and go to state 52
 
 
 state 36
@@ -516,20 +531,43 @@ state 36
 
 state 37
 
+    (4) tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON moreSequenceBlocks .
+    (27) moreSequenceBlocks -> moreSequenceBlocks . sequenceBlock
+    (29) sequenceBlock -> . SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
+
+    CREATE          reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON moreSequenceBlocks .)
+    ALTER           reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON moreSequenceBlocks .)
+    $end            reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes SEMICOLON moreSequenceBlocks .)
+    SEQUENCE        shift and go to state 53
+
+    sequenceBlock                  shift and go to state 54
+
+state 38
+
+    (28) moreSequenceBlocks -> empty .
+
+    SEQUENCE        reduce using rule 28 (moreSequenceBlocks -> empty .)
+    CREATE          reduce using rule 28 (moreSequenceBlocks -> empty .)
+    ALTER           reduce using rule 28 (moreSequenceBlocks -> empty .)
+    $end            reduce using rule 28 (moreSequenceBlocks -> empty .)
+
+
+state 39
+
     (26) parameter -> NUMBER .
 
     RPAREN          reduce using rule 26 (parameter -> NUMBER .)
     COMMA           reduce using rule 26 (parameter -> NUMBER .)
 
 
-state 38
+state 40
 
     (17) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter . COMMA parameter RPAREN
 
-    COMMA           shift and go to state 51
+    COMMA           shift and go to state 55
 
 
-state 39
+state 41
 
     (25) constraints -> UNIQUE .
 
@@ -540,7 +578,7 @@ state 39
     UNIQUE          reduce using rule 25 (constraints -> UNIQUE .)
 
 
-state 40
+state 42
 
     (24) constraints -> NULL .
 
@@ -551,7 +589,7 @@ state 40
     UNIQUE          reduce using rule 24 (constraints -> NULL .)
 
 
-state 41
+state 43
 
     (11) attributeBlock -> IDENTIFIER dtypes constraintPart RPAREN .
 
@@ -559,7 +597,7 @@ state 41
     IDENTIFIER      reduce using rule 11 (attributeBlock -> IDENTIFIER dtypes constraintPart RPAREN .)
 
 
-state 42
+state 44
 
     (9) attributeBlock -> IDENTIFIER dtypes constraintPart COMMA .
 
@@ -567,14 +605,14 @@ state 42
     IDENTIFIER      reduce using rule 9 (attributeBlock -> IDENTIFIER dtypes constraintPart COMMA .)
 
 
-state 43
+state 45
 
     (23) constraints -> NOT . NULL
 
-    NULL            shift and go to state 52
+    NULL            shift and go to state 56
 
 
-state 44
+state 46
 
     (21) constraintPart -> constraintPart constraints .
 
@@ -585,62 +623,79 @@ state 44
     UNIQUE          reduce using rule 21 (constraintPart -> constraintPart constraints .)
 
 
-state 45
+state 47
 
     (20) dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN . parameter RPAREN
     (26) parameter -> . NUMBER
 
-    NUMBER          shift and go to state 37
+    NUMBER          shift and go to state 39
 
-    parameter                      shift and go to state 53
-
-state 46
-
-    (16) dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter . RPAREN
-
-    RPAREN          shift and go to state 54
-
-
-state 47
-
-    (31) alterBody -> ADD . CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
-    (32) alterBody -> ADD . CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-    (34) multi_attr_constr -> ADD . CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
-
-    CONSTRAINT      shift and go to state 55
-
+    parameter                      shift and go to state 57
 
 state 48
 
-    (29) alterBlock -> alterHeader alterBody . SEMICOLON
+    (16) dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter . RPAREN
 
-    SEMICOLON       shift and go to state 56
+    RPAREN          shift and go to state 58
 
 
 state 49
 
-    (33) alterBody -> multi_attr_constr .
+    (34) alterBody -> ADD . CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
+    (35) alterBody -> ADD . CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (37) multi_attr_constr -> ADD . CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
 
-    SEMICOLON       reduce using rule 33 (alterBody -> multi_attr_constr .)
+    CONSTRAINT      shift and go to state 59
 
 
 state 50
 
-    (30) alterHeader -> ALTER TABLE . ONLY IDENTIFIER
+    (32) alterBlock -> alterHeader alterBody . SEMICOLON
 
-    ONLY            shift and go to state 57
+    SEMICOLON       shift and go to state 60
 
 
 state 51
 
+    (36) alterBody -> multi_attr_constr .
+
+    SEMICOLON       reduce using rule 36 (alterBody -> multi_attr_constr .)
+
+
+state 52
+
+    (33) alterHeader -> ALTER TABLE . ONLY IDENTIFIER
+
+    ONLY            shift and go to state 61
+
+
+state 53
+
+    (29) sequenceBlock -> SEQUENCE . IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
+
+    IDENTIFIER      shift and go to state 62
+
+
+state 54
+
+    (27) moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .
+
+    SEQUENCE        reduce using rule 27 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
+    CREATE          reduce using rule 27 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
+    ALTER           reduce using rule 27 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
+    $end            reduce using rule 27 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
+
+
+state 55
+
     (17) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA . parameter RPAREN
     (26) parameter -> . NUMBER
 
-    NUMBER          shift and go to state 37
+    NUMBER          shift and go to state 39
 
-    parameter                      shift and go to state 58
+    parameter                      shift and go to state 63
 
-state 52
+state 56
 
     (23) constraints -> NOT NULL .
 
@@ -651,14 +706,14 @@ state 52
     UNIQUE          reduce using rule 23 (constraints -> NOT NULL .)
 
 
-state 53
+state 57
 
     (20) dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter . RPAREN
 
-    RPAREN          shift and go to state 59
+    RPAREN          shift and go to state 64
 
 
-state 54
+state 58
 
     (16) dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN .
 
@@ -669,38 +724,45 @@ state 54
     UNIQUE          reduce using rule 16 (dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN .)
 
 
-state 55
+state 59
 
-    (31) alterBody -> ADD CONSTRAINT . IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
-    (32) alterBody -> ADD CONSTRAINT . IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-    (34) multi_attr_constr -> ADD CONSTRAINT . IDENTIFIER UNIQUE LPAREN multi_params RPAREN
+    (34) alterBody -> ADD CONSTRAINT . IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
+    (35) alterBody -> ADD CONSTRAINT . IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (37) multi_attr_constr -> ADD CONSTRAINT . IDENTIFIER UNIQUE LPAREN multi_params RPAREN
 
-    IDENTIFIER      shift and go to state 60
-
-
-state 56
-
-    (29) alterBlock -> alterHeader alterBody SEMICOLON .
-
-    ALTER           reduce using rule 29 (alterBlock -> alterHeader alterBody SEMICOLON .)
-    $end            reduce using rule 29 (alterBlock -> alterHeader alterBody SEMICOLON .)
+    IDENTIFIER      shift and go to state 65
 
 
-state 57
+state 60
 
-    (30) alterHeader -> ALTER TABLE ONLY . IDENTIFIER
+    (32) alterBlock -> alterHeader alterBody SEMICOLON .
 
-    IDENTIFIER      shift and go to state 61
+    ALTER           reduce using rule 32 (alterBlock -> alterHeader alterBody SEMICOLON .)
+    $end            reduce using rule 32 (alterBlock -> alterHeader alterBody SEMICOLON .)
 
 
-state 58
+state 61
+
+    (33) alterHeader -> ALTER TABLE ONLY . IDENTIFIER
+
+    IDENTIFIER      shift and go to state 66
+
+
+state 62
+
+    (29) sequenceBlock -> SEQUENCE IDENTIFIER . OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
+
+    OWNED           shift and go to state 67
+
+
+state 63
 
     (17) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter . RPAREN
 
-    RPAREN          shift and go to state 62
+    RPAREN          shift and go to state 68
 
 
-state 59
+state 64
 
     (20) dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN .
 
@@ -711,25 +773,32 @@ state 59
     UNIQUE          reduce using rule 20 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN .)
 
 
-state 60
+state 65
 
-    (31) alterBody -> ADD CONSTRAINT IDENTIFIER . PRIMARY KEY LPAREN IDENTIFIER RPAREN
-    (32) alterBody -> ADD CONSTRAINT IDENTIFIER . FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-    (34) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER . UNIQUE LPAREN multi_params RPAREN
+    (34) alterBody -> ADD CONSTRAINT IDENTIFIER . PRIMARY KEY LPAREN IDENTIFIER RPAREN
+    (35) alterBody -> ADD CONSTRAINT IDENTIFIER . FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (37) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER . UNIQUE LPAREN multi_params RPAREN
 
-    PRIMARY         shift and go to state 64
-    FOREIGN         shift and go to state 65
-    UNIQUE          shift and go to state 63
-
-
-state 61
-
-    (30) alterHeader -> ALTER TABLE ONLY IDENTIFIER .
-
-    ADD             reduce using rule 30 (alterHeader -> ALTER TABLE ONLY IDENTIFIER .)
+    PRIMARY         shift and go to state 70
+    FOREIGN         shift and go to state 71
+    UNIQUE          shift and go to state 69
 
 
-state 62
+state 66
+
+    (33) alterHeader -> ALTER TABLE ONLY IDENTIFIER .
+
+    ADD             reduce using rule 33 (alterHeader -> ALTER TABLE ONLY IDENTIFIER .)
+
+
+state 67
+
+    (29) sequenceBlock -> SEQUENCE IDENTIFIER OWNED . BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
+
+    BY              shift and go to state 72
+
+
+state 68
 
     (17) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN .
 
@@ -740,182 +809,220 @@ state 62
     UNIQUE          reduce using rule 17 (dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN .)
 
 
-state 63
-
-    (34) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE . LPAREN multi_params RPAREN
-
-    LPAREN          shift and go to state 66
-
-
-state 64
-
-    (31) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY . KEY LPAREN IDENTIFIER RPAREN
-
-    KEY             shift and go to state 67
-
-
-state 65
-
-    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN . KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-
-    KEY             shift and go to state 68
-
-
-state 66
-
-    (34) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN . multi_params RPAREN
-    (35) multi_params -> . multi_params multi_1param
-    (36) multi_params -> . empty
-    (39) empty -> .
-
-    RPAREN          reduce using rule 39 (empty -> .)
-    IDENTIFIER      reduce using rule 39 (empty -> .)
-
-    multi_params                   shift and go to state 69
-    empty                          shift and go to state 70
-
-state 67
-
-    (31) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY . LPAREN IDENTIFIER RPAREN
-
-    LPAREN          shift and go to state 71
-
-
-state 68
-
-    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY . LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-
-    LPAREN          shift and go to state 72
-
-
 state 69
 
-    (34) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params . RPAREN
-    (35) multi_params -> multi_params . multi_1param
-    (37) multi_1param -> . IDENTIFIER COMMA
-    (38) multi_1param -> . IDENTIFIER
+    (37) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE . LPAREN multi_params RPAREN
 
-    RPAREN          shift and go to state 74
-    IDENTIFIER      shift and go to state 73
+    LPAREN          shift and go to state 73
 
-    multi_1param                   shift and go to state 75
 
 state 70
 
-    (36) multi_params -> empty .
+    (34) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY . KEY LPAREN IDENTIFIER RPAREN
 
-    RPAREN          reduce using rule 36 (multi_params -> empty .)
-    IDENTIFIER      reduce using rule 36 (multi_params -> empty .)
+    KEY             shift and go to state 74
 
 
 state 71
 
-    (31) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN . IDENTIFIER RPAREN
+    (35) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN . KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
 
-    IDENTIFIER      shift and go to state 76
+    KEY             shift and go to state 75
 
 
 state 72
 
-    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN . IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (29) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY . IDENTIFIER PERIOD IDENTIFIER SEMICOLON
 
-    IDENTIFIER      shift and go to state 77
+    IDENTIFIER      shift and go to state 76
 
 
 state 73
 
-    (37) multi_1param -> IDENTIFIER . COMMA
-    (38) multi_1param -> IDENTIFIER .
+    (37) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN . multi_params RPAREN
+    (38) multi_params -> . multi_params multi_1param
+    (39) multi_params -> . empty
+    (42) empty -> .
 
-    COMMA           shift and go to state 78
-    RPAREN          reduce using rule 38 (multi_1param -> IDENTIFIER .)
-    IDENTIFIER      reduce using rule 38 (multi_1param -> IDENTIFIER .)
+    RPAREN          reduce using rule 42 (empty -> .)
+    IDENTIFIER      reduce using rule 42 (empty -> .)
 
+    multi_params                   shift and go to state 77
+    empty                          shift and go to state 78
 
 state 74
 
-    (34) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN .
+    (34) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY . LPAREN IDENTIFIER RPAREN
 
-    SEMICOLON       reduce using rule 34 (multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN .)
+    LPAREN          shift and go to state 79
 
 
 state 75
 
-    (35) multi_params -> multi_params multi_1param .
+    (35) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY . LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
 
-    RPAREN          reduce using rule 35 (multi_params -> multi_params multi_1param .)
-    IDENTIFIER      reduce using rule 35 (multi_params -> multi_params multi_1param .)
+    LPAREN          shift and go to state 80
 
 
 state 76
 
-    (31) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER . RPAREN
+    (29) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER . PERIOD IDENTIFIER SEMICOLON
 
-    RPAREN          shift and go to state 79
+    PERIOD          shift and go to state 81
 
 
 state 77
 
-    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER . RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (37) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params . RPAREN
+    (38) multi_params -> multi_params . multi_1param
+    (40) multi_1param -> . IDENTIFIER COMMA
+    (41) multi_1param -> . IDENTIFIER
 
-    RPAREN          shift and go to state 80
+    RPAREN          shift and go to state 83
+    IDENTIFIER      shift and go to state 82
 
+    multi_1param                   shift and go to state 84
 
 state 78
 
-    (37) multi_1param -> IDENTIFIER COMMA .
+    (39) multi_params -> empty .
 
-    RPAREN          reduce using rule 37 (multi_1param -> IDENTIFIER COMMA .)
-    IDENTIFIER      reduce using rule 37 (multi_1param -> IDENTIFIER COMMA .)
+    RPAREN          reduce using rule 39 (multi_params -> empty .)
+    IDENTIFIER      reduce using rule 39 (multi_params -> empty .)
 
 
 state 79
 
-    (31) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN .
+    (34) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN . IDENTIFIER RPAREN
 
-    SEMICOLON       reduce using rule 31 (alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN .)
+    IDENTIFIER      shift and go to state 85
 
 
 state 80
 
-    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN . REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (35) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN . IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
 
-    REFERENCES      shift and go to state 81
+    IDENTIFIER      shift and go to state 86
 
 
 state 81
 
-    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES . IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (29) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD . IDENTIFIER SEMICOLON
 
-    IDENTIFIER      shift and go to state 82
+    IDENTIFIER      shift and go to state 87
 
 
 state 82
 
-    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER . LPAREN IDENTIFIER RPAREN
+    (40) multi_1param -> IDENTIFIER . COMMA
+    (41) multi_1param -> IDENTIFIER .
 
-    LPAREN          shift and go to state 83
+    COMMA           shift and go to state 88
+    RPAREN          reduce using rule 41 (multi_1param -> IDENTIFIER .)
+    IDENTIFIER      reduce using rule 41 (multi_1param -> IDENTIFIER .)
 
 
 state 83
 
-    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN . IDENTIFIER RPAREN
+    (37) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN .
 
-    IDENTIFIER      shift and go to state 84
+    SEMICOLON       reduce using rule 37 (multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN .)
 
 
 state 84
 
-    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER . RPAREN
+    (38) multi_params -> multi_params multi_1param .
 
-    RPAREN          shift and go to state 85
+    RPAREN          reduce using rule 38 (multi_params -> multi_params multi_1param .)
+    IDENTIFIER      reduce using rule 38 (multi_params -> multi_params multi_1param .)
 
 
 state 85
 
-    (32) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN .
+    (34) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER . RPAREN
 
-    SEMICOLON       reduce using rule 32 (alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN .)
+    RPAREN          shift and go to state 89
+
+
+state 86
+
+    (35) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER . RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+
+    RPAREN          shift and go to state 90
+
+
+state 87
+
+    (29) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER . SEMICOLON
+
+    SEMICOLON       shift and go to state 91
+
+
+state 88
+
+    (40) multi_1param -> IDENTIFIER COMMA .
+
+    RPAREN          reduce using rule 40 (multi_1param -> IDENTIFIER COMMA .)
+    IDENTIFIER      reduce using rule 40 (multi_1param -> IDENTIFIER COMMA .)
+
+
+state 89
+
+    (34) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN .
+
+    SEMICOLON       reduce using rule 34 (alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN .)
+
+
+state 90
+
+    (35) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN . REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+
+    REFERENCES      shift and go to state 92
+
+
+state 91
+
+    (29) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .
+
+    SEQUENCE        reduce using rule 29 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
+    CREATE          reduce using rule 29 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
+    ALTER           reduce using rule 29 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
+    $end            reduce using rule 29 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
+
+
+state 92
+
+    (35) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES . IDENTIFIER LPAREN IDENTIFIER RPAREN
+
+    IDENTIFIER      shift and go to state 93
+
+
+state 93
+
+    (35) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER . LPAREN IDENTIFIER RPAREN
+
+    LPAREN          shift and go to state 94
+
+
+state 94
+
+    (35) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN . IDENTIFIER RPAREN
+
+    IDENTIFIER      shift and go to state 95
+
+
+state 95
+
+    (35) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER . RPAREN
+
+    RPAREN          shift and go to state 96
+
+
+state 96
+
+    (35) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN .
+
+    SEMICOLON       reduce using rule 35 (alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN .)
 
 WARNING: 
 WARNING: Conflicts:

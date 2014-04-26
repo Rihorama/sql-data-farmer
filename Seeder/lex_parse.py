@@ -52,6 +52,21 @@ def input_lex(lexer, data):
         print tok
 
 
+##
+#to check possible data type and constraint collisions
+##
+def check_collision():
+
+    global new_attribute
+    
+    if new_attribute.serial:
+        if new_attribute.null or new_attribute.foreign_key:
+            msg = "Semantic Error: Attribute '" + new_attribute.name + "' has a constraint uncompatible " \
+                  + "with its data type '" + new_attribute.data_type + "'. Colliding constraint: " \
+                  + new_attribute.constraint_type + ".\n"
+            errprint(msg, ERRCODE["SEMANTIC"])
+
+
 
 ##
 #function to check valid parameters for fill method
@@ -141,6 +156,7 @@ def dsl_parser(f):
         'null' : 'CONSTR_1PARAM',
         
         'BIGINT' : 'TYPE_NOPARAM',    #INT8
+        'BIGSERIAL' : 'TYPE_NOPARAM',
         'BIT' :     'TYPE_1PARAM',
         'BOOL' : 'TYPE_NOPARAM',      #BOOLEAN
         'BOX' : 'TYPE_NOPARAM',
@@ -152,6 +168,7 @@ def dsl_parser(f):
         'PATH' : 'TYPE_NOPARAM',
         'POINT' : 'TYPE_NOPARAM',
         'POLYGON' : 'TYPE_NOPARAM',
+        'SERIAL' : 'TYPE_NOPARAM',
         'SMALLINT' : 'TYPE_NOPARAM',  #INT2
         'TEXT' : 'TYPE_NOPARAM',
         'VARBIT' : 'TYPE_1PARAM',     #BIT VARYING
@@ -293,7 +310,11 @@ def dsl_parser(f):
                           | attributeName dataType fillMethod constraintPart'''
         
         global new_attribute
-        global attr_list        
+        global attr_list
+        
+        #first we check possible data_type and constraint collisions
+        check_collision()
+        
         attr_list.append(new_attribute)       #appends the new attribute
         new_attribute.constraint_flag = False #nulls the flag
         debug("attributeBlock")
@@ -308,7 +329,6 @@ def dsl_parser(f):
         new_attribute.name = p[2]
         debug("attributeName")
         
-#TODO: zkontrolovat, jestli tu musi byt reinicializace tech prazdnych listu po tvorbe nove instance
 
     def p_dataType(p):
         'dataType : TYPE dtypes endline'
@@ -320,11 +340,15 @@ def dsl_parser(f):
                   | TYPE_1PARAM LPAREN NUMBER RPAREN'''
                   
         global new_attribute
+        global new_table
         new_attribute.data_type = p[1]
         new_attribute.parameters = []             #inicializes to no parameters
         
         if len(p) == 5:                           #stands for "DTYPE (1_param)"
             new_attribute.parameters.append(p[3]) #appends the parameter
+            
+        if p[1] == 'SERIAL' or p[1] == 'BIGSERIAL':
+            new_attribute.serial = True
             
         debug("dtypes")
         
@@ -366,7 +390,7 @@ def dsl_parser(f):
             if not new_attribute.foreign_key:      #this means the given fill method doesn't correspond
                 
                 msg = "Semantic Error: Foreign key constraint stated but wrong fill method '" + new_attribute.fill_method \
-                + "' given.\n"
+                + "' given to attribute '" + new_attribute.name + "', table '" + new_table.name + "'.\n"
                 errprint(msg, ERRCODE["SEMANTIC"])
             new_attribute.constraint_cnt -= 1   #not mandatory to be stated so the count has been incremented already    
                                                 #it will be incr. later in this func, so we need to put it back -1
@@ -380,7 +404,7 @@ def dsl_parser(f):
         elif p[1] == "not_null":
             new_attribute.not_null = True            
             
-        new_attribute.constraint_type = p[1]   #older version, not removing now, it could cause trouble
+        new_attribute.constraint_type = p[1]   
         new_attribute.constraint_flag = True
         new_attribute.constraint_cnt += 1
         

@@ -60,3 +60,5 @@ class Attribute:
         self.textbank_open = False
         self.textbank_linecnt = 0
         
+        self.serial = False             #serial type won't be filled, the whole attr will have special treatement
+        

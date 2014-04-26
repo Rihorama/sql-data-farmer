@@ -85,6 +85,9 @@ def sql_parser(f):
         'CONSTRAINT' : 'CONSTRAINT',
         'REFERENCES' : 'REFERENCES',
         'ADD' : 'ADD',
+        'SEQUENCE' : 'SEQUENCE',
+        'OWNED' : 'OWNED',
+        'BY' : 'BY',
         
         'bigint' : 'DTYPE_SOLO',        #SOLO: this word alone is a data type
         'bigserial' : 'DTYPE_SOLO',
@@ -140,6 +143,7 @@ def sql_parser(f):
         'RPAREN',
         'SEMICOLON',
         'COMMA',
+        'PERIOD',
     ] + list(reserved.values())
     
     # Tokens
@@ -147,6 +151,7 @@ def sql_parser(f):
     t_RPAREN  = r'\)'
     t_SEMICOLON = r';'
     t_COMMA = r','
+    t_PERIOD = r'\.'
     
     
     # A rule for Identifier tokens
@@ -220,7 +225,7 @@ def sql_parser(f):
         
 
     def p_tableBlock(p):
-        'tableBlock : tableHeader attributeBlock moreAttributes SEMICOLON'        
+        'tableBlock : tableHeader attributeBlock moreAttributes SEMICOLON moreSequenceBlocks'        
         debug("tableBlock")
         
                     
@@ -241,6 +246,7 @@ def sql_parser(f):
         new_table.name = p[3]
         
         name_dict[new_table.name] = new_table
+
         
 
     def p_attributeBlock(p):
@@ -311,7 +317,7 @@ def sql_parser(f):
         
         global TO_ADD   
         global ADD_VAL
-        if p[0] in TO_ADD:                #we will add parameter for filling purposes
+        if p[0] in TO_ADD and len(param_list) == 0:   #we will add parameter for filling purposes if not given
             param_list.append(ADD_VAL)    #-> varchar(8) and varbit(8)
     
     
@@ -348,12 +354,56 @@ def sql_parser(f):
 
     
     
+    def p_moreSequenceBlocks(p):
+        '''moreSequenceBlocks : moreSequenceBlocks sequenceBlock
+                              | empty'''
+        debug("moreSequenceBlocks")
+        
+    
+    
+    #this is our only hint that the given attribute(collumn) is actually a serial data type
+    #we must change it back to serial/bigserial so Seeder can fill it properly
+    def p_sequenceBlock(p):
+        'sequenceBlock : SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON'
+       
+        debug("sequenceBlock")
+        
+        #we find the table
+        if not p[5] in name_dict.keys():
+            msg = "Semantic error: Table '" + p[5] + "'given in ALTER SEQUENCE part couldn't be found.\n"
+            errprint(msg, ERRCODE["SEMANTIC"])
+        seq_table = name_dict[p[5]]
+        
+        
+        name = p[7]      #name of the attribute
+        seq_attr = None
+        
+        #search for the attribute
+        for attr in seq_table.attr_list:
+            if attr.name == name:
+                seq_attr = attr
+                break
+        
+        #we didn't find it, there is a prob (shouldn't happen with not-edited dump but you never know)
+        if seq_attr == None:
+            msg = "Semantic error: Couldn't find the attribute which SEQUENCE '" + p[2] \
+                            + "' refers to in table '" + p[5] \
+                            + "' while processing a " + constr + ".\n"
+            errprint(msg, ERRCODE["INPUT"])  
+        
+        #now we simply change the data type to corresponding serial type
+        if seq_attr.data_type == "integer":
+           seq_attr.data_type = "serial"
+        
+        elif seq_attr.data_type == "bigint":
+           seq_attr.data_type = "bigserial"
+        
+    
     
     
     def p_moreAlterBlocks(p):
         '''moreAlterBlocks : moreAlterBlocks alterBlock
                            | empty'''
-
         debug("moreAlterBlocks")
         
 
@@ -485,7 +535,8 @@ def sql_parser(f):
         
         
     def p_error(p): 
-        print("Syntax error. Trouble with " + repr(str(p.value)) + " on line " + str(p.lineno))
+        msg = "Syntax error. Trouble with " + repr(str(p.value)) + ".\n"
+        errprint(msg, ERRCODE["SYNTACTIC"]) 
         
         global err
         err = True     #sets the flag

@@ -242,7 +242,7 @@ def fm_basic(table, attr):
         value = basic_int(table, attr)
         
     elif attr.data_type == "BIT" or attr.data_type == "VARBIT":
-        value = basic_bit(table, attr)
+        value = "bit'" + basic_bit(table, attr) + "'"
         
     elif attr.data_type == "BOOL":
         value = basic_bool()

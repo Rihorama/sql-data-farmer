@@ -10,6 +10,7 @@ NULL_FILL = 20
 
 DTYPE_DICT = {
     'bigint' : 'BIGINT',
+    'bigserial' : 'BIGSERIAL',
     'bit' : 'BIT',
     'bit varying' : 'VARBIT',
     'boolean' : 'BOOL',
@@ -23,6 +24,7 @@ DTYPE_DICT = {
     'path' : 'PATH',
     'point' : 'POINT',
     'polygon' : 'POLYGON',
+    'serial' : 'SERIAL',
     'smallint' : 'SMALLINT',
     'text' : 'TEXT',
     }
@@ -37,6 +39,7 @@ def get_dtype_line(attr):
     
     x = "("
     flag = False
+    
     for param in attr.parameters:
         flag = True
         x = x + str(param)

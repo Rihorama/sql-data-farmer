@@ -78,10 +78,12 @@ def get_values(table):
         new_val = None
         
         if attr.foreign_key:
-            new_val = get_foreign(attr)
+            new_val = get_foreign(attr)  
             
-        else:
-        
+        elif attr.serial:
+            new_val = "DEFAULT"      #next sequence  
+            
+        else:        
             func = 'new_val = ' + attr.fill_method + '(table,attr)'
             
             try: 
@@ -93,10 +95,18 @@ def get_values(table):
                 errprint(msg, ERRCODE["INTERNAL"])            
         
         
-        #fk solved separately, rest must be solved here
-        if (attr.unique and not attr.foreign_key) or attr.primary_key:            
-            timeout = 0
-            
+        
+        #unique and fk combo solved separately, rest must be solved here
+        test1 = attr.unique and not attr.foreign_key
+        
+        #NOTE: serial is unique by its sequence, if it overflows because of low capacity, it's user's problem
+        test2 = attr.unique and not attr.serial
+        test3 = attr.primary_key and not attr.serial
+        
+        
+        #if one test true, we must ensure the inserted value hasn't been used yet
+        if test1 or test2 or test3:            
+            timeout = 0            
             while not check_unique(attr,new_val):      #validity check if there is unique/primary key constraint
                 if timeout >= 100:
                     msg = "Runtime error: The timeout for finding new unique value for attribute '" + attr.name + "' exceeded.\n" \
@@ -107,14 +117,14 @@ def get_values(table):
                 timeout += 1
         
         
+        
         #NULL appearance chance
-        if attr.null == 'null':
-            
+        if attr.null == 'null':            
             chance = random.randint(0,100)
-
             if chance < attr.constraint_parameters[0]:
                 new_val = 'NULL'
                 
+
 
         values = values + str(new_val) + ", "     #concatenates the new value with the rest and divides with a ','
         
@@ -152,6 +162,7 @@ def table_filler(table):
     
     if not table_check(table):   #checks if we know enough to fill this table
         return True              #means there is an unifnished table
+        
     
     for i in range(0,table.fill_count):
         values = get_values(table)

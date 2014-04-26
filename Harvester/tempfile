@@ -1,14 +1,18 @@
-CREATE TABLE pony (
-    name character varying(15) NOT NULL
+CREATE TABLE t1 (
+    p1 integer NOT NULL,
+    p2 integer NOT NULL,
+    p3 character varying(5)
 );
-CREATE TABLE town (
-    name character varying(15) NOT NULL,
-    population integer NOT NULL,
-    leader character varying(15)
+SEQUENCE t1_p1_seq OWNED BY t1.p1;
+CREATE TABLE t2 (
+    p1 bit(8),
+    p2 integer
 );
-ALTER TABLE ONLY pony
-    ADD CONSTRAINT pony_pkey PRIMARY KEY (name);
-ALTER TABLE ONLY town
-    ADD CONSTRAINT town_pkey PRIMARY KEY (name);
-ALTER TABLE ONLY town
-    ADD CONSTRAINT town_leader_fkey FOREIGN KEY (leader) REFERENCES pony(name);
+CREATE TABLE t3 (
+    p1 bigint NOT NULL
+);
+SEQUENCE t3_p1_seq OWNED BY t3.p1;
+ALTER TABLE ONLY t1
+    ADD CONSTRAINT t1_pkey PRIMARY KEY (p2);
+ALTER TABLE ONLY t2
+    ADD CONSTRAINT t2_p2_fkey FOREIGN KEY (p2) REFERENCES t1(p2);
