@@ -290,9 +290,23 @@ def basic_numeric(attr):
         regex = r'[0-9]{' + str(fractional_random) + '}'
         fractional = exrex.getone(regex)  
         
-        value = integer + "." + fractional
+        value = integer + "." + fractional        
         
-        
+    return value
+
+
+#creates network masks with mask /24
+def basic_cidr():
+    
+    mask = 24      
+    
+    p1 = random.randint(0,255)
+    p2 = random.randint(0,255)
+    p3 = random.randint(0,255)
+    p4 = 0    
+    
+    value = str(p1) + "." + str(p2) + "." + str(p3) + "." + str(p4) + "/" + str(mask)
+    
     return value
 
 
@@ -320,11 +334,17 @@ def fm_basic(table, attr):
     elif attr.data_type == "CHAR":
         value = basic_char(table, attr)
         
+    elif attr.data_type == "CIDR":
+        value = "cidr'" + basic_cidr() + "'"
+        
     elif attr.data_type == "CIRCLE":
         value = "circle'" + basic_circle() + "'"
         
     elif attr.data_type == "DOUBLE" or attr.data_type == "REAL":
         value = basic_real(attr.data_type)
+        
+    elif attr.data_type == "INET":
+        value = "inet'" + basic_cidr() + "'"
         
     elif attr.data_type == "INT":
         CURRENT_MAX = FOUR_BYTE_MAX

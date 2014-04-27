@@ -161,8 +161,10 @@ def dsl_parser(f):
         'BOOL' : 'TYPE_NOPARAM',      #BOOLEAN
         'BOX' : 'TYPE_NOPARAM',
         'CHAR' : 'TYPE_1PARAM',       #CHARACTER 
+        'CIDR' : 'TYPE_NOPARAM',
         'CIRCLE' : 'TYPE_NOPARAM',
         'DOUBLE' : 'TYPE_NOPARAM',
+        'INET' : 'TYPE_NOPARAM',
         'INT' : 'TYPE_NOPARAM',       #INTEGER, INT4
         'LSEG' : 'TYPE_NOPARAM',
         #'LINE' : 'TYPE_NOPARAM',    #not yet implemented in postgre

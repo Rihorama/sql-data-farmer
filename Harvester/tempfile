@@ -4,6 +4,12 @@ CREATE TABLE ach (
 CREATE TABLE flt (
     f double precision
 );
+CREATE TABLE ip (
+    adr cidr
+);
+CREATE TABLE ip2 (
+    inet_ip inet
+);
 CREATE TABLE nmrc (
     num numeric(20,0)
 );
