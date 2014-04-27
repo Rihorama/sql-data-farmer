@@ -1,3 +1,9 @@
+CREATE TABLE flt (
+    f double precision
+);
+CREATE TABLE realnum (
+    rl real
+);
 CREATE TABLE t1 (
     p1 integer NOT NULL,
     p2 integer NOT NULL,

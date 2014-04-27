@@ -162,12 +162,14 @@ def dsl_parser(f):
         'BOX' : 'TYPE_NOPARAM',
         'CHAR' : 'TYPE_1PARAM',       #CHARACTER 
         'CIRCLE' : 'TYPE_NOPARAM',
+        'DOUBLE' : 'TYPE_NOPARAM',
         'INT' : 'TYPE_NOPARAM',       #INTEGER, INT4
         'LSEG' : 'TYPE_NOPARAM',
         #'LINE' : 'TYPE_NOPARAM',    #not yet implemented in postgre
         'PATH' : 'TYPE_NOPARAM',
         'POINT' : 'TYPE_NOPARAM',
         'POLYGON' : 'TYPE_NOPARAM',
+        'REAL' : 'TYPE_NOPARAM',
         'SERIAL' : 'TYPE_NOPARAM',
         'SMALLINT' : 'TYPE_NOPARAM',  #INT2
         'TEXT' : 'TYPE_NOPARAM',

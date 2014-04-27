@@ -21,6 +21,14 @@ PATH_POINTS_MAX = 9 #how many points can path have (-1, not counting starting po
 RADIUS_MAX = 10
 
 
+#minumum to work for sure according to the postgreSQL docu
+FLOAT_MAX = 1e37
+FLOAT_MIN = 1e-37
+
+DOUBLE_MAX = 1e308
+DOUBLE_MIN = 1e-307
+
+
 # Max range lower than 8: one word will be generated in this range. 
 # Max range greater or equal to 8: more words generated.
 # Vowels and consonants take turns to be at least readable.
@@ -229,6 +237,41 @@ def basic_circle():
     return "<" + str(mid) + "," + str(radius) + ">"
 
 
+#dor real and double precision
+def basic_real(attr_type):
+
+
+    if attr_type == "REAL":
+        exponent = random.randint(-37,37)
+        maximum = FLOAT_MAX
+        minimum = FLOAT_MIN
+        
+    else:     #double precision
+        exponent = random.randint(-307,308)
+        maximum = DOUBLE_MAX
+        minimum = DOUBLE_MIN
+
+    #get random mantissa in pattern x.xxx, 3 decimal places max for now
+    regex = r'[1-9]\.[0-9]{3}'
+    mantissa = exrex.getone(regex)    
+    value = float(mantissa + "e" + str(exponent))
+    
+    
+    if exponent < 0 and value < minimum:
+        exponent =+ 1                                #-37 to -36
+        value = float(mantissa + "e" + str(exponent))
+        
+    elif exponent > 0 and value > maximum:
+        exponent =- 1                                #37 to 36
+        value = float(mantissa + "e" + str(exponent))
+        
+    return value
+        
+    
+    
+
+
+
 
 
 #Basic fill function
@@ -255,6 +298,9 @@ def fm_basic(table, attr):
         
     elif attr.data_type == "CIRCLE":
         value = "circle'" + basic_circle() + "'"
+        
+    elif attr.data_type == "DOUBLE" or attr.data_type == "REAL":
+        value = basic_real(attr.data_type)
         
     elif attr.data_type == "INT":
         CURRENT_MAX = FOUR_BYTE_MAX
