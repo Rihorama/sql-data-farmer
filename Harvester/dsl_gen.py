@@ -22,6 +22,7 @@ DTYPE_DICT = {
     'integer' : 'INT',
     #'line' : 'LINE',
     'lseg' : 'LSEG',
+    'numeric' : 'NUMERIC',
     'path' : 'PATH',
     'point' : 'POINT',
     'polygon' : 'POLYGON',
@@ -44,8 +45,9 @@ def get_dtype_line(attr):
     
     for param in attr.parameters:
         flag = True
-        x = x + str(param)
-    x = x + ")"
+        x = x + str(param) + ","
+        
+    x = x[:-1] + ")"
     
     if flag:
         line = line + x

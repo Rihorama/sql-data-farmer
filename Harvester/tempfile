@@ -1,5 +1,11 @@
+CREATE TABLE ach (
+    je numeric
+);
 CREATE TABLE flt (
     f double precision
+);
+CREATE TABLE nmrc (
+    num numeric(20,0)
 );
 CREATE TABLE realnum (
     rl real

@@ -32,6 +32,9 @@ alter_attr = None
 TO_ADD = ['character varying','bit varying'] 
 ADD_VAL = 8          #number to be a generic parameter for types stated above
 
+NUMERIC_INT = 10     #if we get parameterless numeric, we define these parameters
+NUMERIC_FRAC = 0
+
 
 #error flag
 err = False
@@ -282,7 +285,9 @@ def sql_parser(f):
     def p_dtypeSolo(p):
         '''dtypeSolo : DTYPE_SOLO
                      | DTYPE_BOTH_1PARAM
+                     | DTYPE_SOLO_1PARAM2
                      | DTYPE_BOTH_1PARAM LPAREN parameter RPAREN
+                     | DTYPE_SOLO_1PARAM2 LPAREN parameter RPAREN
                      | DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN'''
         debug("dtypeSolo")
         
@@ -290,6 +295,12 @@ def sql_parser(f):
         
         global param_list
         param_list = []   #inicializes param_list
+        
+        #NOTE: we add our own limitations to this potentially unlimited numeric
+        #      for filling reasons
+        if len(p) == 2 and p[1] == "numeric":
+            param_list.append(NUMERIC_INT)
+            param_list.append(NUMERIC_FRAC)
         
         if len(p) == 5:   #variant: DTYPE_BOTH_1PARAM LPAREN parameter RPAREN
             param_list.append(p[3])

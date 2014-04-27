@@ -166,6 +166,7 @@ def dsl_parser(f):
         'INT' : 'TYPE_NOPARAM',       #INTEGER, INT4
         'LSEG' : 'TYPE_NOPARAM',
         #'LINE' : 'TYPE_NOPARAM',    #not yet implemented in postgre
+        'NUMERIC' : 'TYPE_2PARAM',
         'PATH' : 'TYPE_NOPARAM',
         'POINT' : 'TYPE_NOPARAM',
         'POLYGON' : 'TYPE_NOPARAM',
@@ -194,15 +195,15 @@ def dsl_parser(f):
         'RPAREN',
         'REGEX',
         'PATH',
+        'COMMA',
     ] + list(reserved.values())
-    
-    literals = [ ',' ]
 
     # Tokens
     t_DOUBLE_COLON   = r'\:\:'
     t_COLON  = r'\:'
     t_LPAREN  = r'\('
     t_RPAREN  = r'\)'
+    t_COMMA = r','
     
     
     # A rule for regular expressions
@@ -339,7 +340,8 @@ def dsl_parser(f):
     
     def p_dtypes(p):
         '''dtypes : TYPE_NOPARAM
-                  | TYPE_1PARAM LPAREN NUMBER RPAREN'''
+                  | TYPE_1PARAM LPAREN NUMBER RPAREN
+                  | TYPE_2PARAM LPAREN NUMBER COMMA NUMBER RPAREN'''
                   
         global new_attribute
         global new_table
@@ -348,6 +350,10 @@ def dsl_parser(f):
         
         if len(p) == 5:                           #stands for "DTYPE (1_param)"
             new_attribute.parameters.append(p[3]) #appends the parameter
+            
+        elif len(p) == 7:                         #DTYPE_2PARAM
+            new_attribute.parameters.append(p[3])
+            new_attribute.parameters.append(p[5])
             
         if p[1] == 'SERIAL' or p[1] == 'BIGSERIAL':
             new_attribute.serial = True

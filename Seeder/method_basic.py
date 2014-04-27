@@ -242,12 +242,12 @@ def basic_real(attr_type):
 
 
     if attr_type == "REAL":
-        exponent = random.randint(-37,37)
+        exponent = random.randint(-37,37)     #min and max mantissa
         maximum = FLOAT_MAX
         minimum = FLOAT_MIN
         
     else:     #double precision
-        exponent = random.randint(-307,308)
+        exponent = random.randint(-307,308)   #min and max mantissa
         maximum = DOUBLE_MAX
         minimum = DOUBLE_MIN
 
@@ -268,8 +268,32 @@ def basic_real(attr_type):
     return value
         
     
-    
 
+def basic_numeric(attr):
+    
+    total_cnt = attr.parameters[0]      # = scale = total digits
+    fractional_cnt = attr.parameters[1] #stands for how many digits are in the fractional part
+    integer_cnt = abs(total_cnt - fractional_cnt)
+
+    
+    #now we get random length in that range
+    integer_random = random.randint(1,integer_cnt) 
+    regex = r'[0-9]{' + str(integer_random) + '}'
+    integer = exrex.getone(regex)
+    
+    value = integer
+    
+    
+    #possible fractional part
+    if fractional_cnt > 0:
+        fractional_random = random.randint(1,fractional_cnt)
+        regex = r'[0-9]{' + str(fractional_random) + '}'
+        fractional = exrex.getone(regex)  
+        
+        value = integer + "." + fractional
+        
+        
+    return value
 
 
 
@@ -311,6 +335,9 @@ def fm_basic(table, attr):
         
     elif attr.data_type == "LSEG":
         value = "lseg'" + basic_lseg() + "'"
+        
+    elif attr.data_type == "NUMERIC":
+        value = basic_numeric(attr)
         
     elif attr.data_type == "PATH":
         value = "path'" + basic_path() + "'"
