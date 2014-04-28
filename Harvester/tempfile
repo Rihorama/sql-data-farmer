@@ -1,6 +1,15 @@
 CREATE TABLE ach (
     je numeric
 );
+CREATE TABLE arr (
+    a1 character(5)[]
+);
+CREATE TABLE arr2 (
+    a1 bit(4)[]
+);
+CREATE TABLE arr3 (
+    a1 bit(4)[]
+);
 CREATE TABLE flt (
     f double precision
 );

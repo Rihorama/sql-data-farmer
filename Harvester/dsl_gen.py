@@ -6,6 +6,7 @@ import os
 
 FILL_CNT = 10
 NULL_FILL = 20
+ARR_SIZE = 3     #default array size if no size given - for fill purposes
 
 
 DTYPE_DICT = {
@@ -40,7 +41,7 @@ def get_dtype_line(attr):
     if attr.data_type in DTYPE_DICT.keys():
         line = "\t\tTYPE " + DTYPE_DICT[attr.data_type]
     else:
-        line = "\t\tTYPE " + attr.data_type
+        line = "\t\tTYPE " + attr.data_type   #not supported types yet
     
     x = "("
     flag = False
@@ -49,10 +50,18 @@ def get_dtype_line(attr):
         flag = True
         x = x + str(param) + ","
         
-    x = x[:-1] + ")"
-    
+    x = x[:-1] + ")"    
     if flag:
-        line = line + x
+        line = line + x   #appending (parameters..) to the rest
+        
+    #array test
+    if attr.array_flag:
+        for arr in range(0,attr.array_dim_cnt):
+            if attr.array_dim_size[arr]:        #if any size given
+                dim = "[" + str(attr.array_dim_size[arr]) + "]"
+            else:
+                dim = "[" + str(ARR_SIZE) + "]"
+        line = line + dim                   #appends dimensions
         
     return line
 

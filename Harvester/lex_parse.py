@@ -35,6 +35,10 @@ ADD_VAL = 8          #number to be a generic parameter for types stated above
 NUMERIC_INT = 10     #if we get parameterless numeric, we define these parameters
 NUMERIC_FRAC = 0
 
+ARRAY_FLAG = False
+DIM_CNT = 0
+DIM_SIZE = []
+
 
 #error flag
 err = False
@@ -147,6 +151,8 @@ def sql_parser(f):
         'SEMICOLON',
         'COMMA',
         'PERIOD',
+        'LBRACKET',
+        'RBRACKET',
     ] + list(reserved.values())
     
     # Tokens
@@ -155,6 +161,8 @@ def sql_parser(f):
     t_SEMICOLON = r';'
     t_COMMA = r','
     t_PERIOD = r'\.'
+    t_LBRACKET = r'\['
+    t_RBRACKET = r'\]'
     
     
     # A rule for Identifier tokens
@@ -266,19 +274,33 @@ def sql_parser(f):
         new_table.attr_list.append(new_attribute)
 
     
-    
+    #moreDimensions stands for possible array
     def p_dtypes(p):
-        '''dtypes : dtypeSolo
-                  | dtypeTwopart'''
+        '''dtypes : dtypeSolo moreDimensions
+                  | dtypeTwopart moreDimensions'''
             
         debug("dtypes")
         
         global new_attribute
         global param_list      #inicializes param_list
         
+        global ARRAY_FLAG
+        global DIM_CNT
+        global DIM_SIZE
+        
         new_attribute = table.Attribute()
         new_attribute.data_type = p[1]
-        new_attribute.parameters = param_list 
+        new_attribute.parameters = param_list
+        
+        if ARRAY_FLAG:
+            new_attribute.array_flag = True
+            new_attribute.array_dim_cnt = DIM_CNT
+            new_attribute.array_dim_size = DIM_SIZE
+            
+            ARRAY_FLAG = False   #iniciates them for next attributes
+            DIM_CNT = 0
+            DIM_SIZE = []
+            
         
     
     
@@ -330,6 +352,34 @@ def sql_parser(f):
         global ADD_VAL
         if p[0] in TO_ADD and len(param_list) == 0:   #we will add parameter for filling purposes if not given
             param_list.append(ADD_VAL)    #-> varchar(8) and varbit(8)
+    
+    
+    def p_moreDimensions(p):
+        '''moreDimensions : moreDimensions oneDimension
+                          | empty'''
+                          
+    def p_oneDimension(p):
+        '''oneDimension : LBRACKET RBRACKET
+                        | LBRACKET NUMBER RBRACKET'''
+                        
+        global ARRAY_FLAG
+        global DIM_CNT
+        global DIM_SIZE
+        #we must use these variables because the current new_attribute is still the old one
+        
+        
+        ARRAY_FLAG = True
+        DIM_CNT =+ 1
+        
+        if len(p) == 4:
+            size = p[2]
+        else:
+            size = None    #appending None will help us keep track to which dimension the size comes
+                           #e.g: [][5] - appending only 5 would be mistaken for [5][]
+                           
+        DIM_SIZE.append(size)
+                         
+    
     
     
     

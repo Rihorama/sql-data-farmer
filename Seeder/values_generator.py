@@ -68,6 +68,89 @@ def get_foreign(attr):
 
 
 
+
+###
+#manages the array dimensions
+def get_array(table,attr):
+
+    #as stated in the docu, only BOX type uses semicolon as a delimiter character
+    if attr.data_type == "BOX":
+        delim = ";"
+    else:
+        delim = ","
+    #---------------------------
+
+    cnt = attr.array_dim_cnt    
+    val_list = []
+    
+    total = 1
+    
+    #for [x][y][z] we get value of x*y*z to know how many final values we want
+    for x in attr.array_dim_size:                
+        total = total * x
+    
+    
+    func = 'new_val = ' + attr.fill_method + '(table,attr)'
+    
+    #now we get the values and store them
+    for i in range(0,total):            
+        try: 
+            exec func  #new_val = fill_method(attributes)
+        except AttributeError:
+            msg = "Internal error. Trouble using '" + attr.fill_method + "' method on attribute '" \
+                    + attr.name + "', table '" + table.name + "'.\n" \
+                    + "NOTE: This may also be caused by a non existing method inserted.\n"
+            errprint(msg, ERRCODE["INTERNAL"])
+        print new_val
+        if new_val[0] == "'" and new_val[-1] == "'":
+            new_val = new_val[1:-1]      #cuts both the '
+        new_val = "\"" + new_val + "\""   #double quotes if the val contained commas or curly braces
+        val_list.append(new_val)          #we append the newly received value to the list
+
+    
+    #now we'll put the array of cnt dimensions together (=the final value to fill the db with)
+    old_list = val_list
+    new_list = []
+    
+    #cycles dimension-times
+    for i in range(0,cnt):
+        j = cnt - (i+1)    #reverse the indexing so we go from back
+        size = attr.array_dim_size[j]
+
+        total = total / size  #we now have two separate numbers: 'total'-times we want field of 'size' values
+        
+        #cycles (the current dimension cnt - 1)-times
+        for x in range(0,total):     #for [3][2][2] this happens 3*2 times, next cycle 3 times etc.
+            new_val = "{" 
+            
+            #cycles size-times of the currently last dimension
+            for y in range(0,size):
+                val = old_list.pop()
+                new_val = new_val + val + delim 
+
+            new_val = new_val[:-1] + "}"  #cut the last delimiter and ads the final '{'
+            new_list.append(new_val)
+            
+         
+        #now all old_list values should be used and in concatenated form stored in new_list
+        #we replace old_list with new_list and create new new_list
+        old_list = new_list
+        new_list = []
+         
+         
+    #once we finally get out off this ugly cycle chaos, old_list should contain one item
+    #made of all previous items etc.
+    new_val = "'" + old_list.pop() + "'"
+     
+ 
+    return new_val
+            
+
+
+
+
+
+
 # Returns a string concatenated of generated values for each attribute
 def get_values(table):
     
@@ -82,7 +165,10 @@ def get_values(table):
             
         elif attr.serial:
             new_val = "DEFAULT"      #next sequence  
-            
+        
+        elif attr.array_flag:        #array needs a special treatment
+            new_val = get_array(table,attr)
+        
         else:        
             func = 'new_val = ' + attr.fill_method + '(table,attr)'
             
@@ -263,15 +349,34 @@ def iniciate_fk(table_list):
                             break
                     
                     if fattr == None:
-                        msg = "Input error: The given foreign attribute '" + fattr_name + "' doesn't exist in table '" \
+                        msg = "Semantic error: The given foreign attribute '" + fattr_name + "' doesn't exist in table '" \
                                + ftable_name + "'."
-                        errprint(msg, ERRCODE["INPUT"])
+                        errprint(msg, ERRCODE["SEMANTIC"])
                         
                     if fattr.data_type != attr.data_type:       #types do not correspond
-                        msg = "Input error: The foreign-key-type attribute '" + attr.name + "'s data type doesn't correspond with " \
-                              "the data type of the attribute it references to.\n"
-                        errprint(msg, ERRCODE["INPUT"])
-                        
+                        msg = "Semantic error: The foreign-key-type attribute '" + attr.name + "'s data type doesn't correspond with " \
+                              "the data type of the attribute it references to. Table: '" + table.name + "'\n"
+                        errprint(msg, ERRCODE["SEMANTIC"])
+                    
+                    #data types might be the same but if one is array and other is not, it would mean trouble
+                    elif fattr.data_type == attr.data_type and not (fattr.array_flag == attr.array_flag):
+                        msg = "Semantic error: The foreign-key-type attribute '" + attr.name + "'s data type doesn't correspond with " \
+                              "the data type of the attribute it references to. One is array, one is not. Table: '" + table.name + "'\n"
+                        errprint(msg, ERRCODE["SEMANTIC"])
+                    
+                    #let's check that array of arrays of arrays doesn't refer to only an array
+                    elif fattr.data_type == attr.data_type and fattr.array_flag and attr.array_flag:
+                        if fattr.array_dim_cnt != attr.array_dim_cnt:
+                            msg = "Semantic error: The foreign-key-type attribute '" + attr.name + "' has a different count of " \
+                                  + "dimensions than the array attribute it references to. Table: '" + table.name + "'\n"
+                            errprint(msg, ERRCODE["SEMANTIC"])
+                    
+                    
+                    #NOTE: As stated in postgresql docu, all arrays are now behaving as infinite,
+                    #      max size given or not. So for now there is no reason to check compatibility
+                    #      of individual array sizes. May change.
+                    
+                    
                     #now we have both objects, we can store them in the variables
                     attr.fk_table = ftable
                     attr.fk_attribute = fattr

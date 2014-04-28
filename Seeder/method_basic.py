@@ -323,28 +323,38 @@ def fm_basic(table, attr):
         value = basic_int(table, attr)
         
     elif attr.data_type == "BIT" or attr.data_type == "VARBIT":
-        value = "bit'" + basic_bit(table, attr) + "'"
+        value = basic_bit(table,attr)
+        if not attr.array_flag:
+            value = "bit'" + value + "'"
         
     elif attr.data_type == "BOOL":
         value = basic_bool()
         
     elif attr.data_type == "BOX":
-        value = "box'" + basic_lseg() + "'"
+        value = basic_lseg()
+        if not attr.array_flag:
+            value = "box'" + value + "'"
         
     elif attr.data_type == "CHAR":
         value = basic_char(table, attr)
         
     elif attr.data_type == "CIDR":
-        value = "cidr'" + basic_cidr() + "'"
+        value = basic_cidr()
+        if not attr.array_flag:
+            value = "cidr'" + value + "'"
         
     elif attr.data_type == "CIRCLE":
-        value = "circle'" + basic_circle() + "'"
+        value = basic_circle()
+        if not attr.array_flag:
+            value = "circle'" + value + "'"
         
     elif attr.data_type == "DOUBLE" or attr.data_type == "REAL":
         value = basic_real(attr.data_type)
         
     elif attr.data_type == "INET":
-        value = "inet'" + basic_cidr() + "'"
+        value = basic_cidr()
+        if not attr.array_flag:
+            value = "inet'" + value + "'"
         
     elif attr.data_type == "INT":
         CURRENT_MAX = FOUR_BYTE_MAX
@@ -354,19 +364,27 @@ def fm_basic(table, attr):
     #    value = "line'" + basic_lseg() + "'"   #not yet implemented in postgre itself
         
     elif attr.data_type == "LSEG":
-        value = "lseg'" + basic_lseg() + "'"
+        value = basic_lseg()
+        if not attr.array_flag:
+            value = "lseg'" + value + "'"
         
     elif attr.data_type == "NUMERIC":
         value = basic_numeric(attr)
         
     elif attr.data_type == "PATH":
-        value = "path'" + basic_path() + "'"
+        value = basic_path()
+        if not attr.array_flag:
+            value = "path'" + value + "'"
         
     elif attr.data_type == "POINT":
-        value = "point'" + basic_point() + "'"
+        value = basic_point()
+        if not attr.array_flag:
+            value = "point'" + value + "'"
         
     elif attr.data_type == "POLYGON":
-        value = "polygon'" + basic_polygon() + "'"
+        value = basic_polygon()
+        if not attr.array_flag:
+            value = "polygon'" + value + "'"
         
     elif attr.data_type == "SMALLINT":
         CURRENT_MAX = TWO_BYTE_MAX
@@ -378,4 +396,8 @@ def fm_basic(table, attr):
     elif attr.data_type == "VARCHAR":
         value = basic_varchar(table, attr)
         
+        
+    
+    
+    
     return value

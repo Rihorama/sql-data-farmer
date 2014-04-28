@@ -198,6 +198,8 @@ def dsl_parser(f):
         'REGEX',
         'PATH',
         'COMMA',
+        'LBRACKET',
+        'RBRACKET',
     ] + list(reserved.values())
 
     # Tokens
@@ -206,6 +208,8 @@ def dsl_parser(f):
     t_LPAREN  = r'\('
     t_RPAREN  = r'\)'
     t_COMMA = r','
+    t_LBRACKET = r'\['
+    t_RBRACKET = r'\]'
     
     
     # A rule for regular expressions
@@ -336,7 +340,7 @@ def dsl_parser(f):
         
 
     def p_dataType(p):
-        'dataType : TYPE dtypes endline'
+        'dataType : TYPE dtypes moreDimensions endline'
         debug("dataType")
     
     
@@ -361,7 +365,22 @@ def dsl_parser(f):
             new_attribute.serial = True
             
         debug("dtypes")
+    
+    
+    def p_moreDimensions(p):
+        '''moreDimensions : moreDimensions oneDimension
+                          | empty'''
         
+                          
+    def p_oneDimension(p):
+        '''oneDimension : LBRACKET NUMBER RBRACKET'''
+                        
+        global new_attribute
+        new_attribute.array_flag = True
+        new_attribute.array_dim_size.append(p[2]) #p[2] stands for the max size of this array
+        new_attribute.array_dim_cnt = len(new_attribute.array_dim_size)
+        
+
 
     def p_fillMethod(p):
         '''fillMethod : FILL FILL_METHOD_NOPARAM LPAREN RPAREN endline

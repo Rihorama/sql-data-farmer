@@ -62,3 +62,7 @@ class Attribute:
         
         self.serial = False             #serial type won't be filled, the whole attr will have special treatement
         
+        #if it's an array
+        self.array_flag = False
+        self.array_dim_cnt = 0
+        self.array_dim_size = []        #list to store size of an array if given

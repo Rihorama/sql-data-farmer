@@ -62,14 +62,9 @@ class Attribute:
         self.fk_table = None            #table where the foreign key points
         self.fk_attribute = None        #attribute where the foreign key points
         
-        #self.fill_method = None
-        #self.fill_parameters = []
-        
-        #if this is foreign-key-pointed
-        #self.fk_pointed = False
-        #self.fk_times = 0               #how many other attributes point to this one
-        
-        #self.values_list = []           #this will store all values used for filling if neccessary
+        self.array_flag = False
+        self.array_dim_cnt = 0
+        self.array_dim_size = []        #list to store size of an array if given
      
      
     #sets the flag for the certain constraint    
