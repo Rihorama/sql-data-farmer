@@ -1,45 +1,18 @@
-CREATE TABLE ach (
-    je numeric
+CREATE TABLE datum (
+    x date
 );
-CREATE TABLE arr (
-    a1 character(5)[]
+CREATE TABLE stamp (
+    s timestamp with time zone
 );
-CREATE TABLE arr2 (
-    a1 bit(4)[]
+CREATE TABLE timezoneyes (
+    y time(5) with time zone
 );
-CREATE TABLE arr3 (
-    a1 bit(4)[]
+CREATE TABLE tm (
+    x time without time zone
 );
-CREATE TABLE flt (
-    f double precision
+CREATE TABLE x (
+    y macaddr
 );
-CREATE TABLE ip (
-    adr cidr
+CREATE TABLE zoneless (
+    y timestamp without time zone
 );
-CREATE TABLE ip2 (
-    inet_ip inet
-);
-CREATE TABLE nmrc (
-    num numeric(20,0)
-);
-CREATE TABLE realnum (
-    rl real
-);
-CREATE TABLE t1 (
-    p1 integer NOT NULL,
-    p2 integer NOT NULL,
-    p3 character varying(5)
-);
-SEQUENCE t1_p1_seq OWNED BY t1.p1;
-CREATE TABLE t2 (
-    p1 bit(8),
-    p2 integer
-);
-CREATE TABLE t3 (
-    p1 bigint NOT NULL
-);
-SEQUENCE t3_p1_seq OWNED BY t3.p1;
-ALTER TABLE ONLY t1
-    ADD CONSTRAINT t1_pkey PRIMARY KEY (p2);
-ALTER TABLE ONLY t2
-    ADD CONSTRAINT t2_p2_fkey FOREIGN KEY (p2) REFERENCES t1(p2);

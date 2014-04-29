@@ -20,11 +20,13 @@ DTYPE_DICT = {
     'character' : 'CHAR',
     'cidr' : 'CIDR',
     'circle' : 'CIRCLE',
+    'date' : 'DATE',
     'double precision' : 'DOUBLE',
     'inet' : 'INET',
     'integer' : 'INT',
     #'line' : 'LINE',
     'lseg' : 'LSEG',
+    'macaddr' : 'MACADDR',
     'numeric' : 'NUMERIC',
     'path' : 'PATH',
     'point' : 'POINT',
@@ -32,6 +34,8 @@ DTYPE_DICT = {
     'real' : 'REAL',
     'serial' : 'SERIAL',
     'smallint' : 'SMALLINT',
+    'time' : 'TIME',
+    'timestamp' : 'TIMESTAMP',
     'text' : 'TEXT',
     }
 

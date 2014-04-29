@@ -29,6 +29,22 @@ DOUBLE_MAX = 1e308
 DOUBLE_MIN = 1e-307
 
 
+TIMEZONE = [
+    "AST",
+    "CST",
+    "EST",
+    "PST",
+    "CET",
+    "EET",
+    "GMT",
+    "WET",
+    "MSK",
+]
+    
+    
+    
+
+
 # Max range lower than 8: one word will be generated in this range. 
 # Max range greater or equal to 8: more words generated.
 # Vowels and consonants take turns to be at least readable.
@@ -310,7 +326,67 @@ def basic_cidr():
     return value
 
 
+def basic_macaddr():
 
+    value = ""
+    
+    #six couples of hexa digits separated by ":"
+    for i in range(0,6):
+        value = value + exrex.getone(r'[0-9a-f]{2}') + ":"
+    
+    #cuts the last colon
+    value = value[:-1]
+    
+    return "'" + value + "'"
+
+
+def basic_date():
+    
+    year = str(random.randint(1990,2013))           #most recent years that have passed
+    month = str(random.randint(1,12)).zfill(2)      #1-12 filled with zeros if neccessary: 1 -> 01
+    day = random.randint(1,30)                      #let's not bother with 31 for now
+    
+    if month == "02" and day in range(29,30):
+        day = 28
+        
+    day = str(day).zfill(2)
+    value = year + "-" + month + "-" + day
+    
+    return value
+
+
+
+def basic_time(attr):
+    
+    hours = str(random.randint(0,23)).zfill(2)   #again filled with zero if it's single digit 1 -> 01
+    minutes = str(random.randint(0,59)).zfill(2)
+    seconds = str(random.randint(0,59)).zfill(2)
+    
+    p = attr.parameters[0]
+    if p != 0:
+        if p > 6:                        #if larger number given, we set the largest possible = 6
+            p = 6
+        regex = '[0-9]{' + str(p) + '}'
+        frac = exrex.getone(regex)
+        seconds = seconds + "." + frac   #we append the fractional part to seconds
+        
+    time = hours + ":" + minutes + ":" + seconds
+    
+    if attr.data_type == "TIMESTAMP":
+        time = basic_date() + " " + time
+    
+    if attr.parameters[1] == "+TMZ":     #timezone wanted
+        l = len(TIMEZONE) - 1
+        i = random.randint(0,l)
+        zone = TIMEZONE[i]
+        
+        time = time + " " + zone
+        
+    return time
+
+
+
+        
 
 #Basic fill function
 #Recognizes the data type and uses it's basic method
@@ -347,6 +423,9 @@ def fm_basic(table, attr):
         value = basic_circle()
         if not attr.array_flag:
             value = "circle'" + value + "'"
+            
+    elif attr.data_type == "DATE":
+        value = "'" + basic_date() + "'"
         
     elif attr.data_type == "DOUBLE" or attr.data_type == "REAL":
         value = basic_real(attr.data_type)
@@ -367,6 +446,9 @@ def fm_basic(table, attr):
         value = basic_lseg()
         if not attr.array_flag:
             value = "lseg'" + value + "'"
+            
+    elif attr.data_type == "MACADDR":
+        value = basic_macaddr()
         
     elif attr.data_type == "NUMERIC":
         value = basic_numeric(attr)
@@ -392,6 +474,12 @@ def fm_basic(table, attr):
         
     elif attr.data_type == "TEXT":
         value = basic_text(table, attr)
+        
+    elif attr.data_type == "TIME":
+        value = "'" + basic_time(attr) + "'"
+        
+    elif attr.data_type == "TIMESTAMP":
+        value = "'" + basic_time(attr) + "'"
         
     elif attr.data_type == "VARCHAR":
         value = basic_varchar(table, attr)

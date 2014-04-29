@@ -40,9 +40,9 @@ class NullDevice():
 ##
 #function to see the tokens
 ##
-def input_lex(lexer, data):
+def input_lex(lexer, fd):
   
-    #data = f.read() #reads the file to string
+    data = fd.read() #reads the file to string
   
     lexer.input(data)
   
@@ -163,11 +163,13 @@ def dsl_parser(f):
         'CHAR' : 'TYPE_1PARAM',       #CHARACTER 
         'CIDR' : 'TYPE_NOPARAM',
         'CIRCLE' : 'TYPE_NOPARAM',
+        'DATE' : 'TYPE_NOPARAM',
         'DOUBLE' : 'TYPE_NOPARAM',
         'INET' : 'TYPE_NOPARAM',
         'INT' : 'TYPE_NOPARAM',       #INTEGER, INT4
         'LSEG' : 'TYPE_NOPARAM',
         #'LINE' : 'TYPE_NOPARAM',    #not yet implemented in postgre
+        'MACADDR' : 'TYPE_NOPARAM',
         'NUMERIC' : 'TYPE_2PARAM',
         'PATH' : 'TYPE_NOPARAM',
         'POINT' : 'TYPE_NOPARAM',
@@ -176,6 +178,8 @@ def dsl_parser(f):
         'SERIAL' : 'TYPE_NOPARAM',
         'SMALLINT' : 'TYPE_NOPARAM',  #INT2
         'TEXT' : 'TYPE_NOPARAM',
+        'TIME' : 'TYPE_2PARAM_TIME',
+        'TIMESTAMP' : 'TYPE_2PARAM_TIME',
         'VARBIT' : 'TYPE_1PARAM',     #BIT VARYING
         'VARCHAR' : 'TYPE_1PARAM',    #CHARACTER VARYING
         
@@ -200,6 +204,7 @@ def dsl_parser(f):
         'COMMA',
         'LBRACKET',
         'RBRACKET',
+        'TIMEZONE_PARAM',
     ] + list(reserved.values())
 
     # Tokens
@@ -211,6 +216,10 @@ def dsl_parser(f):
     t_LBRACKET = r'\['
     t_RBRACKET = r'\]'
     
+    
+    def t_TIMEZONE_PARAM(t):
+        r'[\+\-]TMZ'
+        return t
     
     # A rule for regular expressions
     def t_REGEX(t):
@@ -257,7 +266,10 @@ def dsl_parser(f):
     sys.stderr = NullDevice()  # redirect the real STDERR
         
     # Build the lexer
-    lexer = lex.lex()  #will be case insensitive
+    lexer = lex.lex()  
+    
+    #fd = open("./dsl.txt",'r')
+    #input_lex(lexer,fd)
     
     #getting ol'stderr back
     sys.stderr = original_stderr
@@ -347,7 +359,8 @@ def dsl_parser(f):
     def p_dtypes(p):
         '''dtypes : TYPE_NOPARAM
                   | TYPE_1PARAM LPAREN NUMBER RPAREN
-                  | TYPE_2PARAM LPAREN NUMBER COMMA NUMBER RPAREN'''
+                  | TYPE_2PARAM LPAREN NUMBER COMMA NUMBER RPAREN
+                  | TYPE_2PARAM_TIME LPAREN NUMBER COMMA TIMEZONE_PARAM RPAREN'''
                   
         global new_attribute
         global new_table
@@ -363,6 +376,10 @@ def dsl_parser(f):
             
         if p[1] == 'SERIAL' or p[1] == 'BIGSERIAL':
             new_attribute.serial = True
+            
+        if p[1] == "TIME":
+            print new_attribute.parameters
+            
             
         debug("dtypes")
     
@@ -490,8 +507,17 @@ def dsl_parser(f):
         err = True     #sets the flag
         #print "Bad function call at line", p.lineno(1)
 
+
+
+    #ignore stderr for a short while
+    original_stderr = sys.stderr  # keep a reference to STDERR
+    sys.stderr = NullDevice()  # redirect the real STDERR
+    
     #build parser
     yacc.yacc()
+    
+    #getting ol'stderr back
+    sys.stderr = original_stderr
     
     #parse the given file
     yacc.parse(f.read())

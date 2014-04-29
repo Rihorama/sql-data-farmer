@@ -39,6 +39,8 @@ ARRAY_FLAG = False
 DIM_CNT = 0
 DIM_SIZE = []
 
+DEFAULT_TIME_PRECISION = 0  #allowed range 0-6 for fractional part of seconds
+
 
 #error flag
 err = False
@@ -124,8 +126,8 @@ def sql_parser(f):
         'smallint' : 'DTYPE_SOLO',
         'serial' : 'DTYPE_SOLO',
         'text' : 'DTYPE_SOLO',
-        'time' : 'DTYPE_1PARAM',       #NOTE: time and timestamp not allowing "with/without
-        'timestamp' : 'DTYPE_SOLO',    #      time zone" at the moment
+        'time' : 'DTYPE_TIMEZONE_PARAM',      
+        'timestamp' : 'DTYPE_TIMEZONE_PARAM',  
         'tsquery' : 'DTYPE_SOLO',
         'tsvector' : 'DTYPE_SOLO',
         'txid_snapshot' : 'DTYPE_SOLO',
@@ -277,12 +279,13 @@ def sql_parser(f):
     #moreDimensions stands for possible array
     def p_dtypes(p):
         '''dtypes : dtypeSolo moreDimensions
-                  | dtypeTwopart moreDimensions'''
+                  | dtypeTwopart moreDimensions
+                  | dtypeTimezone moreDimensions'''
             
         debug("dtypes")
         
         global new_attribute
-        global param_list      #inicializes param_list
+        global param_list
         
         global ARRAY_FLAG
         global DIM_CNT
@@ -300,6 +303,8 @@ def sql_parser(f):
             ARRAY_FLAG = False   #iniciates them for next attributes
             DIM_CNT = 0
             DIM_SIZE = []
+            
+        
             
         
     
@@ -351,7 +356,52 @@ def sql_parser(f):
         global TO_ADD   
         global ADD_VAL
         if p[0] in TO_ADD and len(param_list) == 0:   #we will add parameter for filling purposes if not given
-            param_list.append(ADD_VAL)    #-> varchar(8) and varbit(8)
+            param_list.append(ADD_VAL)                #-> varchar(8) and varbit(8)
+    
+    
+    def p_dtypeTimezone(p):
+        '''dtypeTimezone : DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN
+                         | DTYPE_TIMEZONE_PARAM IDENTIFIER DTYPE_TIMEZONE_PARAM IDENTIFIER
+                         | DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN IDENTIFIER DTYPE_TIMEZONE_PARAM IDENTIFIER'''
+        
+        #The second DTYPE_TIMEZONE_PARAM token is there because "time" is already a keyword
+        #'with' and 'zone' could be keywords but I didn't think it was necessary
+        
+        p[0] = p[1]
+        global param_list
+        param_list = []   #inicializes param_list
+        
+        #if with/without timezone is missing, it's automatically without
+        if len(p) == 5 and p[2] == "(":
+            word1 = "without"
+            word2 = "time"
+            word3 = "zone"
+            param_list.append(p[3])  #we append precision 
+        
+        if len(p) == 5:
+            word1 = p[2]
+            word2 = p[3]
+            word3 = p[4]
+            param_list.append(DEFAULT_TIME_PRECISION)  #we append precision  
+        else:
+            word1 = p[5]
+            word2 = p[6]
+            word3 = p[7]
+            param_list.append(p[3])  #we append precision            
+        
+        st1 = (word1 == "with" or word1 == "without")
+        st2 = (word2 == "time")
+        st3 = (word3 == "zone")
+        
+        if st1 and st2 and st3:   #all true
+            if word1 == "with":
+                x = "+TMZ"
+            else:
+                x = "-TMZ"
+                
+                
+        param_list.append(x)  #we append with/without code
+            
     
     
     def p_moreDimensions(p):
