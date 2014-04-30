@@ -78,7 +78,8 @@ def check_valid(attr):
     
     if method == 'fm_regex':
         
-        check_regex_compatibility(attr)           #check if regex method can be used with given data type
+        #check_regex_compatibility(attr)    #check if regex method can be used with given data type
+                                            #edit: let's leave it free for all - on users responsibility
         try:
             re.compile(str(attr.fill_parameters[0]))   #check if the given parameter is a valid regex
         except re.error:
@@ -88,7 +89,7 @@ def check_valid(attr):
             
             
     elif method == 'fm_textbank':
-        if not attr.data_type in ("VARCHAR", "CHAR"):        
+        if not attr.data_type in ("VARCHAR", "CHAR", "TEXT"):        
         
             msg = "Semantic Error: The given fill method '" + new_attribute.fill_method \
                 + "' incompatible with the given data type '" + new_attribute.data_type \
@@ -150,10 +151,11 @@ def dsl_parser(f):
         'FILL' : 'FILL',
         'CONSTRAINT' : 'CONSTRAINT',
         
-        'unique' : 'CONSTR_NOPARAM',
-        'primary_key' : 'CONSTR_NOPARAM',
+        'unique' : 'CONSTR_1PARAM',
+        'primary_key' : 'CONSTR_1PARAM',
         'foreign_key' : 'CONSTR_NOPARAM',
         'null' : 'CONSTR_1PARAM',
+        'default' : 'CONSTR_1PARAM',
         
         'BIGINT' : 'TYPE_NOPARAM',    #INT8
         'BIGSERIAL' : 'TYPE_NOPARAM',
@@ -205,6 +207,7 @@ def dsl_parser(f):
         'LBRACKET',
         'RBRACKET',
         'TIMEZONE_PARAM',
+        'QUOTE',
     ] + list(reserved.values())
 
     # Tokens
@@ -215,6 +218,7 @@ def dsl_parser(f):
     t_COMMA = r','
     t_LBRACKET = r'\['
     t_RBRACKET = r'\]'
+    t_QUOTE = r'\''
     
     
     def t_TIMEZONE_PARAM(t):
@@ -350,6 +354,8 @@ def dsl_parser(f):
         new_attribute.name = p[2]
         debug("attributeName")
         
+        print "ATTR NAME:", p[2]
+        
 
     def p_dataType(p):
         'dataType : TYPE dtypes moreDimensions endline'
@@ -379,6 +385,8 @@ def dsl_parser(f):
             
         if p[1] == "TIME":
             print new_attribute.parameters
+            
+        print "DATA TYPE:", p[1]
             
             
         debug("dtypes")
@@ -415,41 +423,62 @@ def dsl_parser(f):
             
         #check validity of parameters
         check_valid(new_attribute)
+        
+        print "FILL:", p[2]
     
     
     def p_constraintPart(p):
         '''constraintPart : CONSTRAINT constr moreConstr endline'''
-        
+        debug("constraintPart")
     
     def p_moreConstr(p):
         '''moreConstr : constr moreConstr
                       | empty'''    
-    
+        debug("moreConstr")
     
     def p_constr(p):
         '''constr : CONSTR_NOPARAM
-                      | CONSTR_1PARAM LPAREN NUMBER RPAREN'''
+                  | CONSTR_1PARAM LPAREN NUMBER RPAREN
+                  | CONSTR_1PARAM LPAREN QUOTE QUOTE RPAREN
+                  | CONSTR_1PARAM LPAREN QUOTE inquote QUOTE RPAREN'''
+        debug("constraintPart")
         
         global new_attribute
         
         if p[1] == "foreign_key":
             if not new_attribute.foreign_key:      #this means the given fill method doesn't correspond
                 
-                msg = "Semantic Error: Foreign key constraint stated but wrong fill method '" + new_attribute.fill_method \
-                + "' given to attribute '" + new_attribute.name + "', table '" + new_table.name + "'.\n"
+                msg = "Semantic Error: Foreign key constraint stated but wrong fill method '"\
+                    + new_attribute.fill_method + "' given to attribute '" + new_attribute.name \
+                    + "', table '" + new_table.name + "'.\n"
                 errprint(msg, ERRCODE["SEMANTIC"])
             new_attribute.constraint_cnt -= 1   #not mandatory to be stated so the count has been incremented already    
                                                 #it will be incr. later in this func, so we need to put it back -1
                 
         elif p[1] == "primary_key":
             new_attribute.primary_key = True
+            new_attribute.unique_group = p[3]
         elif p[1] == "unique":
             new_attribute.unique = True
+            new_attribute.unique_group = p[3]
         elif p[1] == "null":
             new_attribute.null = True
         elif p[1] == "not_null":
-            new_attribute.not_null = True            
+            new_attribute.not_null = True 
             
+        elif p[1] == "default":
+            new_attribute.default = True
+            
+            if len(p) == 5:
+                val = p[3]
+            elif len(p) == 6:
+                val = "''"
+            else:
+                val = p[4]
+                
+            new_attribute.default_value =val
+         
+         
         new_attribute.constraint_type = p[1]   
         new_attribute.constraint_flag = True
         new_attribute.constraint_cnt += 1
@@ -465,7 +494,13 @@ def dsl_parser(f):
             
         #TODO: checkovat, ze neni zadana spatna fill metoda 
         
-        
+    
+    
+    def p_inquote(p):
+        '''inquote : NUMBER
+                   | IDENTIFIER'''
+        debug("inquote")           
+        p[0] = p[1]
 
 
     def p_parameters(p):
@@ -501,8 +536,8 @@ def dsl_parser(f):
         
         
     def p_error(p): 
-        print("Syntax error. Trouble with " + repr(str(p.value)) + " on line " + str(p.lineno))
-        
+        msg = "Syntax error. Trouble with " + repr(str(p.value)) + " on line " + str(p.lineno)
+        errprint(msg,ERRCODE[SYNTACTIC])
         global err
         err = True     #sets the flag
         #print "Bad function call at line", p.lineno(1)

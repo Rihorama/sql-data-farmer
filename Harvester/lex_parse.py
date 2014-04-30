@@ -17,29 +17,37 @@ sys.path.insert(0,"../..")
 #TODO: Check newlines at the end of every error message
 
 #table variables
-table_list = []
+table_list = []      #list keeping all table objects we create in the process
 name_dict = {}       #dictionary that helps reach table object by its name
-new_table = None
+new_table = None     #the current new table
 
 #attribute variables
-attr_list = []
-new_attribute = None
-param_list = []
+attr_list = []       #list of attribute objects for the newest table
+new_attribute = None #current attribute
+param_list = []      #data type parameters
 
-alter_table = None
+alter_table = None   #stores the object while we alter it
 alter_attr = None
 
 TO_ADD = ['character varying','bit varying'] 
 ADD_VAL = 8          #number to be a generic parameter for types stated above
 
 NUMERIC_INT = 10     #if we get parameterless numeric, we define these parameters
-NUMERIC_FRAC = 0
+NUMERIC_FRAC = 0     #default frac value for numeric
 
-ARRAY_FLAG = False
-DIM_CNT = 0
-DIM_SIZE = []
+ARRAY_FLAG = False   #do we have an array attribute?
+DIM_CNT = 0          #how many dimensions
+DIM_SIZE = []        #size of each dimension
 
 DEFAULT_TIME_PRECISION = 0  #allowed range 0-6 for fractional part of seconds
+
+TO_SET_CONSTR = []          #list of multiple attributes that need to have their new constraint flagged
+                            #as the parser doesn't know the constr name the moment he's parsing the attrs
+
+PARAM_COUNTER = 0           #incremented with each new parameter, if greater than 1, group counter needed                            
+GROUP_COUNTER = 0           #this is used to mark a group of attributes together being UNIQUE or PRIMARY KEY
+
+
 
 
 #error flag
@@ -58,9 +66,10 @@ class NullDevice():
 ##
 #function to see the tokens
 ##
-def input_lex(lexer, data):
+def input_lex(lexer):
   
-    #data = f.read() #reads the file to string
+    f = open('./tempfile','r')
+    data = f.read() #reads the file to string
   
     lexer.input(data)
   
@@ -140,6 +149,8 @@ def sql_parser(f):
         'FOREIGN' : 'FOREIGN',
         'KEY' : 'KEY',
         'UNIQUE' : 'UNIQUE',
+        'DEFAULT' : 'DEFAULT',
+        'CHECK' : 'CHECK',    
         
     }
 
@@ -147,7 +158,7 @@ def sql_parser(f):
     tokens = [
         'IDENTIFIER',
         'NUMBER',
-        'EOL',
+        #'EOL',
         'LPAREN',
         'RPAREN',
         'SEMICOLON',
@@ -155,6 +166,10 @@ def sql_parser(f):
         'PERIOD',
         'LBRACKET',
         'RBRACKET',
+        'QUOTE',
+        'DQUOTES',
+        'CHECKATTR'        #specially for CHECK attributes that can be anything
+        #'CHARSEQ',        #for DEFAULT reasons - should cover MOST of possibilities for different types
     ] + list(reserved.values())
     
     # Tokens
@@ -165,6 +180,9 @@ def sql_parser(f):
     t_PERIOD = r'\.'
     t_LBRACKET = r'\['
     t_RBRACKET = r'\]'
+    t_QUOTE = r'\''
+    t_DQUOTES = r'"'
+    t_CHECKATTR = r'(\(\()(.*)(\)\))'
     
     
     # A rule for Identifier tokens
@@ -175,25 +193,29 @@ def sql_parser(f):
 
     # A regular expression rule for numbers
     def t_NUMBER(t):
-        r'\d+'
+        r'(\-)?\d+'
         t.value = int(t.value)    
         return t
+    
+    #def t_CHARSEQ(t):
+    #    r'.*[^\']'
 
     # A rule for New Line - to tokenize and count as well
     def t_EOL(t):
         r'\n'
         t.lexer.lineno += len(t.value)
-        return t
+    #    return t
+    
     
            
     # A string containing ignored characters (spaces and tabs)
-    t_ignore  = ' \t\n'
+    t_ignore  = ' \t'
         
 
     # Error handling rule
     def t_error(t):
         print ("Not supported character '%s' at line '%s'" %(t.value[0], t.lineno))
-        
+        exit()
         global err
         err = True    #sets the flag
 
@@ -205,6 +227,8 @@ def sql_parser(f):
         
     # Build the lexer
     lexer = lex.lex()  #will be case insensitive
+    
+    #input_lex(lexer)
     
     #getting ol'stderr back
     sys.stderr = original_stderr
@@ -238,7 +262,7 @@ def sql_parser(f):
         
 
     def p_tableBlock(p):
-        'tableBlock : tableHeader attributeBlock moreAttributes SEMICOLON moreSequenceBlocks'        
+        'tableBlock : tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks'        
         debug("tableBlock")
         
                     
@@ -263,10 +287,10 @@ def sql_parser(f):
         
 
     def p_attributeBlock(p):
-        '''attributeBlock : IDENTIFIER dtypes COMMA
-                          | IDENTIFIER dtypes constraintPart COMMA
-                          | IDENTIFIER dtypes RPAREN
-                          | IDENTIFIER dtypes constraintPart RPAREN'''
+        '''attributeBlock : attributeName dtypes COMMA
+                          | attributeName dtypes constraintPart COMMA
+                          | attributeName dtypes
+                          | attributeName dtypes constraintPart'''
         debug("attributeBlock")
         
         global new_table
@@ -274,13 +298,24 @@ def sql_parser(f):
         
         new_attribute.name = p[1]
         new_table.attr_list.append(new_attribute)
+        
+    
+    def p_attributeName(p):
+        '''attributeName : IDENTIFIER
+                         | dtypeNames
+                         | DQUOTES IDENTIFIER DQUOTES
+                         | DQUOTES dtypeNames DQUOTES'''
+        debug("attributeName")
+        
+        if len(p) == 2:
+            p[0] = p[1]  # we pass the attribute name
+        else:
+            p[0] = p[2]
 
     
     #moreDimensions stands for possible array
     def p_dtypes(p):
-        '''dtypes : dtypeSolo moreDimensions
-                  | dtypeTwopart moreDimensions
-                  | dtypeTimezone moreDimensions'''
+        '''dtypes : dtype moreDimensions'''
             
         debug("dtypes")
         
@@ -304,9 +339,26 @@ def sql_parser(f):
             DIM_CNT = 0
             DIM_SIZE = []
             
+    
+    
+    def p_dtype(p):
+        '''dtype : dtypeSolo
+                 | dtypeTwopart
+                 | dtypeTimezone'''
+        debug("dtype")        
+        p[0] = p[1]
         
-            
         
+    #for attr name same as data type purpose    
+    def p_dtypeNames(p):
+        '''dtypeNames : DTYPE_SOLO
+                      | DTYPE_BOTH_1PARAM
+                      | DTYPE_SOLO_1PARAM2
+                      | DTYPE_TIMEZONE_PARAM
+                      | DTYPE_PART2
+                      | DTYPE_PART1'''
+        debug("dtypeNames")
+        p[0] = p[1]   
     
     
     def p_dtypeSolo(p):
@@ -366,7 +418,7 @@ def sql_parser(f):
         
         #The second DTYPE_TIMEZONE_PARAM token is there because "time" is already a keyword
         #'with' and 'zone' could be keywords but I didn't think it was necessary
-        
+        debug("dtypeTimezone")
         p[0] = p[1]
         global param_list
         param_list = []   #inicializes param_list
@@ -436,16 +488,20 @@ def sql_parser(f):
     def p_constraintPart(p):
         '''constraintPart : constraintPart constraints
                           | empty'''
-        debug("constraintPart")
+
                           
                           
     def p_constraints(p):
         '''constraints : NOT NULL
                        | NULL
-                       | UNIQUE'''
+                       | UNIQUE
+                       | DEFAULT NUMBER
+                       | DEFAULT QUOTE QUOTE
+                       | DEFAULT QUOTE inquote QUOTE
+                       | DEFAULT LPAREN NUMBER RPAREN'''
         debug("constraints")
         
-        if len(p) == 3:
+        if p[1] == "NOT":
             constr = p[1] + ' ' + p[2]
         else:
             constr = p[1]
@@ -454,6 +510,14 @@ def sql_parser(f):
         new_attribute.constraint_flag = True
         new_attribute.constraint_cnt += 1    #increments the cnt
         new_attribute.set_constraint(constr)
+        
+        if new_attribute.default:
+            
+            if len(p) == 5: #default different than just ''
+                new_attribute.default_value = p[3]
+            
+            elif len(p) == 3 and p[1] == "DEFAULT":
+                new_attribute.default_value = p[2]
 
                    
                     
@@ -462,7 +526,27 @@ def sql_parser(f):
         debug("parameter")
         
         p[0] = p[1]
+        
+        
+    def p_inquote(p):
+        '''inquote : NUMBER
+                   | IDENTIFIER'''
+        debug("inquote")           
+        p[0] = p[1]
 
+    
+    #deals with additional check constraints
+    def p_moreCheckBlocks(p):
+        '''moreCheckBlocks : moreCheckBlocks checkBlock
+                           | empty'''
+        debug("moreCheckBlocks")
+    
+    
+    def p_checkBlock(p):
+        '''checkBlock : CONSTRAINT IDENTIFIER CHECK CHECKATTR
+                      | CONSTRAINT IDENTIFIER CHECK CHECKATTR COMMA''' 
+        debug("moreCheckBlocks")
+    
     
     
     def p_moreSequenceBlocks(p):
@@ -536,8 +620,8 @@ def sql_parser(f):
         
         
     def p_alterBody(p):
-        '''alterBody : ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN IDENTIFIER RPAREN
-                     | ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN IDENTIFIER RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+        '''alterBody : ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN
+                     | ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
                      | multi_attr_constr'''        
         debug("alterBody")
         
@@ -594,29 +678,66 @@ def sql_parser(f):
                     errprint(msg, ERRCODE["INPUT"])       
     
     
+    def p_idOrDtypeName(p):
+        '''idOrDtypeName : IDENTIFIER
+                         | dtypeNames'''
+        debug("idOrDtypeName")
+        p[0] = p[1]
+    
     
     #for alters that can apply on more attributes at once
     def p_multi_attr_constr(p):
-        'multi_attr_constr : ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN'
+        '''multi_attr_constr : ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
+                             | ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN'''
         debug("multi_attr_constr")
         
+        global TO_SET_CONSTR
+        global GROUP_COUNTER
+        global PARAM_COUNTER
         
+        if len(p) == 9:       #two word constraint
+            constr = p[4] + " " + p[5]
+        else:
+            constr = p[4]
+        
+        PARAM_COUNTER = len(TO_SET_CONSTR)          #gets size of PARAM_COUNTER so we know how many there are
+
+        #checking if we got more than 1 param. If yes, it means more attributes create a unique group
+        for attr in TO_SET_CONSTR:           
+            attr.set_constraint(constr)             #sets flag for each attribute
+            
+            if PARAM_COUNTER > 1:                   #more than one attribute given as parameter -> group                
+                attr.unique_group = GROUP_COUNTER   #puts all attributes into the same group
+        
+        
+        if PARAM_COUNTER > 1:                       #if we used the current group number
+            GROUP_COUNTER = GROUP_COUNTER + 1       #we increment the counter
+            
+        TO_SET_CONSTR = []      #inicialize the set
+        PARAM_COUNTER = 0       #and turns param counter back to zero
+        
+        
+        
+    #NOTE: For some reason our usually working  'multi_params : multi_params multi_1param'
+    #      not working in this case though it should produce the same result as this rule.
     def p_multi_params(p):
-        '''multi_params : multi_params multi_1param
+        '''multi_params : multi_1param multi_params
                         | empty'''
         debug("multi_params")
                
                
     def p_multi_1param(p):
-        '''multi_1param : IDENTIFIER COMMA
-                        | IDENTIFIER'''
+        '''multi_1param : idOrDtypeName COMMA
+                        | idOrDtypeName'''
         debug("multi_1param")
         
         global alter_attr
-        global alter_table        
+        global alter_table 
+        global TO_SET_CONSTR
+        global PARAM_COUNTER
+        
         alter_attr = None
         alter_name = None
-        constr = "UNIQUE"
         
         #finding the attribute to get altered
         for attr in alter_table.attr_list:
@@ -628,15 +749,14 @@ def sql_parser(f):
         if alter_attr == None:
             msg = "Input error: Couldn't find the given attribute name '" + p[7] \
                     + "' in the list of attributes of table '" + alter_table.name \
-                    + "' while processing a " + constr + ".\n"
+                    + "' while processing a multiparameter ADD CONSTRAINT.\n"
             errprint(msg, ERRCODE["INPUT"]) 
          
          
         alter_attr.constraint_flag = True
-        alter_attr.constraint_cnt += 1    #increments the cnt
-        alter_attr.set_constraint(constr)   
-                        
+        alter_attr.constraint_cnt += 1    #increments the cnt 
         
+        TO_SET_CONSTR.append(alter_attr)        #we pass the attribute to alter
 
 
         
@@ -646,9 +766,8 @@ def sql_parser(f):
         
         
     def p_error(p): 
-        msg = "Syntax error. Trouble with " + repr(str(p.value)) + ".\n"
+        msg = "Syntax error. Trouble with " + repr(str(p.value)) + ". Line:" + str(p.lineno) + ".\n"
         errprint(msg, ERRCODE["SYNTACTIC"]) 
-        
         global err
         err = True     #sets the flag
         #print "Bad function call at line", p.lineno(1)

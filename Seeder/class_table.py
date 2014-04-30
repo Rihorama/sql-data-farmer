@@ -10,6 +10,9 @@ class Table:
         self.attr_count = None
         self.fk = False           # flag for having at least one foreign key
         self.solved = False       # flag if the table has already been filled or not
+        
+        self.unique_values[]      # if a group of attributes creates unique or PK values
+                                  # they are stored as lists inside this list
 
     
     def print_table(self):
@@ -43,6 +46,10 @@ class Attribute:
         self.not_null = False
         self.primary_key = False
         self.foreign_key = False
+        self.default = False
+        
+        self.unique_group = None        #if in group with more attributes, here's the group id
+        self.default_value = None
         
         #if this is a foreign key
         self.fk_table = None            #table where the foreign key points

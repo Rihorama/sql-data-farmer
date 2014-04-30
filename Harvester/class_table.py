@@ -57,6 +57,12 @@ class Attribute:
         self.not_null = False
         self.primary_key = False
         self.foreign_key = False
+        self.default = False
+        self.check = False
+        
+        self.unique_group = None        #if in group with more attributes, here's the group id
+        self.default_value = None
+        self.check_values = []
         
         #if this is a foreign key
         self.fk_table = None            #table where the foreign key points
@@ -78,6 +84,8 @@ class Attribute:
             self.primary_key = True
         elif constr == 'UNIQUE':
             self.unique = True
+        elif constr == 'DEFAULT':
+            self.default = True
         else:
             self.foreign_key = True
         

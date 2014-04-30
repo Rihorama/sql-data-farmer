@@ -31,7 +31,11 @@ def preparse(f,tempf):
             save = ""
             
             
-        if query:
+        if query:                  
+            
+            if "::character varying" in line:  #NOTE:HOPEFULLY TEMPORAL, I have no idea what is this ::stuff for
+                line = line.replace("::character varying","")
+            
             save = save + line
             
             if li.endswith(";"):
@@ -77,7 +81,7 @@ args = arg_parser.parse_args()
 
 #none of them was inserted
 if not args.file and not args.stdout:
-    arg_parser.error( 'You must choose either -f or -s argument.' )
+    arg_parser.error( 'You must choose either -f or -s argument.\n' )
 
 #checking conflicting options for output
 if args.file:
@@ -91,7 +95,7 @@ else:               #stdout
 try:
     f = open(args.src, 'r')
 except IOError:
-    msg = "Input error: The given file of path '" + path + "' cannot be oppened."
+    msg = "Input error: The given file of path '" + args.src + "' cannot be oppened.\n"
     errprint(msg, ERRCODE["INPUT"])
 
 #opening temp file 
@@ -99,7 +103,7 @@ try:
     tempf = open("tempfile", 'w')
     #tempf = tempfile.TemporaryFile()
 except IOError:
-    msg = "Runtime error: Did not manage to create a temporary file 'tempfile'."
+    msg = "Runtime error: Did not manage to create a temporary file 'tempfile'\n."
     errprint(msg, ERRCODE["RUNTIME"])    
     
 
@@ -118,7 +122,7 @@ try:
     tempf = open("tempfile", 'r')
     #tempf = tempfile.TemporaryFile()
 except IOError:
-    msg = "Runtime error: Did not manage to create a temporary file 'tempfile'."
+    msg = "Runtime error: Did not manage to create a temporary file 'tempfile'\n."
     errprint(msg, ERRCODE["RUNTIME"])    
 #docasne    
     

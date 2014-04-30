@@ -12,7 +12,7 @@ FOUR_BYTE_MAX = 2147483647
 TWO_BYTE_MAX = 32767
 EIGHT_BYTE_MAX = 9223372036854775807
 
-CURRENT_MAX = None
+CURRENT_MAX = None  #set according to integer type comming to one of the values above
 
 POINT_MAX = 9  #our maximum for point's integer part
 
@@ -62,12 +62,13 @@ def basic_varchar(table, attr):
     if max_range == 1:
         min_range = 1
     
-    
-    #the regular expression to be used will be chosen according to the max range
-    if max_range < 8:     #product will be one word
-        regex = r'[BCDFGHJKLMNPQRSTVWXZ][aeiouy]([bcdfghjklmnpqrstvwxz][aeiouy])+'        
-    else:
-        regex = r'[BCDFGHJKLMNPQRSTVWXZ][aeiouy]([bcdfghjklmnpqrstvwxz][aeiouy]){1,2} (([bcdfghjklmnpqrstvwxz][aeiouy]){1,3})+'
+    #adjusting the max range
+    if max_range > 10:    
+        max_range = 10
+        
+    regex = r'[BCDFGHJKLMNPQRSTVWXZ][aeiouy]([bcdfghjklmnpqrstvwxz][aeiouy])+'        
+    #else:
+    #    regex = r'[BCDFGHJKLMNPQRSTVWXZ][aeiouy]([bcdfghjklmnpqrstvwxz][aeiouy]){1,2} (([bcdfghjklmnpqrstvwxz][aeiouy]){1,3})+'
         
 
     string = exrex.getone(regex)
@@ -139,18 +140,15 @@ def basic_bool():
 
 
 
-
+#positive integer
 def basic_int(table, attr):
     
     flag = True
-    regex = r'[-]?\d+'
+    regex = r'\d+'
     value = exrex.getone(regex)
     
     while(int(value) > CURRENT_MAX or int(value) < -CURRENT_MAX):           
         value = value[:-1]  #fitting the value to allowed range
-         
-    if value == "-0":
-        value = "0"
   
     return value
 
@@ -393,7 +391,7 @@ def basic_time(attr):
 def fm_basic(table, attr):
         
     global CURRENT_MAX
-    #supported types for now: VARCHAR, BIT, CHAR, BOOLEAN, INT
+
     if attr.data_type == "BIGINT":
         CURRENT_MAX = EIGHT_BYTE_MAX
         value = basic_int(table, attr)

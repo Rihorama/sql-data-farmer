@@ -30,7 +30,7 @@ def check_unique(attr,value):
 def get_foreign(attr):   
     
     if not attr.fk_assigned: #we encounter this attr for the first time
-        if attr.unique:
+        if attr.unique or attr.primary_key:
             attr.fk_values = attr.fk_attribute.values_list[:]  #duplicates the values list
         else:
             attr.fk_values = attr.fk_attribute.values_list #only assigns the existing list
@@ -51,7 +51,7 @@ def get_foreign(attr):
         i = random.randint(0,length-1)          #randomly chooses one index, minus 1 counts with empty endline
     
     
-    if attr.unique:
+    if attr.unique or attr.primary_key:
         if len(val_list) != 0:       #we have something to take from
             value = val_list[i]
             del val_list[i]          #removes the value so we can't use it again
@@ -214,7 +214,7 @@ def get_values(table):
 
         values = values + str(new_val) + ", "     #concatenates the new value with the rest and divides with a ','
         
-        if attr.fk_pointed or attr.unique:        #we will need these values either for filling foreign key attributes
+        if attr.fk_pointed or attr.unique or attr.primary_key:        #we will need these values either for filling foreign key attributes
             attr.values_list.append(new_val)      #or to make sure each inserted value is unique   
             
             

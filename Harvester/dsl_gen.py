@@ -92,14 +92,31 @@ def get_constr_line(attr):
     
     line = "\t\tCONSTRAINT "
     
-    if attr.null:
-        line = line + "null(" + NULL_CHANCE + ") "
-    if attr.primary_key:
-        line = line + "primary_key "
     if attr.foreign_key:
         line = line + "foreign_key "
+        
+    if attr.primary_key:
+        if attr.unique_group:
+            x = attr.unique_group  #we'll print the group number if given
+        else:
+            x = 0                  #zero stands for UNIQUE/PK alone attributes
+        line = line + "primary_key(" + str(x) + ") "
+        
     if attr.unique:
-        line = line + "unique "
+        if attr.unique_group:
+            x = attr.unique_group  #we'll print the group number if given
+        else:
+            x = 0                  #zero stands for UNIQUE/PK alone attributes
+        line = line + "unique(" + str(x) + ") "
+        
+    if attr.null:
+        line = line + "null(" + NULL_CHANCE + ") "
+        
+    if attr.default:
+        if attr.default_value != None:
+            line = line + "default(" + str(attr.default_value) + ") "
+        else:
+            line = line + "default('') "
         
     return line
         
@@ -128,7 +145,7 @@ def dsl_generator(table_list,DEST):
         fd.write("TABLE:" + table.name + "(" + str(FILL_CNT) + ")\n")
         
         for attr in table.attr_list:
-            fd.write("\t::" + attr.name + "\n")            
+            fd.write("\t::" + attr.name + "\n")  
             fd.write(get_dtype_line(attr) + "\n")
             fd.write(get_fill_line(attr) + "\n")
             fd.write(get_constr_line(attr) + "\n")
