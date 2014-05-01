@@ -208,6 +208,7 @@ def dsl_parser(f):
         'RBRACKET',
         'TIMEZONE_PARAM',
         'QUOTE',
+        'BACKSLASH',
     ] + list(reserved.values())
 
     # Tokens
@@ -219,7 +220,14 @@ def dsl_parser(f):
     t_LBRACKET = r'\['
     t_RBRACKET = r'\]'
     t_QUOTE = r'\''
+    #t_BACKSLASH = r'r[\\@]'
+    #t_REGEX = r'r\'[\\ 0-9A-Za-z#\$%=@!\{\},`~\&\*\(\)\<\>\?\.:;_\|\^/+\[\]"\-]*\''
+    #t_REGEX = r'r\'[ 0-9A-Za-z#\$%=@!\{\},`~\&\*\(\)\<\>?\.:;_\|\^/+\t\r\n\[\]"\-]*\''
+    #([bcdfghjklmnpqrstvwxz][aeiouy]){3}@([bcdfghjklmnpqrstvwxz][aeiouy]){2}\.
     
+    
+    def t_BACKSLASH(t):
+        r'\'\\@\''
     
     def t_TIMEZONE_PARAM(t):
         r'[\+\-]TMZ'
@@ -227,7 +235,7 @@ def dsl_parser(f):
     
     # A rule for regular expressions
     def t_REGEX(t):
-        r'r\'[ 0-9A-Za-z#$%=@!{},`~&*()<>?.:;_|^/+\t\r\n\[\]"-]*\''
+        r'\'[\\ 0-9A-Za-z#\$%=@!\{\},`~\&\*\(\)\<\>\?\.:;_\|\^/+\[\]"\-]+\''
         return t
 
     # A rule for Identifier tokens
@@ -272,8 +280,8 @@ def dsl_parser(f):
     # Build the lexer
     lexer = lex.lex()  
     
-    #fd = open("./dsl.txt",'r')
-    #input_lex(lexer,fd)
+    fd = open("./dsl.txt",'r')
+    input_lex(lexer,fd)
     
     #getting ol'stderr back
     sys.stderr = original_stderr
@@ -354,8 +362,6 @@ def dsl_parser(f):
         new_attribute.name = p[2]
         debug("attributeName")
         
-        print "ATTR NAME:", p[2]
-        
 
     def p_dataType(p):
         'dataType : TYPE dtypes moreDimensions endline'
@@ -385,8 +391,7 @@ def dsl_parser(f):
             
         if p[1] == "TIME":
             print new_attribute.parameters
-            
-        print "DATA TYPE:", p[1]
+
             
             
         debug("dtypes")
@@ -423,8 +428,7 @@ def dsl_parser(f):
             
         #check validity of parameters
         check_valid(new_attribute)
-        
-        print "FILL:", p[2]
+
     
     
     def p_constraintPart(p):
@@ -536,8 +540,8 @@ def dsl_parser(f):
         
         
     def p_error(p): 
-        msg = "Syntax error. Trouble with " + repr(str(p.value)) + " on line " + str(p.lineno)
-        errprint(msg,ERRCODE[SYNTACTIC])
+        msg = "Syntax error. Trouble with " + repr(str(p.value)) + " on line " + str(p.lineno) + ".\n"
+        errprint(msg,ERRCODE["SYNTACTIC"])
         global err
         err = True     #sets the flag
         #print "Bad function call at line", p.lineno(1)

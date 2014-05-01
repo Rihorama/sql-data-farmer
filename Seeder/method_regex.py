@@ -13,7 +13,7 @@ def fm_regex(table, attr):
         
     
     regex = attr.fill_parameters[0]
-    regex = regex[2:-1]
+    regex = regex[1:-1]              #cuts the quotes
    
     value = exrex.getone(regex)
 
