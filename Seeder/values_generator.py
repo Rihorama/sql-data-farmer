@@ -18,11 +18,32 @@ TABLE_DICT = {}    #dictionary of all tables (name:object)
 #returns True, if it's OK, False if it has been used
 def check_unique(attr,value):
     
-    if value in attr.values_list:
+    #if the value belongs to a group that is supposed to be unique together
+    #it's considered ok here so it passes
+    if not attr.unique_group and value in attr.values_list : #if
         return False
     
     return True
 
+
+#checks if the given group of values has not been used in this table yet.
+#returns True, if it's OK, False if it has been used
+def check_unique_group(table,value):
+    
+    if value in table.unique_values: 
+        return False
+    
+    return True
+
+
+#We remove last added foreign key from every fk_pointed attribute.
+#Happens when we have to restart the last generated insert because
+#group combination of some values in it is not unique.
+def remove_foreign(table):
+
+    for attr in table.attr_list:
+        if attr.fk_pointed:
+            attr.values_list.pop()
 
 
 # Finds the value list for the attribute that the foreign key points to
@@ -30,7 +51,7 @@ def check_unique(attr,value):
 def get_foreign(attr):   
     
     if not attr.fk_assigned: #we encounter this attr for the first time
-        if attr.unique or attr.primary_key:
+        if (attr.unique or attr.primary_key) and not attr.unique_group:
             attr.fk_values = attr.fk_attribute.values_list[:]  #duplicates the values list
         else:
             attr.fk_values = attr.fk_attribute.values_list #only assigns the existing list
@@ -51,7 +72,9 @@ def get_foreign(attr):
         i = random.randint(0,length-1)          #randomly chooses one index, minus 1 counts with empty endline
     
     
-    if attr.unique or attr.primary_key:
+    #goes through only if not part of a group
+    #I suppose the combo of single foreign key and group unique/pk is a bit wild but to make sure
+    if (attr.unique or attr.primary_key) and not attr.unique_group:
         if len(val_list) != 0:       #we have something to take from
             value = val_list[i]
             del val_list[i]          #removes the value so we can't use it again
@@ -154,13 +177,14 @@ def get_array(table,attr):
 # Returns a string concatenated of generated values for each attribute
 def get_values(table):
     
+    unique_values = []            #to store all valueas that create a unique/pk group
     values = ""
 
     for attr in table.attr_list:
         
         new_val = None
         
-        if attr.foreign_key:
+        if attr.foreign_key:         #foreign key is filled from existing values
             new_val = get_foreign(attr)  
             
         elif attr.serial:
@@ -200,28 +224,34 @@ def get_values(table):
                     errprint(msg, ERRCODE["RUNTIME"])
                 
                 exec func                              #we call the method again (and again)
-                timeout += 1
-        
+                timeout += 1        
         
         
         #NULL appearance chance
         if attr.null == 'null':            
             chance = random.randint(0,100)
             if chance < attr.constraint_parameters[0]:
-                new_val = 'NULL'
-                
+                new_val = 'NULL'                
 
 
         values = values + str(new_val) + ", "     #concatenates the new value with the rest and divides with a ','
         
-        if attr.fk_pointed or attr.unique or attr.primary_key:        #we will need these values either for filling foreign key attributes
-            attr.values_list.append(new_val)      #or to make sure each inserted value is unique   
+        
+        if attr.fk_pointed or attr.unique or attr.primary_key:     #we will need these values either for filling foreign key attributes
+            
+            if attr.unique_group and not attr.fk_pointed:          #this value has meaning only in group
+                unique_values.append(new_val)      
+            elif attr.unique_group and attr.fk_pointed:            #value important alone and in group as well 
+                attr.values_list.append(new_val)
+                unique_values.append(new_val)
+            else:
+                attr.values_list.append(new_val)                   #value important alone  
             
             
         
     values = values[:-2]       #removes the ',' from the end of the string once we end
     
-    return values    
+    return {'values' : values , 'unique_values' : unique_values}    
    
 
 
@@ -250,8 +280,22 @@ def table_filler(table):
         return True              #means there is an unifnished table
         
     
-    for i in range(0,table.fill_count):
-        values = get_values(table)
+    for i in range(0,table.fill_count):      
+        flag = True
+        
+        while flag:
+            flag = False
+            result = get_values(table)
+            values = result['values']
+            unique_values = result['unique_values']
+            
+            if len(unique_values) > 0 and not check_unique_group(table,unique_values):
+                flag = True            #this set of values has already been used, we need to do it all again
+                remove_foreign(table)  #will remove all values possibly saved during this generating
+           
+            elif len(unique_values) > 0: #group is unique as checked in above branch
+                table.unique_values.append(unique_values)  #we append so this combo cannot be used again
+        
         string = "INSERT INTO " + table.name + "\n" + "VALUES (" + values + ");\n"
         print string
         textbank_close(table)  #closes the file if it's opened

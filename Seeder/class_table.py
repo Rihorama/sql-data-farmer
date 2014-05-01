@@ -11,7 +11,7 @@ class Table:
         self.fk = False           # flag for having at least one foreign key
         self.solved = False       # flag if the table has already been filled or not
         
-        self.unique_values[]      # if a group of attributes creates unique or PK values
+        self.unique_values = []   # if a group of attributes creates unique or PK values
                                   # they are stored as lists inside this list
 
     
