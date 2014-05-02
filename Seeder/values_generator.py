@@ -12,6 +12,17 @@ from printer import errprint, ERRCODE
 TABLE_DICT = {}    #dictionary of all tables (name:object)
 
 
+#referenced type : referencing type(foreign key)
+COMPATIBLE = {
+    'BIGSERIAL' : 'BIGINT',
+    'SERIAL' : 'INT',
+    'BIGINT' : 'BIGSERIAL',
+    'INT' : 'SERIAL',
+    'INT' : 'BIGSERIAL',
+    'SERIAL' : 'BIGINT',
+}
+
+
 
 #TODO: pripadne vyresit smazani seznamu promennych, kdyz uz nejsou treba
 
@@ -50,6 +61,13 @@ def remove_foreign(table):
 # Finds the value list for the attribute that the foreign key points to
 # and randomly chooses and returns one value from it.
 def get_foreign(attr):   
+    
+    #special case of prefilled tables already in db
+    if attr.fk_table.fill_count == "FILLED":
+        value = "(select " + attr.fk_attribute.name + " from " + attr.fk_table.name \
+                + " offset random() * (select count(*) from " + attr.fk_table.name +") limit 1)"
+        return value
+    
     
     if not attr.fk_assigned: #we encounter this attr for the first time
         if (attr.unique or attr.primary_key) and not attr.unique_group:
@@ -352,7 +370,11 @@ def iniciate_fk(table_list):
     create_table_dict(table_list) 
     
     
-    for table in table_list:   
+    for table in table_list:
+        
+        if table.fill_count == "FILLED":  #this table is prefilled in the database
+            table.solved = True           #so we are not filling it here
+        
         if table.fk:              #if this table contains foreign keys
             
             for attr in table.attr_list:    #we cycle over its attributes
@@ -397,8 +419,13 @@ def iniciate_fk(table_list):
                         msg = "Semantic error: The given foreign attribute '" + fattr_name + "' doesn't exist in table '" \
                                + ftable_name + "'."
                         errprint(msg, ERRCODE["SEMANTIC"])
-                        
-                    if fattr.data_type != attr.data_type:       #types do not correspond
+                    
+                    #types not compatible
+                    
+                    print "FATTR", fattr.data_type, "ATTR", attr.data_type
+                    print "FATTR KEY ->",COMPATIBLE[fattr.data_type]
+                    
+                    if fattr.data_type != attr.data_type and COMPATIBLE[fattr.data_type] != attr.data_type:
                         msg = "Semantic error: The foreign-key-type attribute '" + attr.name + "'s data type doesn't correspond with " \
                               "the data type of the attribute it references to. Table: '" + table.name + "'\n"
                         errprint(msg, ERRCODE["SEMANTIC"])

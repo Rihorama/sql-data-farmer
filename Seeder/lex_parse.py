@@ -109,10 +109,13 @@ def check_valid(attr):
         
         new_table.fk = True                   #sets the flag that table contains a foreign key
         attr.foreign_key = True               #this flag allows us to fill this attr properly (if different than foreign key data type given, we have to set it here)
-        attr.fk_table = string[0:pos]     #gets what is before the colon
+        attr.fk_table = string[0:pos]         #gets what is before the colon
         attr.fk_attribute = string[(pos+1):]
         
-        print "FKFKFKFK",attr.foreign_key
+        if new_table.name == attr.fk_table:
+            msg = "Semantic Error: Foreign key referencing the same table not supported. Table: '" \
+                  + new_table.name + "', attribute: '" + attr.name + "'.\n"
+            errprint(msg, ERRCODE["SEMANTIC"])
         
         
     elif method == 'fm_default':
@@ -120,6 +123,7 @@ def check_valid(attr):
         if not attr.default:
             msg = "Semantic Error: Fill method fm_default stated but no DEFAULT value given.'.\n"
             errprint(msg, ERRCODE["SEMANTIC"])
+            
         
         
 
@@ -156,6 +160,8 @@ def dsl_parser(f):
         'TYPE' : 'TYPE',
         'FILL' : 'FILL',
         'CONSTRAINT' : 'CONSTRAINT',
+        
+        'FILLED' : 'FILLED',
         
         'unique' : 'CONSTR_1PARAM',
         'primary_key' : 'CONSTR_1PARAM',
@@ -333,7 +339,8 @@ def dsl_parser(f):
         
 
     def p_tableHeader(p):
-        'tableHeader : TABLE COLON IDENTIFIER LPAREN NUMBER RPAREN endline'
+        '''tableHeader : TABLE COLON IDENTIFIER LPAREN NUMBER RPAREN endline
+                       | TABLE COLON IDENTIFIER LPAREN FILLED RPAREN endline'''
         
         global new_table
         new_table = table.Table() # creates new table instance
