@@ -2,6 +2,7 @@
 import class_table
 from method_basic import fm_basic
 from method_regex import fm_regex
+from method_default import fm_default
 from method_textbank import fm_textbank, textbank_close
 import sys
 import random

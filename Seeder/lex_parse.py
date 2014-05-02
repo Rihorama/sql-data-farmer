@@ -69,7 +69,7 @@ def check_collision():
 
 
 ##
-#function to check valid parameters for fill method
+#check of valid parameters/constraints/data types for fill method
 ##
 def check_valid(attr):
     
@@ -98,9 +98,7 @@ def check_valid(attr):
             
     
     elif method == 'fm_reference':        
-        
-        global FK_FLAG
-        
+                
         string = attr.fill_parameters[0]
         pos = string.find(":")
         
@@ -110,12 +108,20 @@ def check_valid(attr):
             errprint(msg, ERRCODE["SEMANTIC"])
         
         new_table.fk = True                   #sets the flag that table contains a foreign key
-        attr.constraint_flag = True
-        attr.foreign_key = True
-        new_attribute.constraint_cnt += 1
-        
+        attr.foreign_key = True               #this flag allows us to fill this attr properly (if different than foreign key data type given, we have to set it here)
         attr.fk_table = string[0:pos]     #gets what is before the colon
         attr.fk_attribute = string[(pos+1):]
+        
+        print "FKFKFKFK",attr.foreign_key
+        
+        
+    elif method == 'fm_default':
+        
+        if not attr.default:
+            msg = "Semantic Error: Fill method fm_default stated but no DEFAULT value given.'.\n"
+            errprint(msg, ERRCODE["SEMANTIC"])
+        
+        
 
 
 ##
@@ -189,6 +195,7 @@ def dsl_parser(f):
         'fm_regex' : 'FILL_METHOD_1PARAM',
         'fm_textbank' : 'FILL_METHOD_1PARAM',
         'fm_reference' : 'FILL_METHOD_1PARAM',
+        'fm_default' : 'FILL_METHOD_1PARAM',
         
     }
 
@@ -246,7 +253,7 @@ def dsl_parser(f):
 
     # A regular expression rule for numbers
     def t_NUMBER(t):
-        r'\d+'
+        r'(\-)?\d+'
         t.value = int(t.value)    
         return t
 
@@ -345,7 +352,11 @@ def dsl_parser(f):
         global new_attribute
         global attr_list
         
-        #first we check possible data_type and constraint collisions
+        
+        #first we check compatibility of given functions, parameters and data types
+        check_valid(new_attribute)
+        
+        #then we check possible data_type and constraint collisions
         check_collision()
         
         attr_list.append(new_attribute)       #appends the new attribute
@@ -424,11 +435,6 @@ def dsl_parser(f):
         if len(p) == 7:     #one parameter
             new_attribute.fill_parameters = []          #clears the list
             new_attribute.fill_parameters.append(p[4])
-            
-            
-        #check validity of parameters
-        check_valid(new_attribute)
-
     
     
     def p_constraintPart(p):
@@ -450,15 +456,8 @@ def dsl_parser(f):
         global new_attribute
         
         if p[1] == "foreign_key":
-            if not new_attribute.foreign_key:      #this means the given fill method doesn't correspond
-                
-                msg = "Semantic Error: Foreign key constraint stated but wrong fill method '"\
-                    + new_attribute.fill_method + "' given to attribute '" + new_attribute.name \
-                    + "', table '" + new_table.name + "'.\n"
-                errprint(msg, ERRCODE["SEMANTIC"])
-            new_attribute.constraint_cnt -= 1   #not mandatory to be stated so the count has been incremented already    
-                                                #it will be incr. later in this func, so we need to put it back -1
-                
+            new_attribute.foreign_key = True 
+            print "FIRST HERE",new_attribute.foreign_key
         elif p[1] == "primary_key":
             new_attribute.primary_key = True
             new_attribute.unique_group = p[3]
@@ -481,7 +480,6 @@ def dsl_parser(f):
                 val = p[4]
                 
             new_attribute.default_value =val
-         
          
         new_attribute.constraint_type = p[1]   
         new_attribute.constraint_flag = True
@@ -515,6 +513,7 @@ def dsl_parser(f):
     def p_parameter(p):
         '''parameter : PATH
                      | REGEX
+                     | NUMBER
                      | IDENTIFIER
                      | IDENTIFIER COLON IDENTIFIER'''
         p[0] = p[1]                 #returns the value in p[0]
