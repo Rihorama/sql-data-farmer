@@ -63,7 +63,8 @@ def remove_foreign(table):
 def get_foreign(attr):   
     
     #special case of prefilled tables already in db
-    if attr.fk_table.fill_count == "FILLED":
+    #or the foreign key is filled by inserting DEFAULT
+    if attr.fk_table.fill_count == "FILLED" or attr.fk_attribute.serial:
         value = "(select " + attr.fk_attribute.name + " from " + attr.fk_table.name \
                 + " offset random() * (select count(*) from " + attr.fk_table.name +") limit 1)"
         return value

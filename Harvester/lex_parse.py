@@ -122,7 +122,7 @@ def sql_parser(f):
         'precision' : 'DTYPE_PART2',
         'inet' : 'DTYPE_SOLO',
         'integer' : 'DTYPE_SOLO',
-        'interval' : 'DTYPE_2PARAM',    #2PARAM: two ??mandatory parameters
+        'interval' : 'DTYPE_2PARAM',    #2PARAM: two ??mandatory parameters -not supported for filling now
         #'line' : 'DTYPE_SOLO',
         'lseg' : 'DTYPE_SOLO',
         'macaddr' : 'DTYPE_SOLO',
@@ -168,8 +168,9 @@ def sql_parser(f):
         'RBRACKET',
         'QUOTE',
         'DQUOTES',
-        'CHECKATTR'        #specially for CHECK attributes that can be anything
-        #'CHARSEQ',        #for DEFAULT reasons - should cover MOST of possibilities for different types
+        'CHECKATTR',        #specially for CHECK attributes that can be anything
+        'COLON',
+
     ] + list(reserved.values())
     
     # Tokens
@@ -183,6 +184,7 @@ def sql_parser(f):
     t_QUOTE = r'\''
     t_DQUOTES = r'"'
     t_CHECKATTR = r'(\(\()(.*)(\)\))'
+    t_COLON = r'\:'
     
     
     # A rule for Identifier tokens
@@ -495,10 +497,10 @@ def sql_parser(f):
         '''constraints : NOT NULL
                        | NULL
                        | UNIQUE
-                       | DEFAULT NUMBER
-                       | DEFAULT QUOTE QUOTE
-                       | DEFAULT QUOTE inquote QUOTE
-                       | DEFAULT LPAREN NUMBER RPAREN'''
+                       | DEFAULT NUMBER retype
+                       | DEFAULT QUOTE QUOTE retype
+                       | DEFAULT QUOTE inquote QUOTE retype
+                       | DEFAULT LPAREN NUMBER RPAREN retype'''
         debug("constraints")
         
         if p[1] == "NOT":
@@ -519,7 +521,17 @@ def sql_parser(f):
             elif len(p) == 3 and p[1] == "DEFAULT":
                 new_attribute.default_value = p[2]
 
-                   
+    
+    def p_retype(p):
+        '''retype : COLON COLON idOrDtypeName
+                  | COLON COLON idOrDtypeName idOrDtypeName
+                  | empty'''
+        debug("retype")
+        
+        #this happens sometimes when default value given
+        #nothing happens, we don't need any info from here
+    
+    
                     
     def p_parameter(p):
         '''parameter : NUMBER'''        
@@ -592,6 +604,11 @@ def sql_parser(f):
         
         elif seq_attr.data_type == "bigint":
            seq_attr.data_type = "bigserial"
+           
+           #any other type that has a filling sequence gets serial dtype
+           #gonna get 'DEFAULT' as insert value
+        else:
+           seq_attr.data_type = "serial" 
         
     
     

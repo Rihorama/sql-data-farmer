@@ -33,8 +33,8 @@ def preparse(f,tempf):
             
         if query:                  
             
-            if "::character varying" in line:  #NOTE:HOPEFULLY TEMPORAL, I have no idea what is this ::stuff for
-                line = line.replace("::character varying","")
+            #if "::character varying" in line:  #NOTE:HOPEFULLY TEMPORAL, I have no idea what is this ::stuff for
+            #    line = line.replace("::character varying","")
             
             save = save + line
             

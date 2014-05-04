@@ -1,15 +1,15 @@
 CREATE TABLE actions (
-    aid character varying(255) DEFAULT '0' NOT NULL,
-    type character varying(32) DEFAULT '' NOT NULL,
-    callback character varying(255) DEFAULT '' NOT NULL,
+    aid character varying(255) DEFAULT '0'::character varying NOT NULL,
+    type character varying(32) DEFAULT ''::character varying NOT NULL,
+    callback character varying(255) DEFAULT ''::character varying NOT NULL,
     parameters bytea NOT NULL,
-    label character varying(255) DEFAULT '0' NOT NULL
+    label character varying(255) DEFAULT '0'::character varying NOT NULL
 );
 CREATE TABLE authmap (
     aid integer NOT NULL,
     uid integer DEFAULT 0 NOT NULL,
-    authname character varying(128) DEFAULT '' NOT NULL,
-    module character varying(128) DEFAULT '' NOT NULL,
+    authname character varying(128) DEFAULT ''::character varying NOT NULL,
+    module character varying(128) DEFAULT ''::character varying NOT NULL,
     CONSTRAINT authmap_aid_check CHECK ((aid >= 0))
 );
 SEQUENCE authmap_aid_seq OWNED BY authmap.aid;
@@ -22,23 +22,23 @@ CREATE TABLE batch (
 );
 CREATE TABLE block (
     bid integer NOT NULL,
-    module character varying(64) DEFAULT '' NOT NULL,
-    delta character varying(32) DEFAULT '0' NOT NULL,
-    theme character varying(64) DEFAULT '' NOT NULL,
+    module character varying(64) DEFAULT ''::character varying NOT NULL,
+    delta character varying(32) DEFAULT '0'::character varying NOT NULL,
+    theme character varying(64) DEFAULT ''::character varying NOT NULL,
     status smallint DEFAULT 0 NOT NULL,
     weight integer DEFAULT 0 NOT NULL,
-    region character varying(64) DEFAULT '' NOT NULL,
+    region character varying(64) DEFAULT ''::character varying NOT NULL,
     custom smallint DEFAULT 0 NOT NULL,
     visibility smallint DEFAULT 0 NOT NULL,
     pages text NOT NULL,
-    title character varying(64) DEFAULT '' NOT NULL,
+    title character varying(64) DEFAULT ''::character varying NOT NULL,
     cache smallint DEFAULT 1 NOT NULL
 );
 SEQUENCE block_bid_seq OWNED BY block.bid;
 CREATE TABLE block_custom (
     bid integer NOT NULL,
     body text,
-    info character varying(128) DEFAULT '' NOT NULL,
+    info character varying(128) DEFAULT ''::character varying NOT NULL,
     format character varying(255),
     CONSTRAINT block_custom_bid_check CHECK ((bid >= 0))
 );
@@ -56,82 +56,82 @@ CREATE TABLE block_role (
 );
 CREATE TABLE blocked_ips (
     iid integer NOT NULL,
-    ip character varying(40) DEFAULT '' NOT NULL,
+    ip character varying(40) DEFAULT ''::character varying NOT NULL,
     CONSTRAINT blocked_ips_iid_check CHECK ((iid >= 0))
 );
 SEQUENCE blocked_ips_iid_seq OWNED BY blocked_ips.iid;
 CREATE TABLE cache (
-    cid character varying(255) DEFAULT '' NOT NULL,
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
     serialized smallint DEFAULT 0 NOT NULL
 );
 CREATE TABLE cache_block (
-    cid character varying(255) DEFAULT '' NOT NULL,
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
     serialized smallint DEFAULT 0 NOT NULL
 );
 CREATE TABLE cache_bootstrap (
-    cid character varying(255) DEFAULT '' NOT NULL,
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
     serialized smallint DEFAULT 0 NOT NULL
 );
 CREATE TABLE cache_field (
-    cid character varying(255) DEFAULT '' NOT NULL,
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
     serialized smallint DEFAULT 0 NOT NULL
 );
 CREATE TABLE cache_filter (
-    cid character varying(255) DEFAULT '' NOT NULL,
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
     serialized smallint DEFAULT 0 NOT NULL
 );
 CREATE TABLE cache_form (
-    cid character varying(255) DEFAULT '' NOT NULL,
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
     serialized smallint DEFAULT 0 NOT NULL
 );
 CREATE TABLE cache_image (
-    cid character varying(255) DEFAULT '' NOT NULL,
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
     serialized smallint DEFAULT 0 NOT NULL
 );
 CREATE TABLE cache_menu (
-    cid character varying(255) DEFAULT '' NOT NULL,
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
     serialized smallint DEFAULT 0 NOT NULL
 );
 CREATE TABLE cache_page (
-    cid character varying(255) DEFAULT '' NOT NULL,
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
     serialized smallint DEFAULT 0 NOT NULL
 );
 CREATE TABLE cache_path (
-    cid character varying(255) DEFAULT '' NOT NULL,
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
     serialized smallint DEFAULT 0 NOT NULL
 );
 CREATE TABLE cache_update (
-    cid character varying(255) DEFAULT '' NOT NULL,
+    cid character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
@@ -142,8 +142,8 @@ CREATE TABLE comment (
     pid integer DEFAULT 0 NOT NULL,
     nid integer DEFAULT 0 NOT NULL,
     uid integer DEFAULT 0 NOT NULL,
-    subject character varying(64) DEFAULT '' NOT NULL,
-    hostname character varying(128) DEFAULT '' NOT NULL,
+    subject character varying(64) DEFAULT ''::character varying NOT NULL,
+    hostname character varying(128) DEFAULT ''::character varying NOT NULL,
     created integer DEFAULT 0 NOT NULL,
     changed integer DEFAULT 0 NOT NULL,
     status integer DEFAULT 1 NOT NULL,
@@ -151,7 +151,7 @@ CREATE TABLE comment (
     name character varying(60),
     mail character varying(64),
     homepage character varying(255),
-    language character varying(12) DEFAULT '' NOT NULL,
+    language character varying(12) DEFAULT ''::character varying NOT NULL,
     CONSTRAINT comment_status_check CHECK ((status >= 0))
 );
 SEQUENCE comment_cid_seq OWNED BY comment.cid;
@@ -177,10 +177,10 @@ CREATE TABLE field_config (
     id integer NOT NULL,
     field_name character varying(32) NOT NULL,
     type character varying(128) NOT NULL,
-    module character varying(128) DEFAULT '' NOT NULL,
+    module character varying(128) DEFAULT ''::character varying NOT NULL,
     active smallint DEFAULT 0 NOT NULL,
     storage_type character varying(128) NOT NULL,
-    storage_module character varying(128) DEFAULT '' NOT NULL,
+    storage_module character varying(128) DEFAULT ''::character varying NOT NULL,
     storage_active smallint DEFAULT 0 NOT NULL,
     locked smallint DEFAULT 0 NOT NULL,
     data bytea NOT NULL,
@@ -192,20 +192,20 @@ SEQUENCE field_config_id_seq OWNED BY field_config.id;
 CREATE TABLE field_config_instance (
     id integer NOT NULL,
     field_id integer NOT NULL,
-    field_name character varying(32) DEFAULT '' NOT NULL,
-    entity_type character varying(32) DEFAULT '' NOT NULL,
-    bundle character varying(128) DEFAULT '' NOT NULL,
+    field_name character varying(32) DEFAULT ''::character varying NOT NULL,
+    entity_type character varying(32) DEFAULT ''::character varying NOT NULL,
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
     data bytea NOT NULL,
     deleted smallint DEFAULT 0 NOT NULL
 );
 SEQUENCE field_config_instance_id_seq OWNED BY field_config_instance.id;
 CREATE TABLE field_data_body (
-    entity_type character varying(128) DEFAULT '' NOT NULL,
-    bundle character varying(128) DEFAULT '' NOT NULL,
+    entity_type character varying(128) DEFAULT ''::character varying NOT NULL,
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
     deleted smallint DEFAULT 0 NOT NULL,
     entity_id bigint NOT NULL,
     revision_id bigint,
-    language character varying(32) DEFAULT '' NOT NULL,
+    language character varying(32) DEFAULT ''::character varying NOT NULL,
     delta bigint NOT NULL,
     body_value text,
     body_summary text,
@@ -215,12 +215,12 @@ CREATE TABLE field_data_body (
     CONSTRAINT field_data_body_revision_id_check CHECK ((revision_id >= 0))
 );
 CREATE TABLE field_data_comment_body (
-    entity_type character varying(128) DEFAULT '' NOT NULL,
-    bundle character varying(128) DEFAULT '' NOT NULL,
+    entity_type character varying(128) DEFAULT ''::character varying NOT NULL,
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
     deleted smallint DEFAULT 0 NOT NULL,
     entity_id bigint NOT NULL,
     revision_id bigint,
-    language character varying(32) DEFAULT '' NOT NULL,
+    language character varying(32) DEFAULT ''::character varying NOT NULL,
     delta bigint NOT NULL,
     comment_body_value text,
     comment_body_format character varying(255),
@@ -229,12 +229,12 @@ CREATE TABLE field_data_comment_body (
     CONSTRAINT field_data_comment_body_revision_id_check CHECK ((revision_id >= 0))
 );
 CREATE TABLE field_data_field_image (
-    entity_type character varying(128) DEFAULT '' NOT NULL,
-    bundle character varying(128) DEFAULT '' NOT NULL,
+    entity_type character varying(128) DEFAULT ''::character varying NOT NULL,
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
     deleted smallint DEFAULT 0 NOT NULL,
     entity_id bigint NOT NULL,
     revision_id bigint,
-    language character varying(32) DEFAULT '' NOT NULL,
+    language character varying(32) DEFAULT ''::character varying NOT NULL,
     delta bigint NOT NULL,
     field_image_fid bigint,
     field_image_alt character varying(512),
@@ -249,12 +249,12 @@ CREATE TABLE field_data_field_image (
     CONSTRAINT field_data_field_image_revision_id_check CHECK ((revision_id >= 0))
 );
 CREATE TABLE field_data_field_tags (
-    entity_type character varying(128) DEFAULT '' NOT NULL,
-    bundle character varying(128) DEFAULT '' NOT NULL,
+    entity_type character varying(128) DEFAULT ''::character varying NOT NULL,
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
     deleted smallint DEFAULT 0 NOT NULL,
     entity_id bigint NOT NULL,
     revision_id bigint,
-    language character varying(32) DEFAULT '' NOT NULL,
+    language character varying(32) DEFAULT ''::character varying NOT NULL,
     delta bigint NOT NULL,
     field_tags_tid bigint,
     CONSTRAINT field_data_field_tags_delta_check CHECK ((delta >= 0)),
@@ -263,12 +263,12 @@ CREATE TABLE field_data_field_tags (
     CONSTRAINT field_data_field_tags_revision_id_check CHECK ((revision_id >= 0))
 );
 CREATE TABLE field_revision_body (
-    entity_type character varying(128) DEFAULT '' NOT NULL,
-    bundle character varying(128) DEFAULT '' NOT NULL,
+    entity_type character varying(128) DEFAULT ''::character varying NOT NULL,
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
     deleted smallint DEFAULT 0 NOT NULL,
     entity_id bigint NOT NULL,
     revision_id bigint NOT NULL,
-    language character varying(32) DEFAULT '' NOT NULL,
+    language character varying(32) DEFAULT ''::character varying NOT NULL,
     delta bigint NOT NULL,
     body_value text,
     body_summary text,
@@ -278,12 +278,12 @@ CREATE TABLE field_revision_body (
     CONSTRAINT field_revision_body_revision_id_check CHECK ((revision_id >= 0))
 );
 CREATE TABLE field_revision_comment_body (
-    entity_type character varying(128) DEFAULT '' NOT NULL,
-    bundle character varying(128) DEFAULT '' NOT NULL,
+    entity_type character varying(128) DEFAULT ''::character varying NOT NULL,
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
     deleted smallint DEFAULT 0 NOT NULL,
     entity_id bigint NOT NULL,
     revision_id bigint NOT NULL,
-    language character varying(32) DEFAULT '' NOT NULL,
+    language character varying(32) DEFAULT ''::character varying NOT NULL,
     delta bigint NOT NULL,
     comment_body_value text,
     comment_body_format character varying(255),
@@ -292,12 +292,12 @@ CREATE TABLE field_revision_comment_body (
     CONSTRAINT field_revision_comment_body_revision_id_check CHECK ((revision_id >= 0))
 );
 CREATE TABLE field_revision_field_image (
-    entity_type character varying(128) DEFAULT '' NOT NULL,
-    bundle character varying(128) DEFAULT '' NOT NULL,
+    entity_type character varying(128) DEFAULT ''::character varying NOT NULL,
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
     deleted smallint DEFAULT 0 NOT NULL,
     entity_id bigint NOT NULL,
     revision_id bigint NOT NULL,
-    language character varying(32) DEFAULT '' NOT NULL,
+    language character varying(32) DEFAULT ''::character varying NOT NULL,
     delta bigint NOT NULL,
     field_image_fid bigint,
     field_image_alt character varying(512),
@@ -312,12 +312,12 @@ CREATE TABLE field_revision_field_image (
     CONSTRAINT field_revision_field_image_revision_id_check CHECK ((revision_id >= 0))
 );
 CREATE TABLE field_revision_field_tags (
-    entity_type character varying(128) DEFAULT '' NOT NULL,
-    bundle character varying(128) DEFAULT '' NOT NULL,
+    entity_type character varying(128) DEFAULT ''::character varying NOT NULL,
+    bundle character varying(128) DEFAULT ''::character varying NOT NULL,
     deleted smallint DEFAULT 0 NOT NULL,
     entity_id bigint NOT NULL,
     revision_id bigint NOT NULL,
-    language character varying(32) DEFAULT '' NOT NULL,
+    language character varying(32) DEFAULT ''::character varying NOT NULL,
     delta bigint NOT NULL,
     field_tags_tid bigint,
     CONSTRAINT field_revision_field_tags_delta_check CHECK ((delta >= 0)),
@@ -328,9 +328,9 @@ CREATE TABLE field_revision_field_tags (
 CREATE TABLE file_managed (
     fid integer NOT NULL,
     uid bigint DEFAULT 0 NOT NULL,
-    filename character varying(255) DEFAULT '' NOT NULL,
-    uri character varying(255) DEFAULT '' NOT NULL,
-    filemime character varying(255) DEFAULT '' NOT NULL,
+    filename character varying(255) DEFAULT ''::character varying NOT NULL,
+    uri character varying(255) DEFAULT ''::character varying NOT NULL,
+    filemime character varying(255) DEFAULT ''::character varying NOT NULL,
     filesize bigint DEFAULT 0 NOT NULL,
     status smallint DEFAULT 0 NOT NULL,
     "timestamp" bigint DEFAULT 0 NOT NULL,
@@ -342,8 +342,8 @@ CREATE TABLE file_managed (
 SEQUENCE file_managed_fid_seq OWNED BY file_managed.fid;
 CREATE TABLE file_usage (
     fid bigint NOT NULL,
-    module character varying(255) DEFAULT '' NOT NULL,
-    type character varying(64) DEFAULT '' NOT NULL,
+    module character varying(255) DEFAULT ''::character varying NOT NULL,
+    type character varying(64) DEFAULT ''::character varying NOT NULL,
     id bigint DEFAULT 0 NOT NULL,
     count bigint DEFAULT 0 NOT NULL,
     CONSTRAINT file_usage_count_check CHECK ((count >= 0)),
@@ -352,15 +352,15 @@ CREATE TABLE file_usage (
 );
 CREATE TABLE filter (
     format character varying(255) NOT NULL,
-    module character varying(64) DEFAULT '' NOT NULL,
-    name character varying(32) DEFAULT '' NOT NULL,
+    module character varying(64) DEFAULT ''::character varying NOT NULL,
+    name character varying(32) DEFAULT ''::character varying NOT NULL,
     weight integer DEFAULT 0 NOT NULL,
     status integer DEFAULT 0 NOT NULL,
     settings bytea
 );
 CREATE TABLE filter_format (
     format character varying(255) NOT NULL,
-    name character varying(255) DEFAULT '' NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
     cache smallint DEFAULT 0 NOT NULL,
     status integer DEFAULT 1 NOT NULL,
     weight integer DEFAULT 0 NOT NULL,
@@ -368,8 +368,8 @@ CREATE TABLE filter_format (
 );
 CREATE TABLE flood (
     fid integer NOT NULL,
-    event character varying(64) DEFAULT '' NOT NULL,
-    identifier character varying(128) DEFAULT '' NOT NULL,
+    event character varying(64) DEFAULT ''::character varying NOT NULL,
+    identifier character varying(128) DEFAULT ''::character varying NOT NULL,
     "timestamp" integer DEFAULT 0 NOT NULL,
     expiration integer DEFAULT 0 NOT NULL
 );
@@ -392,24 +392,24 @@ SEQUENCE image_effects_ieid_seq OWNED BY image_effects.ieid;
 CREATE TABLE image_styles (
     isid integer NOT NULL,
     name character varying(255) NOT NULL,
-    label character varying(255) DEFAULT '' NOT NULL,
+    label character varying(255) DEFAULT ''::character varying NOT NULL,
     CONSTRAINT image_styles_isid_check CHECK ((isid >= 0))
 );
 SEQUENCE image_styles_isid_seq OWNED BY image_styles.isid;
 CREATE TABLE menu_custom (
-    menu_name character varying(32) DEFAULT '' NOT NULL,
-    title character varying(255) DEFAULT '' NOT NULL,
+    menu_name character varying(32) DEFAULT ''::character varying NOT NULL,
+    title character varying(255) DEFAULT ''::character varying NOT NULL,
     description text
 );
 CREATE TABLE menu_links (
-    menu_name character varying(32) DEFAULT '' NOT NULL,
+    menu_name character varying(32) DEFAULT ''::character varying NOT NULL,
     mlid integer NOT NULL,
     plid bigint DEFAULT 0 NOT NULL,
-    link_path character varying(255) DEFAULT '' NOT NULL,
-    router_path character varying(255) DEFAULT '' NOT NULL,
-    link_title character varying(255) DEFAULT '' NOT NULL,
+    link_path character varying(255) DEFAULT ''::character varying NOT NULL,
+    router_path character varying(255) DEFAULT ''::character varying NOT NULL,
+    link_title character varying(255) DEFAULT ''::character varying NOT NULL,
     options bytea,
-    module character varying(255) DEFAULT 'system' NOT NULL,
+    module character varying(255) DEFAULT 'system'::character varying NOT NULL,
     hidden smallint DEFAULT 0 NOT NULL,
     external smallint DEFAULT 0 NOT NULL,
     has_children smallint DEFAULT 0 NOT NULL,
@@ -441,36 +441,36 @@ CREATE TABLE menu_links (
 );
 SEQUENCE menu_links_mlid_seq OWNED BY menu_links.mlid;
 CREATE TABLE menu_router (
-    path character varying(255) DEFAULT '' NOT NULL,
+    path character varying(255) DEFAULT ''::character varying NOT NULL,
     load_functions bytea NOT NULL,
     to_arg_functions bytea NOT NULL,
-    access_callback character varying(255) DEFAULT '' NOT NULL,
+    access_callback character varying(255) DEFAULT ''::character varying NOT NULL,
     access_arguments bytea,
-    page_callback character varying(255) DEFAULT '' NOT NULL,
+    page_callback character varying(255) DEFAULT ''::character varying NOT NULL,
     page_arguments bytea,
-    delivery_callback character varying(255) DEFAULT '' NOT NULL,
+    delivery_callback character varying(255) DEFAULT ''::character varying NOT NULL,
     fit integer DEFAULT 0 NOT NULL,
     number_parts smallint DEFAULT 0 NOT NULL,
     context integer DEFAULT 0 NOT NULL,
-    tab_parent character varying(255) DEFAULT '' NOT NULL,
-    tab_root character varying(255) DEFAULT '' NOT NULL,
-    title character varying(255) DEFAULT '' NOT NULL,
-    title_callback character varying(255) DEFAULT '' NOT NULL,
-    title_arguments character varying(255) DEFAULT '' NOT NULL,
-    theme_callback character varying(255) DEFAULT '' NOT NULL,
-    theme_arguments character varying(255) DEFAULT '' NOT NULL,
+    tab_parent character varying(255) DEFAULT ''::character varying NOT NULL,
+    tab_root character varying(255) DEFAULT ''::character varying NOT NULL,
+    title character varying(255) DEFAULT ''::character varying NOT NULL,
+    title_callback character varying(255) DEFAULT ''::character varying NOT NULL,
+    title_arguments character varying(255) DEFAULT ''::character varying NOT NULL,
+    theme_callback character varying(255) DEFAULT ''::character varying NOT NULL,
+    theme_arguments character varying(255) DEFAULT ''::character varying NOT NULL,
     type integer DEFAULT 0 NOT NULL,
     description text NOT NULL,
-    "position" character varying(255) DEFAULT '' NOT NULL,
+    "position" character varying(255) DEFAULT ''::character varying NOT NULL,
     weight integer DEFAULT 0 NOT NULL,
     include_file text
 );
 CREATE TABLE node (
     nid integer NOT NULL,
     vid bigint,
-    type character varying(32) DEFAULT '' NOT NULL,
-    language character varying(12) DEFAULT '' NOT NULL,
-    title character varying(255) DEFAULT '' NOT NULL,
+    type character varying(32) DEFAULT ''::character varying NOT NULL,
+    language character varying(12) DEFAULT ''::character varying NOT NULL,
+    title character varying(255) DEFAULT ''::character varying NOT NULL,
     uid integer DEFAULT 0 NOT NULL,
     status integer DEFAULT 1 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
@@ -487,7 +487,7 @@ CREATE TABLE node (
 CREATE TABLE node_access (
     nid bigint DEFAULT 0 NOT NULL,
     gid bigint DEFAULT 0 NOT NULL,
-    realm character varying(255) DEFAULT '' NOT NULL,
+    realm character varying(255) DEFAULT ''::character varying NOT NULL,
     grant_view integer DEFAULT 0 NOT NULL,
     grant_update integer DEFAULT 0 NOT NULL,
     grant_delete integer DEFAULT 0 NOT NULL,
@@ -512,7 +512,7 @@ CREATE TABLE node_revision (
     nid bigint DEFAULT 0 NOT NULL,
     vid integer NOT NULL,
     uid integer DEFAULT 0 NOT NULL,
-    title character varying(255) DEFAULT '' NOT NULL,
+    title character varying(255) DEFAULT ''::character varying NOT NULL,
     log text NOT NULL,
     "timestamp" integer DEFAULT 0 NOT NULL,
     status integer DEFAULT 1 NOT NULL,
@@ -525,23 +525,23 @@ CREATE TABLE node_revision (
 SEQUENCE node_revision_vid_seq OWNED BY node_revision.vid;
 CREATE TABLE node_type (
     type character varying(32) NOT NULL,
-    name character varying(255) DEFAULT '' NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
     base character varying(255) NOT NULL,
     module character varying(255) NOT NULL,
     description text NOT NULL,
     help text NOT NULL,
     has_title integer NOT NULL,
-    title_label character varying(255) DEFAULT '' NOT NULL,
+    title_label character varying(255) DEFAULT ''::character varying NOT NULL,
     custom smallint DEFAULT 0 NOT NULL,
     modified smallint DEFAULT 0 NOT NULL,
     locked smallint DEFAULT 0 NOT NULL,
     disabled smallint DEFAULT 0 NOT NULL,
-    orig_type character varying(255) DEFAULT '' NOT NULL,
+    orig_type character varying(255) DEFAULT ''::character varying NOT NULL,
     CONSTRAINT node_type_has_title_check CHECK ((has_title >= 0))
 );
 CREATE TABLE queue (
     item_id integer NOT NULL,
-    name character varying(255) DEFAULT '' NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
     data bytea,
     expire integer DEFAULT 0 NOT NULL,
     created integer DEFAULT 0 NOT NULL,
@@ -554,10 +554,10 @@ CREATE TABLE rdf_mapping (
     mapping bytea
 );
 CREATE TABLE registry (
-    name character varying(255) DEFAULT '' NOT NULL,
-    type character varying(9) DEFAULT '' NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    type character varying(9) DEFAULT ''::character varying NOT NULL,
     filename character varying(255) NOT NULL,
-    module character varying(255) DEFAULT '' NOT NULL,
+    module character varying(255) DEFAULT ''::character varying NOT NULL,
     weight integer DEFAULT 0 NOT NULL
 );
 CREATE TABLE registry_file (
@@ -566,14 +566,14 @@ CREATE TABLE registry_file (
 );
 CREATE TABLE role (
     rid integer NOT NULL,
-    name character varying(64) DEFAULT '' NOT NULL,
+    name character varying(64) DEFAULT ''::character varying NOT NULL,
     weight integer DEFAULT 0 NOT NULL,
     CONSTRAINT role_rid_check CHECK ((rid >= 0))
 );
 CREATE TABLE role_permission (
     rid bigint NOT NULL,
-    permission character varying(128) DEFAULT '' NOT NULL,
-    module character varying(255) DEFAULT '' NOT NULL,
+    permission character varying(128) DEFAULT ''::character varying NOT NULL,
+    module character varying(255) DEFAULT ''::character varying NOT NULL,
     CONSTRAINT role_permission_rid_check CHECK ((rid >= 0))
 );
 SEQUENCE role_rid_seq OWNED BY role.rid;
@@ -586,7 +586,7 @@ CREATE TABLE search_dataset (
     CONSTRAINT search_dataset_sid_check CHECK ((sid >= 0))
 );
 CREATE TABLE search_index (
-    word character varying(50) DEFAULT '' NOT NULL,
+    word character varying(50) DEFAULT ''::character varying NOT NULL,
     sid bigint DEFAULT 0 NOT NULL,
     type character varying(16) NOT NULL,
     score real,
@@ -594,19 +594,19 @@ CREATE TABLE search_index (
 );
 CREATE TABLE search_node_links (
     sid bigint DEFAULT 0 NOT NULL,
-    type character varying(16) DEFAULT '' NOT NULL,
+    type character varying(16) DEFAULT ''::character varying NOT NULL,
     nid bigint DEFAULT 0 NOT NULL,
     caption text,
     CONSTRAINT search_node_links_nid_check CHECK ((nid >= 0)),
     CONSTRAINT search_node_links_sid_check CHECK ((sid >= 0))
 );
 CREATE TABLE search_total (
-    word character varying(50) DEFAULT '' NOT NULL,
+    word character varying(50) DEFAULT ''::character varying NOT NULL,
     count real
 );
 CREATE TABLE semaphore (
-    name character varying(255) DEFAULT '' NOT NULL,
-    value character varying(255) DEFAULT '' NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    value character varying(255) DEFAULT ''::character varying NOT NULL,
     expire double precision NOT NULL
 );
 CREATE TABLE sequences (
@@ -617,27 +617,27 @@ SEQUENCE sequences_value_seq OWNED BY sequences.value;
 CREATE TABLE sessions (
     uid bigint NOT NULL,
     sid character varying(128) NOT NULL,
-    ssid character varying(128) DEFAULT '' NOT NULL,
-    hostname character varying(128) DEFAULT '' NOT NULL,
+    ssid character varying(128) DEFAULT ''::character varying NOT NULL,
+    hostname character varying(128) DEFAULT ''::character varying NOT NULL,
     "timestamp" integer DEFAULT 0 NOT NULL,
     cache integer DEFAULT 0 NOT NULL,
     session bytea,
     CONSTRAINT sessions_uid_check CHECK ((uid >= 0))
 );
 CREATE TABLE shortcut_set (
-    set_name character varying(32) DEFAULT '' NOT NULL,
-    title character varying(255) DEFAULT '' NOT NULL
+    set_name character varying(32) DEFAULT ''::character varying NOT NULL,
+    title character varying(255) DEFAULT ''::character varying NOT NULL
 );
 CREATE TABLE shortcut_set_users (
     uid bigint DEFAULT 0 NOT NULL,
-    set_name character varying(32) DEFAULT '' NOT NULL,
+    set_name character varying(32) DEFAULT ''::character varying NOT NULL,
     CONSTRAINT shortcut_set_users_uid_check CHECK ((uid >= 0))
 );
 CREATE TABLE system (
-    filename character varying(255) DEFAULT '' NOT NULL,
-    name character varying(255) DEFAULT '' NOT NULL,
-    type character varying(12) DEFAULT '' NOT NULL,
-    owner character varying(255) DEFAULT '' NOT NULL,
+    filename character varying(255) DEFAULT ''::character varying NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    type character varying(12) DEFAULT ''::character varying NOT NULL,
+    owner character varying(255) DEFAULT ''::character varying NOT NULL,
     status integer DEFAULT 0 NOT NULL,
     bootstrap integer DEFAULT 0 NOT NULL,
     schema_version smallint DEFAULT (-1) NOT NULL,
@@ -655,7 +655,7 @@ CREATE TABLE taxonomy_index (
 CREATE TABLE taxonomy_term_data (
     tid integer NOT NULL,
     vid bigint DEFAULT 0 NOT NULL,
-    name character varying(255) DEFAULT '' NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
     description text,
     format character varying(255),
     weight integer DEFAULT 0 NOT NULL,
@@ -671,11 +671,11 @@ CREATE TABLE taxonomy_term_hierarchy (
 );
 CREATE TABLE taxonomy_vocabulary (
     vid integer NOT NULL,
-    name character varying(255) DEFAULT '' NOT NULL,
-    machine_name character varying(255) DEFAULT '' NOT NULL,
+    name character varying(255) DEFAULT ''::character varying NOT NULL,
+    machine_name character varying(255) DEFAULT ''::character varying NOT NULL,
     description text,
     hierarchy integer DEFAULT 0 NOT NULL,
-    module character varying(255) DEFAULT '' NOT NULL,
+    module character varying(255) DEFAULT ''::character varying NOT NULL,
     weight integer DEFAULT 0 NOT NULL,
     CONSTRAINT taxonomy_vocabulary_hierarchy_check CHECK ((hierarchy >= 0)),
     CONSTRAINT taxonomy_vocabulary_vid_check CHECK ((vid >= 0))
@@ -683,28 +683,28 @@ CREATE TABLE taxonomy_vocabulary (
 SEQUENCE taxonomy_vocabulary_vid_seq OWNED BY taxonomy_vocabulary.vid;
 CREATE TABLE url_alias (
     pid integer NOT NULL,
-    source character varying(255) DEFAULT '' NOT NULL,
-    alias character varying(255) DEFAULT '' NOT NULL,
-    language character varying(12) DEFAULT '' NOT NULL,
+    source character varying(255) DEFAULT ''::character varying NOT NULL,
+    alias character varying(255) DEFAULT ''::character varying NOT NULL,
+    language character varying(12) DEFAULT ''::character varying NOT NULL,
     CONSTRAINT url_alias_pid_check CHECK ((pid >= 0))
 );
 SEQUENCE url_alias_pid_seq OWNED BY url_alias.pid;
 CREATE TABLE users (
     uid bigint DEFAULT 0 NOT NULL,
-    name character varying(60) DEFAULT '' NOT NULL,
-    pass character varying(128) DEFAULT '' NOT NULL,
-    mail character varying(254) DEFAULT '',
-    theme character varying(255) DEFAULT '' NOT NULL,
-    signature character varying(255) DEFAULT '' NOT NULL,
+    name character varying(60) DEFAULT ''::character varying NOT NULL,
+    pass character varying(128) DEFAULT ''::character varying NOT NULL,
+    mail character varying(254) DEFAULT ''::character varying,
+    theme character varying(255) DEFAULT ''::character varying NOT NULL,
+    signature character varying(255) DEFAULT ''::character varying NOT NULL,
     signature_format character varying(255),
     created integer DEFAULT 0 NOT NULL,
     access integer DEFAULT 0 NOT NULL,
     login integer DEFAULT 0 NOT NULL,
     status smallint DEFAULT 0 NOT NULL,
     timezone character varying(32),
-    language character varying(12) DEFAULT '' NOT NULL,
+    language character varying(12) DEFAULT ''::character varying NOT NULL,
     picture integer DEFAULT 0 NOT NULL,
-    init character varying(254) DEFAULT '',
+    init character varying(254) DEFAULT ''::character varying,
     data bytea,
     CONSTRAINT users_uid_check CHECK ((uid >= 0))
 );
@@ -715,20 +715,20 @@ CREATE TABLE users_roles (
     CONSTRAINT users_roles_uid_check CHECK ((uid >= 0))
 );
 CREATE TABLE variable (
-    name character varying(128) DEFAULT '' NOT NULL,
+    name character varying(128) DEFAULT ''::character varying NOT NULL,
     value bytea NOT NULL
 );
 CREATE TABLE watchdog (
     wid integer NOT NULL,
     uid integer DEFAULT 0 NOT NULL,
-    type character varying(64) DEFAULT '' NOT NULL,
+    type character varying(64) DEFAULT ''::character varying NOT NULL,
     message text NOT NULL,
     variables bytea NOT NULL,
     severity integer DEFAULT 0 NOT NULL,
-    link character varying(255) DEFAULT '',
+    link character varying(255) DEFAULT ''::character varying,
     location text NOT NULL,
     referer text,
-    hostname character varying(128) DEFAULT '' NOT NULL,
+    hostname character varying(128) DEFAULT ''::character varying NOT NULL,
     "timestamp" integer DEFAULT 0 NOT NULL,
     CONSTRAINT watchdog_severity_check CHECK ((severity >= 0))
 );
