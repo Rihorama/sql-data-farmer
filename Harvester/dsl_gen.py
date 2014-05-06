@@ -4,7 +4,6 @@ import sys
 import os
 
 
-FILL_CNT = 10
 NULL_FILL = 20
 ARR_SIZE = 3     #default array size if no size given - for fill purposes
 
@@ -124,7 +123,7 @@ def get_constr_line(attr):
 
 #A function that generates the dsl file
 #according to the given table list
-def dsl_generator(table_list,DEST):
+def dsl_generator(table_list,DEST,fill_cnt):
     
     #iniciates
     initiate_gen(table_list)
@@ -142,7 +141,7 @@ def dsl_generator(table_list,DEST):
     
     
     for table in table_list:
-        fd.write("TABLE:" + table.name + "(" + str(FILL_CNT) + ")\n")
+        fd.write("TABLE:" + table.name + "(" + str(fill_cnt) + ")\n")
         
         for attr in table.attr_list:
             fd.write("\t::" + attr.name + "\n")  

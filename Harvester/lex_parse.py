@@ -47,6 +47,8 @@ TO_SET_CONSTR = []          #list of multiple attributes that need to have their
 PARAM_COUNTER = 0           #incremented with each new parameter, if greater than 1, group counter needed                            
 GROUP_COUNTER = 0           #this is used to mark a group of attributes together being UNIQUE or PRIMARY KEY
 
+DEFAULT_BIT_CHAR = 8        #default value for character or bit types when no size given
+
 
 
 
@@ -382,6 +384,9 @@ def sql_parser(f):
         if len(p) == 2 and p[1] == "numeric":
             param_list.append(NUMERIC_INT)
             param_list.append(NUMERIC_FRAC)
+            
+        elif len(p) == 2 and (p[1] == "bit" or p[1] == "character"):
+             param_list.append(DEFAULT_BIT_CHAR)
         
         if len(p) == 5:   #variant: DTYPE_BOTH_1PARAM LPAREN parameter RPAREN
             param_list.append(p[3])

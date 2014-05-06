@@ -3,7 +3,7 @@
 import argparse
 import os
 import lex_parse as parser
-from values_generator import iniciate_fk,db_filler
+from data_gen import iniciate_fk,db_filler
 from printer import errprint,ERRCODE
 
 

@@ -72,22 +72,27 @@ DEST = None   #stores user-chosen destination for results (stdout/file)
 #arguments
 arg_parser = argparse.ArgumentParser()
 arg_parser.add_argument("src", help="Path to the source db dump.")
+#arg_parser.add_argument("--count" help="Path to the source db dump.")
+arg_parser.add_argument('-c', '--count', metavar='N', type=int, help='Fill count to be used for generating. DEFAULT = 10')
 
 group = arg_parser.add_mutually_exclusive_group()
+group.add_argument("-s", "--stdout", action="store_true", help="Print to stdout. (DEFAULT)")
 group.add_argument("-f", "--file", action="store_true", help="Save as a file.")
-group.add_argument("-s", "--stdout", action="store_true", help="Print to stdout.")
 
 args = arg_parser.parse_args()
 
-#none of them was inserted
+#none of them was inserted, default = stdout
 if not args.file and not args.stdout:
-    arg_parser.error( 'You must choose either -f or -s argument.\n' )
-
-#checking conflicting options for output
+    DEST = "stdout"
 if args.file:
     DEST = "file"
 else:               #stdout
     DEST = "stdout"
+    
+if args.count:
+    fill_cnt = args.count
+else:
+    fill_cnt = 10    #default
     
 
 
@@ -135,7 +140,7 @@ table_list = parser.sql_parser(tempf)
 #    table.print_table()
 
 #generating the DSL file
-dsl_generator(table_list,DEST)
+dsl_generator(table_list,DEST,fill_cnt)
 
 
 #Close file
