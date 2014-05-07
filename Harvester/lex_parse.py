@@ -45,7 +45,8 @@ TO_SET_CONSTR = []          #list of multiple attributes that need to have their
                             #as the parser doesn't know the constr name the moment he's parsing the attrs
 
 PARAM_COUNTER = 0           #incremented with each new parameter, if greater than 1, group counter needed                            
-GROUP_COUNTER = 0           #this is used to mark a group of attributes together being UNIQUE or PRIMARY KEY
+GROUP_COUNTER = 1           #this is used to mark a group of attributes together being UNIQUE or PRIMARY KEY
+                            #starts with 1
 
 DEFAULT_BIT_CHAR = 8        #default value for character or bit types when no size given
 
@@ -520,10 +521,10 @@ def sql_parser(f):
         
         if new_attribute.default:
             
-            if len(p) == 5: #default different than just ''
+            if len(p) == 6: #default different than just ''
                 new_attribute.default_value = p[3]
             
-            elif len(p) == 3 and p[1] == "DEFAULT":
+            elif len(p) == 4 and p[1] == "DEFAULT":
                 new_attribute.default_value = p[2]
 
     
@@ -730,6 +731,8 @@ def sql_parser(f):
             
             if PARAM_COUNTER > 1:                   #more than one attribute given as parameter -> group                
                 attr.unique_group = GROUP_COUNTER   #puts all attributes into the same group
+            else:
+                attr.unique_group = 0               #single unique attr
         
         
         if PARAM_COUNTER > 1:                       #if we used the current group number

@@ -48,13 +48,14 @@ def check_unique_group(table,value):
     return True
 
 
-#We remove last added foreign key from every fk_pointed attribute.
+#We remove last added value from every fk_pointed attribute.
+#Same goes for single unique or primary key attributes
 #Happens when we have to restart the last generated insert because
 #group combination of some values in it is not unique.
-def remove_foreign(table):
+def remove_last_saved(table):
 
-    for attr in table.attr_list:
-        if attr.fk_pointed:
+    for attr in table.attr_list:        
+        if attr.fk_pointed or attr.unique_group == 0:
             attr.values_list.pop()
 
 
@@ -98,6 +99,7 @@ def get_foreign(attr):
         if len(val_list) != 0:       #we have something to take from
             value = val_list[i]
             del val_list[i]          #removes the value so we can't use it again
+
         else:
             msg = "Input error: Unique foreign key attribute '" + attr.name + "' cannot be filled " \
             + "as the source attribute '" \
@@ -142,11 +144,11 @@ def get_array(table,attr):
         except AttributeError:
             msg = "Internal error. Trouble using '" + attr.fill_method + "' method on attribute '" \
                     + attr.name + "', table '" + table.name + "'.\n" \
-                    + "NOTE: This may also be caused by a non existing method inserted.\n"
+                   # + "NOTE: This may also be caused by a non existing method inserted.\n"
             errprint(msg, ERRCODE["INTERNAL"])
-        print new_val
+            
         if new_val[0] == "'" and new_val[-1] == "'":
-            new_val = new_val[1:-1]      #cuts both the '
+            new_val = new_val[1:-1]       #cuts both the '
         new_val = "\"" + new_val + "\""   #double quotes if the val contained commas or curly braces
         val_list.append(new_val)          #we append the newly received value to the list
 
@@ -197,7 +199,7 @@ def get_array(table,attr):
 # Returns a string concatenated of generated values for each attribute
 def get_values(table):
     
-    unique_values = []            #to store all valueas that create a unique/pk group
+    unique_values = []            #to store all values that create a unique/pk group
     values = ""
 
     for attr in table.attr_list:
@@ -220,22 +222,22 @@ def get_values(table):
                 exec func  #new_val = fill_method(attributes)
             except AttributeError:
                 msg = "Internal error. Trouble using '" + attr.fill_method + "' method on attribute '" \
-                      + attr.name + "', table '" + table.name + "'.\n" \
-                      + "NOTE: This may also be caused by a non existing method inserted.\n"
+                      + attr.name + "', table '" + table.name + "'.\n" 
+                      #+ "NOTE: This may also be caused by a non existing method inserted.\n"
                 errprint(msg, ERRCODE["INTERNAL"])            
         
         
+        #these combinations are filled with embedded SELECT query so no checking for them
+        test0 = attr.unique and attr.foreign_key and not attr.fk_attribute.serial
+        test1 = attr.unique and attr.foreign_key and not attr.fk_table.fill_count == "FILLED"
         
-        #unique and fk combo solved separately, rest must be solved here
-        test1 = attr.unique and not attr.foreign_key
-        
-        #NOTE: serial is unique by its sequence, if it overflows because of low capacity, it's user's problem
+        #serial is unique by its sequence, if it overflows because of low capacity, it's user's problem
         test2 = attr.unique and not attr.serial
         test3 = attr.primary_key and not attr.serial
         
         
         #if one test true, we must ensure the inserted value hasn't been used yet
-        if test1 or test2 or test3:            
+        if test0 or test1 or test2 or test3:            
             timeout = 0            
             while not check_unique(attr,new_val):      #validity check if there is unique/primary key constraint
                 if timeout >= 100:
@@ -243,7 +245,11 @@ def get_values(table):
                           "Tip: Check if the given fill method offers enough unique values.\n"      
                     errprint(msg, ERRCODE["RUNTIME"])
                 
-                exec func                              #we call the method again (and again)
+                if attr.foreign_key:
+                    new_val = get_foreign(attr)
+                else:
+                    exec func                              #we call the method again (and again)
+                
                 timeout += 1        
         
         
@@ -303,7 +309,8 @@ def table_filler(table):
     for i in range(0,table.fill_count):      
         flag = True
         
-        while flag:
+        timeout = 0
+        while flag and timeout < 100:
             flag = False
             result = get_values(table)
             values = result['values']
@@ -311,10 +318,18 @@ def table_filler(table):
             
             if len(unique_values) > 0 and not check_unique_group(table,unique_values):
                 flag = True            #this set of values has already been used, we need to do it all again
-                remove_foreign(table)  #will remove all values possibly saved during this generating
+                remove_last_saved(table)  #will remove all values possibly saved during this generating
+                timeout += 1
            
             elif len(unique_values) > 0: #group is unique as checked in above branch
                 table.unique_values.append(unique_values)  #we append so this combo cannot be used again
+        
+        if timeout >= 100:
+            msg = "Runtime error: The timeout for finding new unique value combination for table '" + table.name + "' exceeded.\n" \
+                  "Tip: Check if the given fill method offers enough unique combinations.\n"      
+            errprint(msg, ERRCODE["RUNTIME"])
+        
+        
         
         string = "INSERT INTO " + table.name + "\n" + "VALUES (" + values + ");\n"
         print string
@@ -339,7 +354,7 @@ def db_filler(table_list):
         for table in table_list:            
             if table.solved == False:       #this table hasn't been filled yet
                 y = table_filler(table) 
-                i = y or i                  #if one is true, it remains true
+                i = y or i                  #if one is true, it remains true and we can't stop yet
                 
                 
             

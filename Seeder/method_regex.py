@@ -20,8 +20,7 @@ def fm_regex(table, attr):
     
     
     #NOTE: If the given regex allows shorter results than the given length,
-    #      the final result will be created by concatenating as many generated
-    #      strings as neccessary and then cut to the desired length.
+    #      the final result will be created by adding empty space by db.
     #      On contrary - if the given regex produced longer result, it will be cut
     if attr.data_type == "CHAR":        
         length = attr.parameters[0]

@@ -17,6 +17,12 @@ CREATE TABLE student (
     grp integer NOT NULL
 );
 SEQUENCE student_id_seq OWNED BY student.id;
+CREATE TABLE tester (
+    a integer,
+    b integer,
+    c integer,
+    d integer
+);
 CREATE TABLE wah (
     xd character varying
 );
@@ -26,5 +32,9 @@ ALTER TABLE ONLY hah
     ADD CONSTRAINT hah_pkey PRIMARY KEY (xd);
 ALTER TABLE ONLY student
     ADD CONSTRAINT student_pkey PRIMARY KEY (id);
+ALTER TABLE ONLY tester
+    ADD CONSTRAINT tester_d_key UNIQUE (d);
+ALTER TABLE ONLY tester
+    ADD CONSTRAINT tester_d_key2 UNIQUE (a, b, c);
 ALTER TABLE ONLY student
     ADD CONSTRAINT student_grp_fkey FOREIGN KEY (grp) REFERENCES grp(number);

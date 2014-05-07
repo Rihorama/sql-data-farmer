@@ -9,7 +9,7 @@ from printer import errprint,ERRCODE
 
 #arguments
 arg_parser = argparse.ArgumentParser()
-arg_parser.add_argument("-s","--source", metavar=('PATH'), help="Custom path to a DSL file.")
+arg_parser.add_argument("-s","--source", metavar=('PATH'), help="Custom path to a DSL file. DEFAULT: ~/dsl.txt")
 
 args = arg_parser.parse_args()
 
