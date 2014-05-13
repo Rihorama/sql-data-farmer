@@ -345,7 +345,7 @@ def dsl_parser(f):
         global new_table
         new_table = table.Table() # creates new table instance
         new_table.fill_count = p[5]
-        new_table.name = p[3]     # coresponds to the IDENTIFIER token
+        new_table.name = p[3]     # corresponds to the IDENTIFIER token
         
         global attr_list
         attr_list = []            # inicializes empty list for this table

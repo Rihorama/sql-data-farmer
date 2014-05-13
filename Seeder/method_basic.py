@@ -77,7 +77,7 @@ def basic_varchar(table, attr):
     value = string[:x]                #cuts the obtained string
     
      #checks for white space at the end of string and deletes it if yes
-    if string[-1:] == ' ':
+    if string.endswith(' '):
         string = string[:-1]
 
     return "\'" + value + "\'"   #for string values
@@ -115,7 +115,7 @@ def basic_char(table, attr):
 
         
     length = attr.parameters[0]    
-    regex = r'[a-zA-Z0-9_]+'  
+    regex = r'+'  
         
     string = exrex.getone(regex)
 
@@ -149,7 +149,10 @@ def basic_int(table, attr):
     
     while(int(value) > CURRENT_MAX or int(value) < -CURRENT_MAX):           
         value = value[:-1]  #fitting the value to allowed range
-  
+    
+    value = int(value)      #removes posible zeros (0025 etc.) This is accepted
+                            #but doesn't look so good
+    value = str(value)      #reverting back to string      
     return value
 
 

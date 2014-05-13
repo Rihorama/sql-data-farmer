@@ -374,6 +374,11 @@ def create_table_dict(table_list):
     global TABLE_DICT
 
     for table in table_list:
+        
+        if table.name in TABLE_DICT:
+            msg = "Semantic error: Duplicate in table names found!\n"      
+            errprint(msg, ERRCODE["SEMANTIC"])
+        
         TABLE_DICT[table.name] = table
         
         
