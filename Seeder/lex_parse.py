@@ -168,6 +168,7 @@ def dsl_parser(f):
         'foreign_key' : 'CONSTR_NOPARAM',
         'null' : 'CONSTR_1PARAM',
         'default' : 'CONSTR_1PARAM',
+        'not_null' : 'CONSTR_NOPARAM',
         
         'BIGINT' : 'TYPE_NOPARAM',    #INT8
         'BIGSERIAL' : 'TYPE_NOPARAM',
@@ -201,7 +202,6 @@ def dsl_parser(f):
         'fm_regex' : 'FILL_METHOD_1PARAM',
         'fm_textbank' : 'FILL_METHOD_1PARAM',
         'fm_reference' : 'FILL_METHOD_1PARAM',
-        'fm_default' : 'FILL_METHOD_1PARAM',
         
     }
 
@@ -293,8 +293,8 @@ def dsl_parser(f):
     # Build the lexer
     lexer = lex.lex()  
     
-    fd = open("./dsl.txt",'r')
-    input_lex(lexer,fd)
+    #fd = open("./dsl.txt",'r')
+    #input_lex(lexer,fd)
     
     #getting ol'stderr back
     sys.stderr = original_stderr
@@ -455,16 +455,14 @@ def dsl_parser(f):
     
     def p_constr(p):
         '''constr : CONSTR_NOPARAM
-                  | CONSTR_1PARAM LPAREN NUMBER RPAREN
-                  | CONSTR_1PARAM LPAREN QUOTE QUOTE RPAREN
-                  | CONSTR_1PARAM LPAREN QUOTE inquote QUOTE RPAREN'''
+                  | CONSTR_1PARAM LPAREN NUMBER RPAREN'''
         debug("constraintPart")
         
         global new_attribute
         
         if p[1] == "foreign_key":
-            new_attribute.foreign_key = True 
-            print "FIRST HERE",new_attribute.foreign_key
+           #new_attribute.foreign_key = True
+           return                              #like nothing happened, fm_reference sets the flag
         elif p[1] == "primary_key":
             new_attribute.primary_key = True
             new_attribute.unique_group = p[3]
@@ -473,20 +471,21 @@ def dsl_parser(f):
             new_attribute.unique_group = p[3]
         elif p[1] == "null":
             new_attribute.null = True
+            new_attribute.constraint_parameters = p[3]
         elif p[1] == "not_null":
             new_attribute.not_null = True 
             
         elif p[1] == "default":
             new_attribute.default = True
             
-            if len(p) == 5:
-                val = p[3]
-            elif len(p) == 6:
-                val = "''"
-            else:
-                val = p[4]
+            #if len(p) == 5:
+            #    val = p[3]
+            #elif len(p) == 6:
+            #    val = "''"
+            #else:
+            #    val = p[4]
                 
-            new_attribute.default_value =val
+            new_attribute.default_value = p[3] #stores the percentage
          
         new_attribute.constraint_type = p[1]   
         new_attribute.constraint_flag = True
@@ -496,20 +495,11 @@ def dsl_parser(f):
         #TODO:check if it's really neccessary to make generator go more easy, feels chaotic here
         if new_attribute.primary_key:
             new_attribute.unique = True
-        
-        #useful for null only now
-        if len(p) == 7:            
-            new_attribute.constraint_parameters.append(p[4])     #keeping the parameters
+
             
         #TODO: checkovat, ze neni zadana spatna fill metoda 
         
-    
-    
-    def p_inquote(p):
-        '''inquote : NUMBER
-                   | IDENTIFIER'''
-        debug("inquote")           
-        p[0] = p[1]
+
 
 
     def p_parameters(p):

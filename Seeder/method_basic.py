@@ -115,7 +115,7 @@ def basic_char(table, attr):
 
         
     length = attr.parameters[0]    
-    regex = r'+'  
+    regex = r'[a-zA-Z0-9_]+'  
         
     string = exrex.getone(regex)
 

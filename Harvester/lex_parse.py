@@ -161,6 +161,7 @@ def sql_parser(f):
     tokens = [
         'IDENTIFIER',
         'NUMBER',
+        'FLOATNUM',
         #'EOL',
         'LPAREN',
         'RPAREN',
@@ -194,6 +195,12 @@ def sql_parser(f):
     def t_IDENTIFIER(t):
         r'[a-zA-Z][a-zA-Z_0-9]*'
         t.type = reserved.get(t.value,'IDENTIFIER')    # Check for reserved words
+        return t
+    
+        # A regular expression rule for floating point numbers
+    def t_FLOATNUM(t):
+        r'(\-)?\d+\.\d+([Ee](\-)?\d+)?'
+        t.value = float(t.value)    
         return t
 
     # A regular expression rule for numbers
@@ -504,9 +511,11 @@ def sql_parser(f):
                        | NULL
                        | UNIQUE
                        | DEFAULT NUMBER retype
+                       | DEFAULT FLOATNUM retype
                        | DEFAULT QUOTE QUOTE retype
                        | DEFAULT QUOTE inquote QUOTE retype
-                       | DEFAULT LPAREN NUMBER RPAREN retype'''
+                       | DEFAULT LPAREN NUMBER RPAREN retype
+                       | DEFAULT LPAREN FLOATNUM RPAREN retype'''
         debug("constraints")
         
         if p[1] == "NOT":

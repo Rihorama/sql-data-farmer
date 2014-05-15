@@ -2,7 +2,6 @@
 import class_table
 from method_basic import fm_basic
 from method_regex import fm_regex
-from method_default import fm_default
 from method_textbank import fm_textbank, textbank_close
 import sys
 import random
@@ -253,10 +252,17 @@ def get_values(table):
                 timeout += 1        
         
         
-        #NULL appearance chance
-        if attr.null == 'null':            
+        
+        #DEFAULT appearance chance
+        if attr.default:            
             chance = random.randint(0,100)
-            if chance < attr.constraint_parameters[0]:
+            if chance < attr.default_value:
+                new_val = 'DEFAULT' 
+        
+        #NULL appearance chance
+        if attr.null:            
+            chance = random.randint(0,100)
+            if chance < attr.constraint_parameters:
                 new_val = 'NULL'                
 
 
@@ -443,8 +449,8 @@ def iniciate_fk(table_list):
                     
                     #types not compatible
                     
-                    print "FATTR", fattr.data_type, "ATTR", attr.data_type
-                    print "FATTR KEY ->",COMPATIBLE[fattr.data_type]
+                    #print "FATTR", fattr.data_type, "ATTR", attr.data_type
+                    #print "FATTR KEY ->",COMPATIBLE[fattr.data_type]
                     
                     if fattr.data_type != attr.data_type and COMPATIBLE[fattr.data_type] != attr.data_type:
                         msg = "Semantic error: The foreign-key-type attribute '" + attr.name + "'s data type doesn't correspond with " \

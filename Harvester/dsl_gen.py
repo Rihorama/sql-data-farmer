@@ -5,6 +5,7 @@ import os
 
 
 NULL_FILL = 20
+DEFAULT_FILL = 20
 ARR_SIZE = 3     #default array size if no size given - for fill purposes
 
 
@@ -86,7 +87,7 @@ def get_fill_line(attr):
 #creates a constraint line if necessary
 def get_constr_line(attr):
     
-    if not attr.constraint_flag or (attr.not_null and attr.constraint_cnt == 1):
+    if not attr.constraint_flag:
         return ""
     
     line = "\t\tCONSTRAINT "
@@ -109,13 +110,17 @@ def get_constr_line(attr):
         line = line + "unique(" + str(x) + ") "
         
     if attr.null:
-        line = line + "null(" + NULL_CHANCE + ") "
+        line = line + "null(" + str(NULL_FILL) + ") "
+        
+    if attr.not_null:
+        line = line + "not_null "
         
     if attr.default:
-        if attr.default_value != None:
-            line = line + "default(" + str(attr.default_value) + ") "
-        else:
-            line = line + "default('') "
+        line = line + "default(" + str(DEFAULT_FILL) + ") "
+        #if attr.default_value != None:
+        #    line = line + "default(" + str(attr.default_value) + ") "
+        #else:
+        #    line = line + "default('') "
         
     return line
         

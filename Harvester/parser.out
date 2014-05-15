@@ -54,51 +54,53 @@ Rule 44    constraints -> NOT NULL
 Rule 45    constraints -> NULL
 Rule 46    constraints -> UNIQUE
 Rule 47    constraints -> DEFAULT NUMBER retype
-Rule 48    constraints -> DEFAULT QUOTE QUOTE retype
-Rule 49    constraints -> DEFAULT QUOTE inquote QUOTE retype
-Rule 50    constraints -> DEFAULT LPAREN NUMBER RPAREN retype
-Rule 51    retype -> COLON COLON idOrDtypeName
-Rule 52    retype -> COLON COLON idOrDtypeName idOrDtypeName
-Rule 53    retype -> empty
-Rule 54    parameter -> NUMBER
-Rule 55    inquote -> NUMBER
-Rule 56    inquote -> IDENTIFIER
-Rule 57    moreCheckBlocks -> moreCheckBlocks checkBlock
-Rule 58    moreCheckBlocks -> empty
-Rule 59    checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR
-Rule 60    checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR COMMA
-Rule 61    moreSequenceBlocks -> moreSequenceBlocks sequenceBlock
-Rule 62    moreSequenceBlocks -> empty
-Rule 63    sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
-Rule 64    moreAlterBlocks -> moreAlterBlocks alterBlock
-Rule 65    moreAlterBlocks -> empty
-Rule 66    alterBlock -> alterHeader alterBody SEMICOLON
-Rule 67    alterHeader -> ALTER TABLE ONLY IDENTIFIER
-Rule 68    alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN
-Rule 69    alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-Rule 70    alterBody -> multi_attr_constr
-Rule 71    idOrDtypeName -> IDENTIFIER
-Rule 72    idOrDtypeName -> dtypeNames
-Rule 73    multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
-Rule 74    multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN
-Rule 75    multi_params -> multi_1param multi_params
-Rule 76    multi_params -> empty
-Rule 77    multi_1param -> idOrDtypeName COMMA
-Rule 78    multi_1param -> idOrDtypeName
-Rule 79    empty -> <empty>
+Rule 48    constraints -> DEFAULT FLOATNUM retype
+Rule 49    constraints -> DEFAULT QUOTE QUOTE retype
+Rule 50    constraints -> DEFAULT QUOTE inquote QUOTE retype
+Rule 51    constraints -> DEFAULT LPAREN NUMBER RPAREN retype
+Rule 52    constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype
+Rule 53    retype -> COLON COLON idOrDtypeName
+Rule 54    retype -> COLON COLON idOrDtypeName idOrDtypeName
+Rule 55    retype -> empty
+Rule 56    parameter -> NUMBER
+Rule 57    inquote -> NUMBER
+Rule 58    inquote -> IDENTIFIER
+Rule 59    moreCheckBlocks -> moreCheckBlocks checkBlock
+Rule 60    moreCheckBlocks -> empty
+Rule 61    checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR
+Rule 62    checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR COMMA
+Rule 63    moreSequenceBlocks -> moreSequenceBlocks sequenceBlock
+Rule 64    moreSequenceBlocks -> empty
+Rule 65    sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
+Rule 66    moreAlterBlocks -> moreAlterBlocks alterBlock
+Rule 67    moreAlterBlocks -> empty
+Rule 68    alterBlock -> alterHeader alterBody SEMICOLON
+Rule 69    alterHeader -> ALTER TABLE ONLY IDENTIFIER
+Rule 70    alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN
+Rule 71    alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+Rule 72    alterBody -> multi_attr_constr
+Rule 73    idOrDtypeName -> IDENTIFIER
+Rule 74    idOrDtypeName -> dtypeNames
+Rule 75    multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
+Rule 76    multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN
+Rule 77    multi_params -> multi_1param multi_params
+Rule 78    multi_params -> empty
+Rule 79    multi_1param -> idOrDtypeName COMMA
+Rule 80    multi_1param -> idOrDtypeName
+Rule 81    empty -> <empty>
 
 Terminals, with rules where they appear
 
-ADD                  : 68 69 73 74
-ALTER                : 67
-BY                   : 63
-CHECK                : 59 60
-CHECKATTR            : 59 60
-COLON                : 51 51 52 52
-COMMA                : 8 9 31 60 77
-CONSTRAINT           : 59 60 68 69 73 74
+ADD                  : 70 71 75 76
+ALTER                : 69
+BY                   : 65
+CHECK                : 61 62
+CHECKATTR            : 61 62
+COLON                : 53 53 54 54
+COMMA                : 8 9 31 62 79
+CONSTRAINT           : 61 62 70 71 75 76
 CREATE               : 7
-DEFAULT              : 47 48 49 50
+DEFAULT              : 47 48 49 50 51 52
 DQUOTES              : 14 14 15 15
 DTYPE_2PARAM         : 
 DTYPE_BOTH_1PARAM    : 21 27 29 32 34
@@ -107,61 +109,62 @@ DTYPE_PART2          : 24 32 33 34
 DTYPE_SOLO           : 20 26
 DTYPE_SOLO_1PARAM2   : 22 28 30 31
 DTYPE_TIMEZONE_PARAM : 23 35 36 36 37 37
-FOREIGN              : 69
-IDENTIFIER           : 7 12 14 36 36 37 37 56 59 60 63 63 63 67 68 69 69 69 71 73 74
-KEY                  : 68 69 74
+FLOATNUM             : 48 52
+FOREIGN              : 71
+IDENTIFIER           : 7 12 14 36 36 37 37 58 61 62 65 65 65 69 70 71 71 71 73 75 76
+KEY                  : 70 71 76
 LBRACKET             : 40 41
-LPAREN               : 7 29 30 31 34 35 37 50 68 69 69 73 74
+LPAREN               : 7 29 30 31 34 35 37 51 52 70 71 71 75 76
 NOT                  : 44
 NULL                 : 44 45
-NUMBER               : 41 47 50 54 55
-ONLY                 : 67
-OWNED                : 63
-PERIOD               : 63
-PRIMARY              : 68 74
-QUOTE                : 48 48 49 49
+NUMBER               : 41 47 51 56 57
+ONLY                 : 69
+OWNED                : 65
+PERIOD               : 65
+PRIMARY              : 70 76
+QUOTE                : 49 49 50 50
 RBRACKET             : 40 41
-REFERENCES           : 69
-RPAREN               : 4 29 30 31 34 35 37 50 68 69 69 73 74
-SEMICOLON            : 4 63 66
-SEQUENCE             : 63
-TABLE                : 7 67
-UNIQUE               : 46 73
+REFERENCES           : 71
+RPAREN               : 4 29 30 31 34 35 37 51 52 70 71 71 75 76
+SEMICOLON            : 4 65 68
+SEQUENCE             : 65
+TABLE                : 7 69
+UNIQUE               : 46 75
 error                : 
 
 Nonterminals, with rules where they appear
 
-alterBlock           : 64
-alterBody            : 66
-alterHeader          : 66
+alterBlock           : 66
+alterBody            : 68
+alterHeader          : 68
 attributeBlock       : 4 5
 attributeName        : 8 9 10 11
-checkBlock           : 57
+checkBlock           : 59
 constraintPart       : 9 11 42
 constraints          : 42
 dtype                : 16
-dtypeNames           : 13 15 72
+dtypeNames           : 13 15 74
 dtypeSolo            : 17
 dtypeTimezone        : 19
 dtypeTwopart         : 18
 dtypes               : 8 9 10 11
-empty                : 3 6 39 43 53 58 62 65 76
-idOrDtypeName        : 51 52 52 68 69 77 78
-inquote              : 49
-moreAlterBlocks      : 1 64
+empty                : 3 6 39 43 55 60 64 67 78
+idOrDtypeName        : 53 54 54 70 71 79 80
+inquote              : 50
+moreAlterBlocks      : 1 66
 moreAttributes       : 4 5
 moreBlocks           : 1 2
-moreCheckBlocks      : 4 57
+moreCheckBlocks      : 4 59
 moreDimensions       : 16 38
-moreSequenceBlocks   : 4 61
-multi_1param         : 75
-multi_attr_constr    : 70
-multi_params         : 73 74 75
+moreSequenceBlocks   : 4 63
+multi_1param         : 77
+multi_attr_constr    : 72
+multi_params         : 75 76 77
 oneDimension         : 38
 parameter            : 29 30 31 31 34 35 37
-retype               : 47 48 49 50
+retype               : 47 48 49 50 51 52
 root                 : 0
-sequenceBlock        : 61
+sequenceBlock        : 63
 tableBlock           : 1 2
 tableHeader          : 4
 
@@ -216,11 +219,11 @@ state 2
     (1) root -> tableBlock . moreBlocks moreAlterBlocks
     (2) moreBlocks -> . moreBlocks tableBlock
     (3) moreBlocks -> . empty
-    (79) empty -> .
+    (81) empty -> .
 
-    CREATE          reduce using rule 79 (empty -> .)
-    ALTER           reduce using rule 79 (empty -> .)
-    $end            reduce using rule 79 (empty -> .)
+    CREATE          reduce using rule 81 (empty -> .)
+    ALTER           reduce using rule 81 (empty -> .)
+    $end            reduce using rule 81 (empty -> .)
 
     empty                          shift and go to state 16
     moreBlocks                     shift and go to state 17
@@ -242,7 +245,6 @@ state 5
 
     (25) dtypeNames -> DTYPE_PART1 .
 
-    COMMA           reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
     IDENTIFIER      reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
     DTYPE_SOLO      reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
     DTYPE_BOTH_1PARAM reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
@@ -250,12 +252,13 @@ state 5
     DTYPE_TIMEZONE_PARAM reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
     DTYPE_PART2     reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
     DTYPE_PART1     reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
-    RPAREN          reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
+    COMMA           reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
     NOT             reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
     NULL            reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
     UNIQUE          reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
     DEFAULT         reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
     DQUOTES         reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
+    RPAREN          reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
     CONSTRAINT      reduce using rule 25 (dtypeNames -> DTYPE_PART1 .)
 
 
@@ -263,7 +266,6 @@ state 6
 
     (22) dtypeNames -> DTYPE_SOLO_1PARAM2 .
 
-    COMMA           reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
     IDENTIFIER      reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
     DTYPE_SOLO      reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
     DTYPE_BOTH_1PARAM reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
@@ -271,12 +273,13 @@ state 6
     DTYPE_TIMEZONE_PARAM reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
     DTYPE_PART2     reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
     DTYPE_PART1     reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
-    RPAREN          reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
+    COMMA           reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
     NOT             reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
     NULL            reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
     UNIQUE          reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
     DEFAULT         reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
     DQUOTES         reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
+    RPAREN          reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
     CONSTRAINT      reduce using rule 22 (dtypeNames -> DTYPE_SOLO_1PARAM2 .)
 
 
@@ -305,7 +308,6 @@ state 8
 
     (20) dtypeNames -> DTYPE_SOLO .
 
-    COMMA           reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
     IDENTIFIER      reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
     DTYPE_SOLO      reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
     DTYPE_BOTH_1PARAM reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
@@ -313,12 +315,13 @@ state 8
     DTYPE_TIMEZONE_PARAM reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
     DTYPE_PART2     reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
     DTYPE_PART1     reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
-    RPAREN          reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
+    COMMA           reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
     NOT             reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
     NULL            reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
     UNIQUE          reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
     DEFAULT         reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
     DQUOTES         reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
+    RPAREN          reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
     CONSTRAINT      reduce using rule 20 (dtypeNames -> DTYPE_SOLO .)
 
 
@@ -362,18 +365,18 @@ state 10
     (4) tableBlock -> tableHeader attributeBlock . moreAttributes moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks
     (5) moreAttributes -> . moreAttributes attributeBlock
     (6) moreAttributes -> . empty
-    (79) empty -> .
+    (81) empty -> .
 
-    IDENTIFIER      reduce using rule 79 (empty -> .)
-    DQUOTES         reduce using rule 79 (empty -> .)
-    DTYPE_SOLO      reduce using rule 79 (empty -> .)
-    DTYPE_BOTH_1PARAM reduce using rule 79 (empty -> .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 79 (empty -> .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 79 (empty -> .)
-    DTYPE_PART2     reduce using rule 79 (empty -> .)
-    DTYPE_PART1     reduce using rule 79 (empty -> .)
-    RPAREN          reduce using rule 79 (empty -> .)
-    CONSTRAINT      reduce using rule 79 (empty -> .)
+    IDENTIFIER      reduce using rule 81 (empty -> .)
+    DQUOTES         reduce using rule 81 (empty -> .)
+    DTYPE_SOLO      reduce using rule 81 (empty -> .)
+    DTYPE_BOTH_1PARAM reduce using rule 81 (empty -> .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 81 (empty -> .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 81 (empty -> .)
+    DTYPE_PART2     reduce using rule 81 (empty -> .)
+    DTYPE_PART1     reduce using rule 81 (empty -> .)
+    RPAREN          reduce using rule 81 (empty -> .)
+    CONSTRAINT      reduce using rule 81 (empty -> .)
 
     moreAttributes                 shift and go to state 31
     empty                          shift and go to state 32
@@ -393,7 +396,6 @@ state 12
 
     (24) dtypeNames -> DTYPE_PART2 .
 
-    COMMA           reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
     IDENTIFIER      reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
     DTYPE_SOLO      reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
     DTYPE_BOTH_1PARAM reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
@@ -401,12 +403,13 @@ state 12
     DTYPE_TIMEZONE_PARAM reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
     DTYPE_PART2     reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
     DTYPE_PART1     reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
-    RPAREN          reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
+    COMMA           reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
     NOT             reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
     NULL            reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
     UNIQUE          reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
     DEFAULT         reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
     DQUOTES         reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
+    RPAREN          reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
     CONSTRAINT      reduce using rule 24 (dtypeNames -> DTYPE_PART2 .)
 
 
@@ -425,7 +428,6 @@ state 14
 
     (21) dtypeNames -> DTYPE_BOTH_1PARAM .
 
-    COMMA           reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
     IDENTIFIER      reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
     DTYPE_SOLO      reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
     DTYPE_BOTH_1PARAM reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
@@ -433,12 +435,13 @@ state 14
     DTYPE_TIMEZONE_PARAM reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
     DTYPE_PART2     reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
     DTYPE_PART1     reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
-    RPAREN          reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
+    COMMA           reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
     NOT             reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
     NULL            reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
     UNIQUE          reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
     DEFAULT         reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
     DQUOTES         reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
+    RPAREN          reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
     CONSTRAINT      reduce using rule 21 (dtypeNames -> DTYPE_BOTH_1PARAM .)
 
 
@@ -446,7 +449,6 @@ state 15
 
     (23) dtypeNames -> DTYPE_TIMEZONE_PARAM .
 
-    COMMA           reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
     IDENTIFIER      reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
     DTYPE_SOLO      reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
     DTYPE_BOTH_1PARAM reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
@@ -454,12 +456,13 @@ state 15
     DTYPE_TIMEZONE_PARAM reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
     DTYPE_PART2     reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
     DTYPE_PART1     reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
-    RPAREN          reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
+    COMMA           reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
     NOT             reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
     NULL            reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
     UNIQUE          reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
     DEFAULT         reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
     DQUOTES         reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
+    RPAREN          reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
     CONSTRAINT      reduce using rule 23 (dtypeNames -> DTYPE_TIMEZONE_PARAM .)
 
 
@@ -476,14 +479,14 @@ state 17
 
     (1) root -> tableBlock moreBlocks . moreAlterBlocks
     (2) moreBlocks -> moreBlocks . tableBlock
-    (64) moreAlterBlocks -> . moreAlterBlocks alterBlock
-    (65) moreAlterBlocks -> . empty
+    (66) moreAlterBlocks -> . moreAlterBlocks alterBlock
+    (67) moreAlterBlocks -> . empty
     (4) tableBlock -> . tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks
-    (79) empty -> .
+    (81) empty -> .
     (7) tableHeader -> . CREATE TABLE IDENTIFIER LPAREN
 
-    ALTER           reduce using rule 79 (empty -> .)
-    $end            reduce using rule 79 (empty -> .)
+    ALTER           reduce using rule 81 (empty -> .)
+    $end            reduce using rule 81 (empty -> .)
     CREATE          shift and go to state 3
 
     tableHeader                    shift and go to state 1
@@ -568,24 +571,24 @@ state 24
     (16) dtypes -> dtype . moreDimensions
     (38) moreDimensions -> . moreDimensions oneDimension
     (39) moreDimensions -> . empty
-    (79) empty -> .
+    (81) empty -> .
 
-    LBRACKET        reduce using rule 79 (empty -> .)
-    COMMA           reduce using rule 79 (empty -> .)
-    NOT             reduce using rule 79 (empty -> .)
-    NULL            reduce using rule 79 (empty -> .)
-    UNIQUE          reduce using rule 79 (empty -> .)
-    DEFAULT         reduce using rule 79 (empty -> .)
-    IDENTIFIER      reduce using rule 79 (empty -> .)
-    DQUOTES         reduce using rule 79 (empty -> .)
-    DTYPE_SOLO      reduce using rule 79 (empty -> .)
-    DTYPE_BOTH_1PARAM reduce using rule 79 (empty -> .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 79 (empty -> .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 79 (empty -> .)
-    DTYPE_PART2     reduce using rule 79 (empty -> .)
-    DTYPE_PART1     reduce using rule 79 (empty -> .)
-    RPAREN          reduce using rule 79 (empty -> .)
-    CONSTRAINT      reduce using rule 79 (empty -> .)
+    LBRACKET        reduce using rule 81 (empty -> .)
+    COMMA           reduce using rule 81 (empty -> .)
+    NOT             reduce using rule 81 (empty -> .)
+    NULL            reduce using rule 81 (empty -> .)
+    UNIQUE          reduce using rule 81 (empty -> .)
+    DEFAULT         reduce using rule 81 (empty -> .)
+    IDENTIFIER      reduce using rule 81 (empty -> .)
+    DQUOTES         reduce using rule 81 (empty -> .)
+    DTYPE_SOLO      reduce using rule 81 (empty -> .)
+    DTYPE_BOTH_1PARAM reduce using rule 81 (empty -> .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 81 (empty -> .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 81 (empty -> .)
+    DTYPE_PART2     reduce using rule 81 (empty -> .)
+    DTYPE_PART1     reduce using rule 81 (empty -> .)
+    RPAREN          reduce using rule 81 (empty -> .)
+    CONSTRAINT      reduce using rule 81 (empty -> .)
 
     moreDimensions                 shift and go to state 40
     empty                          shift and go to state 41
@@ -645,7 +648,7 @@ state 27
     (11) attributeBlock -> attributeName dtypes . constraintPart
     (42) constraintPart -> . constraintPart constraints
     (43) constraintPart -> . empty
-    (79) empty -> .
+    (81) empty -> .
 
   ! shift/reduce conflict for COMMA resolved as shift
   ! reduce/reduce conflict for IDENTIFIER resolved using rule 10 (attributeBlock -> attributeName dtypes .)
@@ -669,22 +672,22 @@ state 27
     DTYPE_PART1     reduce using rule 10 (attributeBlock -> attributeName dtypes .)
     RPAREN          reduce using rule 10 (attributeBlock -> attributeName dtypes .)
     CONSTRAINT      reduce using rule 10 (attributeBlock -> attributeName dtypes .)
-    NOT             reduce using rule 79 (empty -> .)
-    NULL            reduce using rule 79 (empty -> .)
-    UNIQUE          reduce using rule 79 (empty -> .)
-    DEFAULT         reduce using rule 79 (empty -> .)
+    NOT             reduce using rule 81 (empty -> .)
+    NULL            reduce using rule 81 (empty -> .)
+    UNIQUE          reduce using rule 81 (empty -> .)
+    DEFAULT         reduce using rule 81 (empty -> .)
 
-  ! COMMA           [ reduce using rule 79 (empty -> .) ]
-  ! IDENTIFIER      [ reduce using rule 79 (empty -> .) ]
-  ! DQUOTES         [ reduce using rule 79 (empty -> .) ]
-  ! DTYPE_SOLO      [ reduce using rule 79 (empty -> .) ]
-  ! DTYPE_BOTH_1PARAM [ reduce using rule 79 (empty -> .) ]
-  ! DTYPE_SOLO_1PARAM2 [ reduce using rule 79 (empty -> .) ]
-  ! DTYPE_TIMEZONE_PARAM [ reduce using rule 79 (empty -> .) ]
-  ! DTYPE_PART2     [ reduce using rule 79 (empty -> .) ]
-  ! DTYPE_PART1     [ reduce using rule 79 (empty -> .) ]
-  ! RPAREN          [ reduce using rule 79 (empty -> .) ]
-  ! CONSTRAINT      [ reduce using rule 79 (empty -> .) ]
+  ! COMMA           [ reduce using rule 81 (empty -> .) ]
+  ! IDENTIFIER      [ reduce using rule 81 (empty -> .) ]
+  ! DQUOTES         [ reduce using rule 81 (empty -> .) ]
+  ! DTYPE_SOLO      [ reduce using rule 81 (empty -> .) ]
+  ! DTYPE_BOTH_1PARAM [ reduce using rule 81 (empty -> .) ]
+  ! DTYPE_SOLO_1PARAM2 [ reduce using rule 81 (empty -> .) ]
+  ! DTYPE_TIMEZONE_PARAM [ reduce using rule 81 (empty -> .) ]
+  ! DTYPE_PART2     [ reduce using rule 81 (empty -> .) ]
+  ! DTYPE_PART1     [ reduce using rule 81 (empty -> .) ]
+  ! RPAREN          [ reduce using rule 81 (empty -> .) ]
+  ! CONSTRAINT      [ reduce using rule 81 (empty -> .) ]
 
     constraintPart                 shift and go to state 43
     empty                          shift and go to state 45
@@ -754,13 +757,13 @@ state 31
 
     (4) tableBlock -> tableHeader attributeBlock moreAttributes . moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks
     (5) moreAttributes -> moreAttributes . attributeBlock
-    (57) moreCheckBlocks -> . moreCheckBlocks checkBlock
-    (58) moreCheckBlocks -> . empty
+    (59) moreCheckBlocks -> . moreCheckBlocks checkBlock
+    (60) moreCheckBlocks -> . empty
     (8) attributeBlock -> . attributeName dtypes COMMA
     (9) attributeBlock -> . attributeName dtypes constraintPart COMMA
     (10) attributeBlock -> . attributeName dtypes
     (11) attributeBlock -> . attributeName dtypes constraintPart
-    (79) empty -> .
+    (81) empty -> .
     (12) attributeName -> . IDENTIFIER
     (13) attributeName -> . dtypeNames
     (14) attributeName -> . DQUOTES IDENTIFIER DQUOTES
@@ -772,8 +775,8 @@ state 31
     (24) dtypeNames -> . DTYPE_PART2
     (25) dtypeNames -> . DTYPE_PART1
 
-    RPAREN          reduce using rule 79 (empty -> .)
-    CONSTRAINT      reduce using rule 79 (empty -> .)
+    RPAREN          reduce using rule 81 (empty -> .)
+    CONSTRAINT      reduce using rule 81 (empty -> .)
     IDENTIFIER      shift and go to state 13
     DQUOTES         shift and go to state 7
     DTYPE_SOLO      shift and go to state 8
@@ -808,9 +811,9 @@ state 32
 state 33
 
     (1) root -> tableBlock moreBlocks moreAlterBlocks .
-    (64) moreAlterBlocks -> moreAlterBlocks . alterBlock
-    (66) alterBlock -> . alterHeader alterBody SEMICOLON
-    (67) alterHeader -> . ALTER TABLE ONLY IDENTIFIER
+    (66) moreAlterBlocks -> moreAlterBlocks . alterBlock
+    (68) alterBlock -> . alterHeader alterBody SEMICOLON
+    (69) alterHeader -> . ALTER TABLE ONLY IDENTIFIER
 
     $end            reduce using rule 1 (root -> tableBlock moreBlocks moreAlterBlocks .)
     ALTER           shift and go to state 55
@@ -829,10 +832,10 @@ state 34
 
 state 35
 
-    (65) moreAlterBlocks -> empty .
+    (67) moreAlterBlocks -> empty .
 
-    ALTER           reduce using rule 65 (moreAlterBlocks -> empty .)
-    $end            reduce using rule 65 (moreAlterBlocks -> empty .)
+    ALTER           reduce using rule 67 (moreAlterBlocks -> empty .)
+    $end            reduce using rule 67 (moreAlterBlocks -> empty .)
 
 
 state 36
@@ -938,7 +941,7 @@ state 42
 
     (30) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN . parameter RPAREN
     (31) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN . parameter COMMA parameter RPAREN
-    (54) parameter -> . NUMBER
+    (56) parameter -> . NUMBER
 
     NUMBER          shift and go to state 59
 
@@ -953,9 +956,11 @@ state 43
     (45) constraints -> . NULL
     (46) constraints -> . UNIQUE
     (47) constraints -> . DEFAULT NUMBER retype
-    (48) constraints -> . DEFAULT QUOTE QUOTE retype
-    (49) constraints -> . DEFAULT QUOTE inquote QUOTE retype
-    (50) constraints -> . DEFAULT LPAREN NUMBER RPAREN retype
+    (48) constraints -> . DEFAULT FLOATNUM retype
+    (49) constraints -> . DEFAULT QUOTE QUOTE retype
+    (50) constraints -> . DEFAULT QUOTE inquote QUOTE retype
+    (51) constraints -> . DEFAULT LPAREN NUMBER RPAREN retype
+    (52) constraints -> . DEFAULT LPAREN FLOATNUM RPAREN retype
 
     COMMA           shift and go to state 63
     IDENTIFIER      reduce using rule 11 (attributeBlock -> attributeName dtypes constraintPart .)
@@ -1039,7 +1044,7 @@ state 46
 state 47
 
     (29) dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN . parameter RPAREN
-    (54) parameter -> . NUMBER
+    (56) parameter -> . NUMBER
 
     NUMBER          shift and go to state 59
 
@@ -1056,7 +1061,7 @@ state 49
 
     (35) dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN . parameter RPAREN
     (37) dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN . parameter RPAREN IDENTIFIER DTYPE_TIMEZONE_PARAM IDENTIFIER
-    (54) parameter -> . NUMBER
+    (56) parameter -> . NUMBER
 
     NUMBER          shift and go to state 59
 
@@ -1065,9 +1070,9 @@ state 49
 state 50
 
     (4) tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks . RPAREN SEMICOLON moreSequenceBlocks
-    (57) moreCheckBlocks -> moreCheckBlocks . checkBlock
-    (59) checkBlock -> . CONSTRAINT IDENTIFIER CHECK CHECKATTR
-    (60) checkBlock -> . CONSTRAINT IDENTIFIER CHECK CHECKATTR COMMA
+    (59) moreCheckBlocks -> moreCheckBlocks . checkBlock
+    (61) checkBlock -> . CONSTRAINT IDENTIFIER CHECK CHECKATTR
+    (62) checkBlock -> . CONSTRAINT IDENTIFIER CHECK CHECKATTR COMMA
 
     RPAREN          shift and go to state 71
     CONSTRAINT      shift and go to state 72
@@ -1076,10 +1081,10 @@ state 50
 
 state 51
 
-    (58) moreCheckBlocks -> empty .
+    (60) moreCheckBlocks -> empty .
 
-    RPAREN          reduce using rule 58 (moreCheckBlocks -> empty .)
-    CONSTRAINT      reduce using rule 58 (moreCheckBlocks -> empty .)
+    RPAREN          reduce using rule 60 (moreCheckBlocks -> empty .)
+    CONSTRAINT      reduce using rule 60 (moreCheckBlocks -> empty .)
 
 
 state 52
@@ -1100,12 +1105,12 @@ state 52
 
 state 53
 
-    (66) alterBlock -> alterHeader . alterBody SEMICOLON
-    (68) alterBody -> . ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN
-    (69) alterBody -> . ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-    (70) alterBody -> . multi_attr_constr
-    (73) multi_attr_constr -> . ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
-    (74) multi_attr_constr -> . ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN
+    (68) alterBlock -> alterHeader . alterBody SEMICOLON
+    (70) alterBody -> . ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN
+    (71) alterBody -> . ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (72) alterBody -> . multi_attr_constr
+    (75) multi_attr_constr -> . ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
+    (76) multi_attr_constr -> . ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN
 
     ADD             shift and go to state 74
 
@@ -1114,15 +1119,15 @@ state 53
 
 state 54
 
-    (64) moreAlterBlocks -> moreAlterBlocks alterBlock .
+    (66) moreAlterBlocks -> moreAlterBlocks alterBlock .
 
-    ALTER           reduce using rule 64 (moreAlterBlocks -> moreAlterBlocks alterBlock .)
-    $end            reduce using rule 64 (moreAlterBlocks -> moreAlterBlocks alterBlock .)
+    ALTER           reduce using rule 66 (moreAlterBlocks -> moreAlterBlocks alterBlock .)
+    $end            reduce using rule 66 (moreAlterBlocks -> moreAlterBlocks alterBlock .)
 
 
 state 55
 
-    (67) alterHeader -> ALTER . TABLE ONLY IDENTIFIER
+    (69) alterHeader -> ALTER . TABLE ONLY IDENTIFIER
 
     TABLE           shift and go to state 77
 
@@ -1174,10 +1179,10 @@ state 58
 
 state 59
 
-    (54) parameter -> NUMBER .
+    (56) parameter -> NUMBER .
 
-    RPAREN          reduce using rule 54 (parameter -> NUMBER .)
-    COMMA           reduce using rule 54 (parameter -> NUMBER .)
+    RPAREN          reduce using rule 56 (parameter -> NUMBER .)
+    COMMA           reduce using rule 56 (parameter -> NUMBER .)
 
 
 state 60
@@ -1213,13 +1218,16 @@ state 61
 state 62
 
     (47) constraints -> DEFAULT . NUMBER retype
-    (48) constraints -> DEFAULT . QUOTE QUOTE retype
-    (49) constraints -> DEFAULT . QUOTE inquote QUOTE retype
-    (50) constraints -> DEFAULT . LPAREN NUMBER RPAREN retype
+    (48) constraints -> DEFAULT . FLOATNUM retype
+    (49) constraints -> DEFAULT . QUOTE QUOTE retype
+    (50) constraints -> DEFAULT . QUOTE inquote QUOTE retype
+    (51) constraints -> DEFAULT . LPAREN NUMBER RPAREN retype
+    (52) constraints -> DEFAULT . LPAREN FLOATNUM RPAREN retype
 
     NUMBER          shift and go to state 83
+    FLOATNUM        shift and go to state 84
     QUOTE           shift and go to state 82
-    LPAREN          shift and go to state 84
+    LPAREN          shift and go to state 85
 
 
 state 63
@@ -1242,7 +1250,7 @@ state 64
 
     (44) constraints -> NOT . NULL
 
-    NULL            shift and go to state 85
+    NULL            shift and go to state 86
 
 
 state 65
@@ -1290,24 +1298,24 @@ state 66
 state 67
 
     (34) dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN . parameter RPAREN
-    (54) parameter -> . NUMBER
+    (56) parameter -> . NUMBER
 
     NUMBER          shift and go to state 59
 
-    parameter                      shift and go to state 86
+    parameter                      shift and go to state 87
 
 state 68
 
     (29) dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter . RPAREN
 
-    RPAREN          shift and go to state 87
+    RPAREN          shift and go to state 88
 
 
 state 69
 
     (36) dtypeTimezone -> DTYPE_TIMEZONE_PARAM IDENTIFIER DTYPE_TIMEZONE_PARAM . IDENTIFIER
 
-    IDENTIFIER      shift and go to state 88
+    IDENTIFIER      shift and go to state 89
 
 
 state 70
@@ -1315,61 +1323,61 @@ state 70
     (35) dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter . RPAREN
     (37) dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter . RPAREN IDENTIFIER DTYPE_TIMEZONE_PARAM IDENTIFIER
 
-    RPAREN          shift and go to state 89
+    RPAREN          shift and go to state 90
 
 
 state 71
 
     (4) tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN . SEMICOLON moreSequenceBlocks
 
-    SEMICOLON       shift and go to state 90
+    SEMICOLON       shift and go to state 91
 
 
 state 72
 
-    (59) checkBlock -> CONSTRAINT . IDENTIFIER CHECK CHECKATTR
-    (60) checkBlock -> CONSTRAINT . IDENTIFIER CHECK CHECKATTR COMMA
+    (61) checkBlock -> CONSTRAINT . IDENTIFIER CHECK CHECKATTR
+    (62) checkBlock -> CONSTRAINT . IDENTIFIER CHECK CHECKATTR COMMA
 
-    IDENTIFIER      shift and go to state 91
+    IDENTIFIER      shift and go to state 92
 
 
 state 73
 
-    (57) moreCheckBlocks -> moreCheckBlocks checkBlock .
+    (59) moreCheckBlocks -> moreCheckBlocks checkBlock .
 
-    RPAREN          reduce using rule 57 (moreCheckBlocks -> moreCheckBlocks checkBlock .)
-    CONSTRAINT      reduce using rule 57 (moreCheckBlocks -> moreCheckBlocks checkBlock .)
+    RPAREN          reduce using rule 59 (moreCheckBlocks -> moreCheckBlocks checkBlock .)
+    CONSTRAINT      reduce using rule 59 (moreCheckBlocks -> moreCheckBlocks checkBlock .)
 
 
 state 74
 
-    (68) alterBody -> ADD . CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN
-    (69) alterBody -> ADD . CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-    (73) multi_attr_constr -> ADD . CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
-    (74) multi_attr_constr -> ADD . CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN
+    (70) alterBody -> ADD . CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN
+    (71) alterBody -> ADD . CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (75) multi_attr_constr -> ADD . CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN
+    (76) multi_attr_constr -> ADD . CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN
 
-    CONSTRAINT      shift and go to state 92
+    CONSTRAINT      shift and go to state 93
 
 
 state 75
 
-    (66) alterBlock -> alterHeader alterBody . SEMICOLON
+    (68) alterBlock -> alterHeader alterBody . SEMICOLON
 
-    SEMICOLON       shift and go to state 93
+    SEMICOLON       shift and go to state 94
 
 
 state 76
 
-    (70) alterBody -> multi_attr_constr .
+    (72) alterBody -> multi_attr_constr .
 
-    SEMICOLON       reduce using rule 70 (alterBody -> multi_attr_constr .)
+    SEMICOLON       reduce using rule 72 (alterBody -> multi_attr_constr .)
 
 
 state 77
 
-    (67) alterHeader -> ALTER TABLE . ONLY IDENTIFIER
+    (69) alterHeader -> ALTER TABLE . ONLY IDENTIFIER
 
-    ONLY            shift and go to state 94
+    ONLY            shift and go to state 95
 
 
 state 78
@@ -1398,7 +1406,7 @@ state 79
 
     (41) oneDimension -> LBRACKET NUMBER . RBRACKET
 
-    RBRACKET        shift and go to state 95
+    RBRACKET        shift and go to state 96
 
 
 state 80
@@ -1426,61 +1434,91 @@ state 80
 state 81
 
     (31) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA . parameter RPAREN
-    (54) parameter -> . NUMBER
+    (56) parameter -> . NUMBER
 
     NUMBER          shift and go to state 59
 
-    parameter                      shift and go to state 96
+    parameter                      shift and go to state 97
 
 state 82
 
-    (48) constraints -> DEFAULT QUOTE . QUOTE retype
-    (49) constraints -> DEFAULT QUOTE . inquote QUOTE retype
-    (55) inquote -> . NUMBER
-    (56) inquote -> . IDENTIFIER
+    (49) constraints -> DEFAULT QUOTE . QUOTE retype
+    (50) constraints -> DEFAULT QUOTE . inquote QUOTE retype
+    (57) inquote -> . NUMBER
+    (58) inquote -> . IDENTIFIER
 
-    QUOTE           shift and go to state 98
-    NUMBER          shift and go to state 99
-    IDENTIFIER      shift and go to state 100
+    QUOTE           shift and go to state 99
+    NUMBER          shift and go to state 100
+    IDENTIFIER      shift and go to state 101
 
-    inquote                        shift and go to state 97
+    inquote                        shift and go to state 98
 
 state 83
 
     (47) constraints -> DEFAULT NUMBER . retype
-    (51) retype -> . COLON COLON idOrDtypeName
-    (52) retype -> . COLON COLON idOrDtypeName idOrDtypeName
-    (53) retype -> . empty
-    (79) empty -> .
+    (53) retype -> . COLON COLON idOrDtypeName
+    (54) retype -> . COLON COLON idOrDtypeName idOrDtypeName
+    (55) retype -> . empty
+    (81) empty -> .
 
-    COLON           shift and go to state 101
-    COMMA           reduce using rule 79 (empty -> .)
-    NOT             reduce using rule 79 (empty -> .)
-    NULL            reduce using rule 79 (empty -> .)
-    UNIQUE          reduce using rule 79 (empty -> .)
-    DEFAULT         reduce using rule 79 (empty -> .)
-    IDENTIFIER      reduce using rule 79 (empty -> .)
-    DQUOTES         reduce using rule 79 (empty -> .)
-    DTYPE_SOLO      reduce using rule 79 (empty -> .)
-    DTYPE_BOTH_1PARAM reduce using rule 79 (empty -> .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 79 (empty -> .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 79 (empty -> .)
-    DTYPE_PART2     reduce using rule 79 (empty -> .)
-    DTYPE_PART1     reduce using rule 79 (empty -> .)
-    RPAREN          reduce using rule 79 (empty -> .)
-    CONSTRAINT      reduce using rule 79 (empty -> .)
+    COLON           shift and go to state 102
+    COMMA           reduce using rule 81 (empty -> .)
+    NOT             reduce using rule 81 (empty -> .)
+    NULL            reduce using rule 81 (empty -> .)
+    UNIQUE          reduce using rule 81 (empty -> .)
+    DEFAULT         reduce using rule 81 (empty -> .)
+    IDENTIFIER      reduce using rule 81 (empty -> .)
+    DQUOTES         reduce using rule 81 (empty -> .)
+    DTYPE_SOLO      reduce using rule 81 (empty -> .)
+    DTYPE_BOTH_1PARAM reduce using rule 81 (empty -> .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 81 (empty -> .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 81 (empty -> .)
+    DTYPE_PART2     reduce using rule 81 (empty -> .)
+    DTYPE_PART1     reduce using rule 81 (empty -> .)
+    RPAREN          reduce using rule 81 (empty -> .)
+    CONSTRAINT      reduce using rule 81 (empty -> .)
 
-    retype                         shift and go to state 102
-    empty                          shift and go to state 103
+    retype                         shift and go to state 103
+    empty                          shift and go to state 104
 
 state 84
 
-    (50) constraints -> DEFAULT LPAREN . NUMBER RPAREN retype
+    (48) constraints -> DEFAULT FLOATNUM . retype
+    (53) retype -> . COLON COLON idOrDtypeName
+    (54) retype -> . COLON COLON idOrDtypeName idOrDtypeName
+    (55) retype -> . empty
+    (81) empty -> .
 
-    NUMBER          shift and go to state 104
+    COLON           shift and go to state 102
+    COMMA           reduce using rule 81 (empty -> .)
+    NOT             reduce using rule 81 (empty -> .)
+    NULL            reduce using rule 81 (empty -> .)
+    UNIQUE          reduce using rule 81 (empty -> .)
+    DEFAULT         reduce using rule 81 (empty -> .)
+    IDENTIFIER      reduce using rule 81 (empty -> .)
+    DQUOTES         reduce using rule 81 (empty -> .)
+    DTYPE_SOLO      reduce using rule 81 (empty -> .)
+    DTYPE_BOTH_1PARAM reduce using rule 81 (empty -> .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 81 (empty -> .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 81 (empty -> .)
+    DTYPE_PART2     reduce using rule 81 (empty -> .)
+    DTYPE_PART1     reduce using rule 81 (empty -> .)
+    RPAREN          reduce using rule 81 (empty -> .)
+    CONSTRAINT      reduce using rule 81 (empty -> .)
 
+    retype                         shift and go to state 105
+    empty                          shift and go to state 104
 
 state 85
+
+    (51) constraints -> DEFAULT LPAREN . NUMBER RPAREN retype
+    (52) constraints -> DEFAULT LPAREN . FLOATNUM RPAREN retype
+
+    NUMBER          shift and go to state 106
+    FLOATNUM        shift and go to state 107
+
+
+state 86
 
     (44) constraints -> NOT NULL .
 
@@ -1501,14 +1539,14 @@ state 85
     CONSTRAINT      reduce using rule 44 (constraints -> NOT NULL .)
 
 
-state 86
+state 87
 
     (34) dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter . RPAREN
 
-    RPAREN          shift and go to state 105
+    RPAREN          shift and go to state 108
 
 
-state 87
+state 88
 
     (29) dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN .
 
@@ -1530,7 +1568,7 @@ state 87
     CONSTRAINT      reduce using rule 29 (dtypeSolo -> DTYPE_BOTH_1PARAM LPAREN parameter RPAREN .)
 
 
-state 88
+state 89
 
     (36) dtypeTimezone -> DTYPE_TIMEZONE_PARAM IDENTIFIER DTYPE_TIMEZONE_PARAM IDENTIFIER .
 
@@ -1552,7 +1590,7 @@ state 88
     CONSTRAINT      reduce using rule 36 (dtypeTimezone -> DTYPE_TIMEZONE_PARAM IDENTIFIER DTYPE_TIMEZONE_PARAM IDENTIFIER .)
 
 
-state 89
+state 90
 
     (35) dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN .
     (37) dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN . IDENTIFIER DTYPE_TIMEZONE_PARAM IDENTIFIER
@@ -1573,60 +1611,60 @@ state 89
     DTYPE_PART1     reduce using rule 35 (dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN .)
     RPAREN          reduce using rule 35 (dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN .)
     CONSTRAINT      reduce using rule 35 (dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN .)
-    IDENTIFIER      shift and go to state 106
+    IDENTIFIER      shift and go to state 109
 
   ! IDENTIFIER      [ reduce using rule 35 (dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN .) ]
 
 
-state 90
-
-    (4) tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON . moreSequenceBlocks
-    (61) moreSequenceBlocks -> . moreSequenceBlocks sequenceBlock
-    (62) moreSequenceBlocks -> . empty
-    (79) empty -> .
-
-    SEQUENCE        reduce using rule 79 (empty -> .)
-    CREATE          reduce using rule 79 (empty -> .)
-    ALTER           reduce using rule 79 (empty -> .)
-    $end            reduce using rule 79 (empty -> .)
-
-    moreSequenceBlocks             shift and go to state 107
-    empty                          shift and go to state 108
-
 state 91
 
-    (59) checkBlock -> CONSTRAINT IDENTIFIER . CHECK CHECKATTR
-    (60) checkBlock -> CONSTRAINT IDENTIFIER . CHECK CHECKATTR COMMA
+    (4) tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON . moreSequenceBlocks
+    (63) moreSequenceBlocks -> . moreSequenceBlocks sequenceBlock
+    (64) moreSequenceBlocks -> . empty
+    (81) empty -> .
 
-    CHECK           shift and go to state 109
+    SEQUENCE        reduce using rule 81 (empty -> .)
+    CREATE          reduce using rule 81 (empty -> .)
+    ALTER           reduce using rule 81 (empty -> .)
+    $end            reduce using rule 81 (empty -> .)
 
+    moreSequenceBlocks             shift and go to state 110
+    empty                          shift and go to state 111
 
 state 92
 
-    (68) alterBody -> ADD CONSTRAINT . IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN
-    (69) alterBody -> ADD CONSTRAINT . IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-    (73) multi_attr_constr -> ADD CONSTRAINT . IDENTIFIER UNIQUE LPAREN multi_params RPAREN
-    (74) multi_attr_constr -> ADD CONSTRAINT . IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN
+    (61) checkBlock -> CONSTRAINT IDENTIFIER . CHECK CHECKATTR
+    (62) checkBlock -> CONSTRAINT IDENTIFIER . CHECK CHECKATTR COMMA
 
-    IDENTIFIER      shift and go to state 110
+    CHECK           shift and go to state 112
 
 
 state 93
 
-    (66) alterBlock -> alterHeader alterBody SEMICOLON .
+    (70) alterBody -> ADD CONSTRAINT . IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN
+    (71) alterBody -> ADD CONSTRAINT . IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (75) multi_attr_constr -> ADD CONSTRAINT . IDENTIFIER UNIQUE LPAREN multi_params RPAREN
+    (76) multi_attr_constr -> ADD CONSTRAINT . IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN
 
-    ALTER           reduce using rule 66 (alterBlock -> alterHeader alterBody SEMICOLON .)
-    $end            reduce using rule 66 (alterBlock -> alterHeader alterBody SEMICOLON .)
+    IDENTIFIER      shift and go to state 113
 
 
 state 94
 
-    (67) alterHeader -> ALTER TABLE ONLY . IDENTIFIER
+    (68) alterBlock -> alterHeader alterBody SEMICOLON .
 
-    IDENTIFIER      shift and go to state 111
+    ALTER           reduce using rule 68 (alterBlock -> alterHeader alterBody SEMICOLON .)
+    $end            reduce using rule 68 (alterBlock -> alterHeader alterBody SEMICOLON .)
 
 
 state 95
+
+    (69) alterHeader -> ALTER TABLE ONLY . IDENTIFIER
+
+    IDENTIFIER      shift and go to state 114
+
+
+state 96
 
     (41) oneDimension -> LBRACKET NUMBER RBRACKET .
 
@@ -1648,71 +1686,71 @@ state 95
     CONSTRAINT      reduce using rule 41 (oneDimension -> LBRACKET NUMBER RBRACKET .)
 
 
-state 96
+state 97
 
     (31) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter . RPAREN
 
-    RPAREN          shift and go to state 112
-
-
-state 97
-
-    (49) constraints -> DEFAULT QUOTE inquote . QUOTE retype
-
-    QUOTE           shift and go to state 113
+    RPAREN          shift and go to state 115
 
 
 state 98
 
-    (48) constraints -> DEFAULT QUOTE QUOTE . retype
-    (51) retype -> . COLON COLON idOrDtypeName
-    (52) retype -> . COLON COLON idOrDtypeName idOrDtypeName
-    (53) retype -> . empty
-    (79) empty -> .
+    (50) constraints -> DEFAULT QUOTE inquote . QUOTE retype
 
-    COLON           shift and go to state 101
-    COMMA           reduce using rule 79 (empty -> .)
-    NOT             reduce using rule 79 (empty -> .)
-    NULL            reduce using rule 79 (empty -> .)
-    UNIQUE          reduce using rule 79 (empty -> .)
-    DEFAULT         reduce using rule 79 (empty -> .)
-    IDENTIFIER      reduce using rule 79 (empty -> .)
-    DQUOTES         reduce using rule 79 (empty -> .)
-    DTYPE_SOLO      reduce using rule 79 (empty -> .)
-    DTYPE_BOTH_1PARAM reduce using rule 79 (empty -> .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 79 (empty -> .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 79 (empty -> .)
-    DTYPE_PART2     reduce using rule 79 (empty -> .)
-    DTYPE_PART1     reduce using rule 79 (empty -> .)
-    RPAREN          reduce using rule 79 (empty -> .)
-    CONSTRAINT      reduce using rule 79 (empty -> .)
+    QUOTE           shift and go to state 116
 
-    retype                         shift and go to state 114
-    empty                          shift and go to state 103
 
 state 99
 
-    (55) inquote -> NUMBER .
+    (49) constraints -> DEFAULT QUOTE QUOTE . retype
+    (53) retype -> . COLON COLON idOrDtypeName
+    (54) retype -> . COLON COLON idOrDtypeName idOrDtypeName
+    (55) retype -> . empty
+    (81) empty -> .
 
-    QUOTE           reduce using rule 55 (inquote -> NUMBER .)
+    COLON           shift and go to state 102
+    COMMA           reduce using rule 81 (empty -> .)
+    NOT             reduce using rule 81 (empty -> .)
+    NULL            reduce using rule 81 (empty -> .)
+    UNIQUE          reduce using rule 81 (empty -> .)
+    DEFAULT         reduce using rule 81 (empty -> .)
+    IDENTIFIER      reduce using rule 81 (empty -> .)
+    DQUOTES         reduce using rule 81 (empty -> .)
+    DTYPE_SOLO      reduce using rule 81 (empty -> .)
+    DTYPE_BOTH_1PARAM reduce using rule 81 (empty -> .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 81 (empty -> .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 81 (empty -> .)
+    DTYPE_PART2     reduce using rule 81 (empty -> .)
+    DTYPE_PART1     reduce using rule 81 (empty -> .)
+    RPAREN          reduce using rule 81 (empty -> .)
+    CONSTRAINT      reduce using rule 81 (empty -> .)
 
+    retype                         shift and go to state 117
+    empty                          shift and go to state 104
 
 state 100
 
-    (56) inquote -> IDENTIFIER .
+    (57) inquote -> NUMBER .
 
-    QUOTE           reduce using rule 56 (inquote -> IDENTIFIER .)
+    QUOTE           reduce using rule 57 (inquote -> NUMBER .)
 
 
 state 101
 
-    (51) retype -> COLON . COLON idOrDtypeName
-    (52) retype -> COLON . COLON idOrDtypeName idOrDtypeName
+    (58) inquote -> IDENTIFIER .
 
-    COLON           shift and go to state 115
+    QUOTE           reduce using rule 58 (inquote -> IDENTIFIER .)
 
 
 state 102
+
+    (53) retype -> COLON . COLON idOrDtypeName
+    (54) retype -> COLON . COLON idOrDtypeName idOrDtypeName
+
+    COLON           shift and go to state 118
+
+
+state 103
 
     (47) constraints -> DEFAULT NUMBER retype .
 
@@ -1733,35 +1771,63 @@ state 102
     CONSTRAINT      reduce using rule 47 (constraints -> DEFAULT NUMBER retype .)
 
 
-state 103
-
-    (53) retype -> empty .
-
-    COMMA           reduce using rule 53 (retype -> empty .)
-    NOT             reduce using rule 53 (retype -> empty .)
-    NULL            reduce using rule 53 (retype -> empty .)
-    UNIQUE          reduce using rule 53 (retype -> empty .)
-    DEFAULT         reduce using rule 53 (retype -> empty .)
-    IDENTIFIER      reduce using rule 53 (retype -> empty .)
-    DQUOTES         reduce using rule 53 (retype -> empty .)
-    DTYPE_SOLO      reduce using rule 53 (retype -> empty .)
-    DTYPE_BOTH_1PARAM reduce using rule 53 (retype -> empty .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 53 (retype -> empty .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 53 (retype -> empty .)
-    DTYPE_PART2     reduce using rule 53 (retype -> empty .)
-    DTYPE_PART1     reduce using rule 53 (retype -> empty .)
-    RPAREN          reduce using rule 53 (retype -> empty .)
-    CONSTRAINT      reduce using rule 53 (retype -> empty .)
-
-
 state 104
 
-    (50) constraints -> DEFAULT LPAREN NUMBER . RPAREN retype
+    (55) retype -> empty .
 
-    RPAREN          shift and go to state 116
+    COMMA           reduce using rule 55 (retype -> empty .)
+    NOT             reduce using rule 55 (retype -> empty .)
+    NULL            reduce using rule 55 (retype -> empty .)
+    UNIQUE          reduce using rule 55 (retype -> empty .)
+    DEFAULT         reduce using rule 55 (retype -> empty .)
+    IDENTIFIER      reduce using rule 55 (retype -> empty .)
+    DQUOTES         reduce using rule 55 (retype -> empty .)
+    DTYPE_SOLO      reduce using rule 55 (retype -> empty .)
+    DTYPE_BOTH_1PARAM reduce using rule 55 (retype -> empty .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 55 (retype -> empty .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 55 (retype -> empty .)
+    DTYPE_PART2     reduce using rule 55 (retype -> empty .)
+    DTYPE_PART1     reduce using rule 55 (retype -> empty .)
+    RPAREN          reduce using rule 55 (retype -> empty .)
+    CONSTRAINT      reduce using rule 55 (retype -> empty .)
 
 
 state 105
+
+    (48) constraints -> DEFAULT FLOATNUM retype .
+
+    COMMA           reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    NOT             reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    NULL            reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    UNIQUE          reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    DEFAULT         reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    IDENTIFIER      reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    DQUOTES         reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    DTYPE_SOLO      reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    DTYPE_BOTH_1PARAM reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    DTYPE_PART2     reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    DTYPE_PART1     reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    RPAREN          reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+    CONSTRAINT      reduce using rule 48 (constraints -> DEFAULT FLOATNUM retype .)
+
+
+state 106
+
+    (51) constraints -> DEFAULT LPAREN NUMBER . RPAREN retype
+
+    RPAREN          shift and go to state 119
+
+
+state 107
+
+    (52) constraints -> DEFAULT LPAREN FLOATNUM . RPAREN retype
+
+    RPAREN          shift and go to state 120
+
+
+state 108
 
     (34) dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN .
 
@@ -1783,64 +1849,64 @@ state 105
     CONSTRAINT      reduce using rule 34 (dtypeTwopart -> DTYPE_BOTH_1PARAM DTYPE_PART2 LPAREN parameter RPAREN .)
 
 
-state 106
+state 109
 
     (37) dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN IDENTIFIER . DTYPE_TIMEZONE_PARAM IDENTIFIER
 
-    DTYPE_TIMEZONE_PARAM shift and go to state 117
-
-
-state 107
-
-    (4) tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks .
-    (61) moreSequenceBlocks -> moreSequenceBlocks . sequenceBlock
-    (63) sequenceBlock -> . SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
-
-    CREATE          reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks .)
-    ALTER           reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks .)
-    $end            reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks .)
-    SEQUENCE        shift and go to state 118
-
-    sequenceBlock                  shift and go to state 119
-
-state 108
-
-    (62) moreSequenceBlocks -> empty .
-
-    SEQUENCE        reduce using rule 62 (moreSequenceBlocks -> empty .)
-    CREATE          reduce using rule 62 (moreSequenceBlocks -> empty .)
-    ALTER           reduce using rule 62 (moreSequenceBlocks -> empty .)
-    $end            reduce using rule 62 (moreSequenceBlocks -> empty .)
-
-
-state 109
-
-    (59) checkBlock -> CONSTRAINT IDENTIFIER CHECK . CHECKATTR
-    (60) checkBlock -> CONSTRAINT IDENTIFIER CHECK . CHECKATTR COMMA
-
-    CHECKATTR       shift and go to state 120
+    DTYPE_TIMEZONE_PARAM shift and go to state 121
 
 
 state 110
 
-    (68) alterBody -> ADD CONSTRAINT IDENTIFIER . PRIMARY KEY LPAREN idOrDtypeName RPAREN
-    (69) alterBody -> ADD CONSTRAINT IDENTIFIER . FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-    (73) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER . UNIQUE LPAREN multi_params RPAREN
-    (74) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER . PRIMARY KEY LPAREN multi_params RPAREN
+    (4) tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks .
+    (63) moreSequenceBlocks -> moreSequenceBlocks . sequenceBlock
+    (65) sequenceBlock -> . SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
 
-    PRIMARY         shift and go to state 122
-    FOREIGN         shift and go to state 123
-    UNIQUE          shift and go to state 121
+    CREATE          reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks .)
+    ALTER           reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks .)
+    $end            reduce using rule 4 (tableBlock -> tableHeader attributeBlock moreAttributes moreCheckBlocks RPAREN SEMICOLON moreSequenceBlocks .)
+    SEQUENCE        shift and go to state 122
 
+    sequenceBlock                  shift and go to state 123
 
 state 111
 
-    (67) alterHeader -> ALTER TABLE ONLY IDENTIFIER .
+    (64) moreSequenceBlocks -> empty .
 
-    ADD             reduce using rule 67 (alterHeader -> ALTER TABLE ONLY IDENTIFIER .)
+    SEQUENCE        reduce using rule 64 (moreSequenceBlocks -> empty .)
+    CREATE          reduce using rule 64 (moreSequenceBlocks -> empty .)
+    ALTER           reduce using rule 64 (moreSequenceBlocks -> empty .)
+    $end            reduce using rule 64 (moreSequenceBlocks -> empty .)
 
 
 state 112
+
+    (61) checkBlock -> CONSTRAINT IDENTIFIER CHECK . CHECKATTR
+    (62) checkBlock -> CONSTRAINT IDENTIFIER CHECK . CHECKATTR COMMA
+
+    CHECKATTR       shift and go to state 124
+
+
+state 113
+
+    (70) alterBody -> ADD CONSTRAINT IDENTIFIER . PRIMARY KEY LPAREN idOrDtypeName RPAREN
+    (71) alterBody -> ADD CONSTRAINT IDENTIFIER . FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (75) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER . UNIQUE LPAREN multi_params RPAREN
+    (76) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER . PRIMARY KEY LPAREN multi_params RPAREN
+
+    PRIMARY         shift and go to state 126
+    FOREIGN         shift and go to state 127
+    UNIQUE          shift and go to state 125
+
+
+state 114
+
+    (69) alterHeader -> ALTER TABLE ONLY IDENTIFIER .
+
+    ADD             reduce using rule 69 (alterHeader -> ALTER TABLE ONLY IDENTIFIER .)
+
+
+state 115
 
     (31) dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN .
 
@@ -1862,61 +1928,61 @@ state 112
     CONSTRAINT      reduce using rule 31 (dtypeSolo -> DTYPE_SOLO_1PARAM2 LPAREN parameter COMMA parameter RPAREN .)
 
 
-state 113
+state 116
 
-    (49) constraints -> DEFAULT QUOTE inquote QUOTE . retype
-    (51) retype -> . COLON COLON idOrDtypeName
-    (52) retype -> . COLON COLON idOrDtypeName idOrDtypeName
-    (53) retype -> . empty
-    (79) empty -> .
+    (50) constraints -> DEFAULT QUOTE inquote QUOTE . retype
+    (53) retype -> . COLON COLON idOrDtypeName
+    (54) retype -> . COLON COLON idOrDtypeName idOrDtypeName
+    (55) retype -> . empty
+    (81) empty -> .
 
-    COLON           shift and go to state 101
-    COMMA           reduce using rule 79 (empty -> .)
-    NOT             reduce using rule 79 (empty -> .)
-    NULL            reduce using rule 79 (empty -> .)
-    UNIQUE          reduce using rule 79 (empty -> .)
-    DEFAULT         reduce using rule 79 (empty -> .)
-    IDENTIFIER      reduce using rule 79 (empty -> .)
-    DQUOTES         reduce using rule 79 (empty -> .)
-    DTYPE_SOLO      reduce using rule 79 (empty -> .)
-    DTYPE_BOTH_1PARAM reduce using rule 79 (empty -> .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 79 (empty -> .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 79 (empty -> .)
-    DTYPE_PART2     reduce using rule 79 (empty -> .)
-    DTYPE_PART1     reduce using rule 79 (empty -> .)
-    RPAREN          reduce using rule 79 (empty -> .)
-    CONSTRAINT      reduce using rule 79 (empty -> .)
+    COLON           shift and go to state 102
+    COMMA           reduce using rule 81 (empty -> .)
+    NOT             reduce using rule 81 (empty -> .)
+    NULL            reduce using rule 81 (empty -> .)
+    UNIQUE          reduce using rule 81 (empty -> .)
+    DEFAULT         reduce using rule 81 (empty -> .)
+    IDENTIFIER      reduce using rule 81 (empty -> .)
+    DQUOTES         reduce using rule 81 (empty -> .)
+    DTYPE_SOLO      reduce using rule 81 (empty -> .)
+    DTYPE_BOTH_1PARAM reduce using rule 81 (empty -> .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 81 (empty -> .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 81 (empty -> .)
+    DTYPE_PART2     reduce using rule 81 (empty -> .)
+    DTYPE_PART1     reduce using rule 81 (empty -> .)
+    RPAREN          reduce using rule 81 (empty -> .)
+    CONSTRAINT      reduce using rule 81 (empty -> .)
 
-    retype                         shift and go to state 124
-    empty                          shift and go to state 103
+    retype                         shift and go to state 128
+    empty                          shift and go to state 104
 
-state 114
+state 117
 
-    (48) constraints -> DEFAULT QUOTE QUOTE retype .
+    (49) constraints -> DEFAULT QUOTE QUOTE retype .
 
-    COMMA           reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    NOT             reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    NULL            reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    UNIQUE          reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    DEFAULT         reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    IDENTIFIER      reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    DQUOTES         reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    DTYPE_SOLO      reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    DTYPE_BOTH_1PARAM reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    DTYPE_PART2     reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    DTYPE_PART1     reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    RPAREN          reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
-    CONSTRAINT      reduce using rule 48 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    COMMA           reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    NOT             reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    NULL            reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    UNIQUE          reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    DEFAULT         reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    IDENTIFIER      reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    DQUOTES         reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    DTYPE_SOLO      reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    DTYPE_BOTH_1PARAM reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    DTYPE_PART2     reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    DTYPE_PART1     reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    RPAREN          reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
+    CONSTRAINT      reduce using rule 49 (constraints -> DEFAULT QUOTE QUOTE retype .)
 
 
-state 115
+state 118
 
-    (51) retype -> COLON COLON . idOrDtypeName
-    (52) retype -> COLON COLON . idOrDtypeName idOrDtypeName
-    (71) idOrDtypeName -> . IDENTIFIER
-    (72) idOrDtypeName -> . dtypeNames
+    (53) retype -> COLON COLON . idOrDtypeName
+    (54) retype -> COLON COLON . idOrDtypeName idOrDtypeName
+    (73) idOrDtypeName -> . IDENTIFIER
+    (74) idOrDtypeName -> . dtypeNames
     (20) dtypeNames -> . DTYPE_SOLO
     (21) dtypeNames -> . DTYPE_BOTH_1PARAM
     (22) dtypeNames -> . DTYPE_SOLO_1PARAM2
@@ -1924,7 +1990,7 @@ state 115
     (24) dtypeNames -> . DTYPE_PART2
     (25) dtypeNames -> . DTYPE_PART1
 
-    IDENTIFIER      shift and go to state 126
+    IDENTIFIER      shift and go to state 130
     DTYPE_SOLO      shift and go to state 8
     DTYPE_BOTH_1PARAM shift and go to state 14
     DTYPE_SOLO_1PARAM2 shift and go to state 6
@@ -1932,162 +1998,190 @@ state 115
     DTYPE_PART2     shift and go to state 12
     DTYPE_PART1     shift and go to state 5
 
-    idOrDtypeName                  shift and go to state 127
-    dtypeNames                     shift and go to state 125
-
-state 116
-
-    (50) constraints -> DEFAULT LPAREN NUMBER RPAREN . retype
-    (51) retype -> . COLON COLON idOrDtypeName
-    (52) retype -> . COLON COLON idOrDtypeName idOrDtypeName
-    (53) retype -> . empty
-    (79) empty -> .
-
-    COLON           shift and go to state 101
-    COMMA           reduce using rule 79 (empty -> .)
-    NOT             reduce using rule 79 (empty -> .)
-    NULL            reduce using rule 79 (empty -> .)
-    UNIQUE          reduce using rule 79 (empty -> .)
-    DEFAULT         reduce using rule 79 (empty -> .)
-    IDENTIFIER      reduce using rule 79 (empty -> .)
-    DQUOTES         reduce using rule 79 (empty -> .)
-    DTYPE_SOLO      reduce using rule 79 (empty -> .)
-    DTYPE_BOTH_1PARAM reduce using rule 79 (empty -> .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 79 (empty -> .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 79 (empty -> .)
-    DTYPE_PART2     reduce using rule 79 (empty -> .)
-    DTYPE_PART1     reduce using rule 79 (empty -> .)
-    RPAREN          reduce using rule 79 (empty -> .)
-    CONSTRAINT      reduce using rule 79 (empty -> .)
-
-    retype                         shift and go to state 128
-    empty                          shift and go to state 103
-
-state 117
-
-    (37) dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN IDENTIFIER DTYPE_TIMEZONE_PARAM . IDENTIFIER
-
-    IDENTIFIER      shift and go to state 129
-
-
-state 118
-
-    (63) sequenceBlock -> SEQUENCE . IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
-
-    IDENTIFIER      shift and go to state 130
-
+    idOrDtypeName                  shift and go to state 131
+    dtypeNames                     shift and go to state 129
 
 state 119
 
-    (61) moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .
+    (51) constraints -> DEFAULT LPAREN NUMBER RPAREN . retype
+    (53) retype -> . COLON COLON idOrDtypeName
+    (54) retype -> . COLON COLON idOrDtypeName idOrDtypeName
+    (55) retype -> . empty
+    (81) empty -> .
 
-    SEQUENCE        reduce using rule 61 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
-    CREATE          reduce using rule 61 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
-    ALTER           reduce using rule 61 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
-    $end            reduce using rule 61 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
+    COLON           shift and go to state 102
+    COMMA           reduce using rule 81 (empty -> .)
+    NOT             reduce using rule 81 (empty -> .)
+    NULL            reduce using rule 81 (empty -> .)
+    UNIQUE          reduce using rule 81 (empty -> .)
+    DEFAULT         reduce using rule 81 (empty -> .)
+    IDENTIFIER      reduce using rule 81 (empty -> .)
+    DQUOTES         reduce using rule 81 (empty -> .)
+    DTYPE_SOLO      reduce using rule 81 (empty -> .)
+    DTYPE_BOTH_1PARAM reduce using rule 81 (empty -> .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 81 (empty -> .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 81 (empty -> .)
+    DTYPE_PART2     reduce using rule 81 (empty -> .)
+    DTYPE_PART1     reduce using rule 81 (empty -> .)
+    RPAREN          reduce using rule 81 (empty -> .)
+    CONSTRAINT      reduce using rule 81 (empty -> .)
 
+    retype                         shift and go to state 132
+    empty                          shift and go to state 104
 
 state 120
 
-    (59) checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR .
-    (60) checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR . COMMA
+    (52) constraints -> DEFAULT LPAREN FLOATNUM RPAREN . retype
+    (53) retype -> . COLON COLON idOrDtypeName
+    (54) retype -> . COLON COLON idOrDtypeName idOrDtypeName
+    (55) retype -> . empty
+    (81) empty -> .
 
-    RPAREN          reduce using rule 59 (checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR .)
-    CONSTRAINT      reduce using rule 59 (checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR .)
-    COMMA           shift and go to state 131
+    COLON           shift and go to state 102
+    COMMA           reduce using rule 81 (empty -> .)
+    NOT             reduce using rule 81 (empty -> .)
+    NULL            reduce using rule 81 (empty -> .)
+    UNIQUE          reduce using rule 81 (empty -> .)
+    DEFAULT         reduce using rule 81 (empty -> .)
+    IDENTIFIER      reduce using rule 81 (empty -> .)
+    DQUOTES         reduce using rule 81 (empty -> .)
+    DTYPE_SOLO      reduce using rule 81 (empty -> .)
+    DTYPE_BOTH_1PARAM reduce using rule 81 (empty -> .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 81 (empty -> .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 81 (empty -> .)
+    DTYPE_PART2     reduce using rule 81 (empty -> .)
+    DTYPE_PART1     reduce using rule 81 (empty -> .)
+    RPAREN          reduce using rule 81 (empty -> .)
+    CONSTRAINT      reduce using rule 81 (empty -> .)
 
+    retype                         shift and go to state 133
+    empty                          shift and go to state 104
 
 state 121
 
-    (73) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE . LPAREN multi_params RPAREN
+    (37) dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN IDENTIFIER DTYPE_TIMEZONE_PARAM . IDENTIFIER
 
-    LPAREN          shift and go to state 132
+    IDENTIFIER      shift and go to state 134
 
 
 state 122
 
-    (68) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY . KEY LPAREN idOrDtypeName RPAREN
-    (74) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY . KEY LPAREN multi_params RPAREN
+    (65) sequenceBlock -> SEQUENCE . IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
 
-    KEY             shift and go to state 133
+    IDENTIFIER      shift and go to state 135
 
 
 state 123
 
-    (69) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN . KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (63) moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .
 
-    KEY             shift and go to state 134
+    SEQUENCE        reduce using rule 63 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
+    CREATE          reduce using rule 63 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
+    ALTER           reduce using rule 63 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
+    $end            reduce using rule 63 (moreSequenceBlocks -> moreSequenceBlocks sequenceBlock .)
 
 
 state 124
 
-    (49) constraints -> DEFAULT QUOTE inquote QUOTE retype .
+    (61) checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR .
+    (62) checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR . COMMA
 
-    COMMA           reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    NOT             reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    NULL            reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    UNIQUE          reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    DEFAULT         reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    IDENTIFIER      reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    DQUOTES         reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    DTYPE_SOLO      reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    DTYPE_BOTH_1PARAM reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    DTYPE_PART2     reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    DTYPE_PART1     reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    RPAREN          reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
-    CONSTRAINT      reduce using rule 49 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    RPAREN          reduce using rule 61 (checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR .)
+    CONSTRAINT      reduce using rule 61 (checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR .)
+    COMMA           shift and go to state 136
 
 
 state 125
 
-    (72) idOrDtypeName -> dtypeNames .
+    (75) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE . LPAREN multi_params RPAREN
 
-    IDENTIFIER      reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    DTYPE_SOLO      reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    DTYPE_BOTH_1PARAM reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    DTYPE_PART2     reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    DTYPE_PART1     reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    COMMA           reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    NOT             reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    NULL            reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    UNIQUE          reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    DEFAULT         reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    DQUOTES         reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    RPAREN          reduce using rule 72 (idOrDtypeName -> dtypeNames .)
-    CONSTRAINT      reduce using rule 72 (idOrDtypeName -> dtypeNames .)
+    LPAREN          shift and go to state 137
 
 
 state 126
 
-    (71) idOrDtypeName -> IDENTIFIER .
+    (70) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY . KEY LPAREN idOrDtypeName RPAREN
+    (76) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY . KEY LPAREN multi_params RPAREN
 
-    IDENTIFIER      reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    DTYPE_SOLO      reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    DTYPE_BOTH_1PARAM reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    DTYPE_PART2     reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    DTYPE_PART1     reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    COMMA           reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    NOT             reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    NULL            reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    UNIQUE          reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    DEFAULT         reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    DQUOTES         reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    RPAREN          reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
-    CONSTRAINT      reduce using rule 71 (idOrDtypeName -> IDENTIFIER .)
+    KEY             shift and go to state 138
 
 
 state 127
 
-    (51) retype -> COLON COLON idOrDtypeName .
-    (52) retype -> COLON COLON idOrDtypeName . idOrDtypeName
-    (71) idOrDtypeName -> . IDENTIFIER
-    (72) idOrDtypeName -> . dtypeNames
+    (71) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN . KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+
+    KEY             shift and go to state 139
+
+
+state 128
+
+    (50) constraints -> DEFAULT QUOTE inquote QUOTE retype .
+
+    COMMA           reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    NOT             reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    NULL            reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    UNIQUE          reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    DEFAULT         reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    IDENTIFIER      reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    DQUOTES         reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    DTYPE_SOLO      reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    DTYPE_BOTH_1PARAM reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    DTYPE_PART2     reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    DTYPE_PART1     reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    RPAREN          reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+    CONSTRAINT      reduce using rule 50 (constraints -> DEFAULT QUOTE inquote QUOTE retype .)
+
+
+state 129
+
+    (74) idOrDtypeName -> dtypeNames .
+
+    RPAREN          reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    COMMA           reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    IDENTIFIER      reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    DTYPE_SOLO      reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    DTYPE_BOTH_1PARAM reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    DTYPE_PART2     reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    DTYPE_PART1     reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    NOT             reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    NULL            reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    UNIQUE          reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    DEFAULT         reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    DQUOTES         reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+    CONSTRAINT      reduce using rule 74 (idOrDtypeName -> dtypeNames .)
+
+
+state 130
+
+    (73) idOrDtypeName -> IDENTIFIER .
+
+    RPAREN          reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    COMMA           reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    IDENTIFIER      reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    DTYPE_SOLO      reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    DTYPE_BOTH_1PARAM reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    DTYPE_PART2     reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    DTYPE_PART1     reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    NOT             reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    NULL            reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    UNIQUE          reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    DEFAULT         reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    DQUOTES         reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+    CONSTRAINT      reduce using rule 73 (idOrDtypeName -> IDENTIFIER .)
+
+
+state 131
+
+    (53) retype -> COLON COLON idOrDtypeName .
+    (54) retype -> COLON COLON idOrDtypeName . idOrDtypeName
+    (73) idOrDtypeName -> . IDENTIFIER
+    (74) idOrDtypeName -> . dtypeNames
     (20) dtypeNames -> . DTYPE_SOLO
     (21) dtypeNames -> . DTYPE_BOTH_1PARAM
     (22) dtypeNames -> . DTYPE_SOLO_1PARAM2
@@ -2102,15 +2196,15 @@ state 127
   ! shift/reduce conflict for DTYPE_TIMEZONE_PARAM resolved as shift
   ! shift/reduce conflict for DTYPE_PART2 resolved as shift
   ! shift/reduce conflict for DTYPE_PART1 resolved as shift
-    COMMA           reduce using rule 51 (retype -> COLON COLON idOrDtypeName .)
-    NOT             reduce using rule 51 (retype -> COLON COLON idOrDtypeName .)
-    NULL            reduce using rule 51 (retype -> COLON COLON idOrDtypeName .)
-    UNIQUE          reduce using rule 51 (retype -> COLON COLON idOrDtypeName .)
-    DEFAULT         reduce using rule 51 (retype -> COLON COLON idOrDtypeName .)
-    DQUOTES         reduce using rule 51 (retype -> COLON COLON idOrDtypeName .)
-    RPAREN          reduce using rule 51 (retype -> COLON COLON idOrDtypeName .)
-    CONSTRAINT      reduce using rule 51 (retype -> COLON COLON idOrDtypeName .)
-    IDENTIFIER      shift and go to state 126
+    COMMA           reduce using rule 53 (retype -> COLON COLON idOrDtypeName .)
+    NOT             reduce using rule 53 (retype -> COLON COLON idOrDtypeName .)
+    NULL            reduce using rule 53 (retype -> COLON COLON idOrDtypeName .)
+    UNIQUE          reduce using rule 53 (retype -> COLON COLON idOrDtypeName .)
+    DEFAULT         reduce using rule 53 (retype -> COLON COLON idOrDtypeName .)
+    DQUOTES         reduce using rule 53 (retype -> COLON COLON idOrDtypeName .)
+    RPAREN          reduce using rule 53 (retype -> COLON COLON idOrDtypeName .)
+    CONSTRAINT      reduce using rule 53 (retype -> COLON COLON idOrDtypeName .)
+    IDENTIFIER      shift and go to state 130
     DTYPE_SOLO      shift and go to state 8
     DTYPE_BOTH_1PARAM shift and go to state 14
     DTYPE_SOLO_1PARAM2 shift and go to state 6
@@ -2118,39 +2212,60 @@ state 127
     DTYPE_PART2     shift and go to state 12
     DTYPE_PART1     shift and go to state 5
 
-  ! IDENTIFIER      [ reduce using rule 51 (retype -> COLON COLON idOrDtypeName .) ]
-  ! DTYPE_SOLO      [ reduce using rule 51 (retype -> COLON COLON idOrDtypeName .) ]
-  ! DTYPE_BOTH_1PARAM [ reduce using rule 51 (retype -> COLON COLON idOrDtypeName .) ]
-  ! DTYPE_SOLO_1PARAM2 [ reduce using rule 51 (retype -> COLON COLON idOrDtypeName .) ]
-  ! DTYPE_TIMEZONE_PARAM [ reduce using rule 51 (retype -> COLON COLON idOrDtypeName .) ]
-  ! DTYPE_PART2     [ reduce using rule 51 (retype -> COLON COLON idOrDtypeName .) ]
-  ! DTYPE_PART1     [ reduce using rule 51 (retype -> COLON COLON idOrDtypeName .) ]
+  ! IDENTIFIER      [ reduce using rule 53 (retype -> COLON COLON idOrDtypeName .) ]
+  ! DTYPE_SOLO      [ reduce using rule 53 (retype -> COLON COLON idOrDtypeName .) ]
+  ! DTYPE_BOTH_1PARAM [ reduce using rule 53 (retype -> COLON COLON idOrDtypeName .) ]
+  ! DTYPE_SOLO_1PARAM2 [ reduce using rule 53 (retype -> COLON COLON idOrDtypeName .) ]
+  ! DTYPE_TIMEZONE_PARAM [ reduce using rule 53 (retype -> COLON COLON idOrDtypeName .) ]
+  ! DTYPE_PART2     [ reduce using rule 53 (retype -> COLON COLON idOrDtypeName .) ]
+  ! DTYPE_PART1     [ reduce using rule 53 (retype -> COLON COLON idOrDtypeName .) ]
 
-    idOrDtypeName                  shift and go to state 135
-    dtypeNames                     shift and go to state 125
+    idOrDtypeName                  shift and go to state 140
+    dtypeNames                     shift and go to state 129
 
-state 128
+state 132
 
-    (50) constraints -> DEFAULT LPAREN NUMBER RPAREN retype .
+    (51) constraints -> DEFAULT LPAREN NUMBER RPAREN retype .
 
-    COMMA           reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    NOT             reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    NULL            reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    UNIQUE          reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    DEFAULT         reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    IDENTIFIER      reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    DQUOTES         reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    DTYPE_SOLO      reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    DTYPE_BOTH_1PARAM reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    DTYPE_PART2     reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    DTYPE_PART1     reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    RPAREN          reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
-    CONSTRAINT      reduce using rule 50 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    COMMA           reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    NOT             reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    NULL            reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    UNIQUE          reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    DEFAULT         reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    IDENTIFIER      reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    DQUOTES         reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    DTYPE_SOLO      reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    DTYPE_BOTH_1PARAM reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    DTYPE_PART2     reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    DTYPE_PART1     reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    RPAREN          reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
+    CONSTRAINT      reduce using rule 51 (constraints -> DEFAULT LPAREN NUMBER RPAREN retype .)
 
 
-state 129
+state 133
+
+    (52) constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .
+
+    COMMA           reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    NOT             reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    NULL            reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    UNIQUE          reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    DEFAULT         reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    IDENTIFIER      reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    DQUOTES         reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    DTYPE_SOLO      reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    DTYPE_BOTH_1PARAM reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    DTYPE_PART2     reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    DTYPE_PART1     reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    RPAREN          reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+    CONSTRAINT      reduce using rule 52 (constraints -> DEFAULT LPAREN FLOATNUM RPAREN retype .)
+
+
+state 134
 
     (37) dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN IDENTIFIER DTYPE_TIMEZONE_PARAM IDENTIFIER .
 
@@ -2172,106 +2287,31 @@ state 129
     CONSTRAINT      reduce using rule 37 (dtypeTimezone -> DTYPE_TIMEZONE_PARAM LPAREN parameter RPAREN IDENTIFIER DTYPE_TIMEZONE_PARAM IDENTIFIER .)
 
 
-state 130
-
-    (63) sequenceBlock -> SEQUENCE IDENTIFIER . OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
-
-    OWNED           shift and go to state 136
-
-
-state 131
-
-    (60) checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR COMMA .
-
-    RPAREN          reduce using rule 60 (checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR COMMA .)
-    CONSTRAINT      reduce using rule 60 (checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR COMMA .)
-
-
-state 132
-
-    (73) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN . multi_params RPAREN
-    (75) multi_params -> . multi_1param multi_params
-    (76) multi_params -> . empty
-    (77) multi_1param -> . idOrDtypeName COMMA
-    (78) multi_1param -> . idOrDtypeName
-    (79) empty -> .
-    (71) idOrDtypeName -> . IDENTIFIER
-    (72) idOrDtypeName -> . dtypeNames
-    (20) dtypeNames -> . DTYPE_SOLO
-    (21) dtypeNames -> . DTYPE_BOTH_1PARAM
-    (22) dtypeNames -> . DTYPE_SOLO_1PARAM2
-    (23) dtypeNames -> . DTYPE_TIMEZONE_PARAM
-    (24) dtypeNames -> . DTYPE_PART2
-    (25) dtypeNames -> . DTYPE_PART1
-
-    RPAREN          reduce using rule 79 (empty -> .)
-    IDENTIFIER      shift and go to state 126
-    DTYPE_SOLO      shift and go to state 8
-    DTYPE_BOTH_1PARAM shift and go to state 14
-    DTYPE_SOLO_1PARAM2 shift and go to state 6
-    DTYPE_TIMEZONE_PARAM shift and go to state 15
-    DTYPE_PART2     shift and go to state 12
-    DTYPE_PART1     shift and go to state 5
-
-    multi_params                   shift and go to state 138
-    multi_1param                   shift and go to state 137
-    idOrDtypeName                  shift and go to state 139
-    dtypeNames                     shift and go to state 125
-    empty                          shift and go to state 140
-
-state 133
-
-    (68) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY . LPAREN idOrDtypeName RPAREN
-    (74) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY . LPAREN multi_params RPAREN
-
-    LPAREN          shift and go to state 141
-
-
-state 134
-
-    (69) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY . LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-
-    LPAREN          shift and go to state 142
-
-
 state 135
 
-    (52) retype -> COLON COLON idOrDtypeName idOrDtypeName .
+    (65) sequenceBlock -> SEQUENCE IDENTIFIER . OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
 
-    COMMA           reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    NOT             reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    NULL            reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    UNIQUE          reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    DEFAULT         reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    IDENTIFIER      reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    DQUOTES         reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    DTYPE_SOLO      reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    DTYPE_BOTH_1PARAM reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    DTYPE_PART2     reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    DTYPE_PART1     reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    RPAREN          reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
-    CONSTRAINT      reduce using rule 52 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    OWNED           shift and go to state 141
 
 
 state 136
 
-    (63) sequenceBlock -> SEQUENCE IDENTIFIER OWNED . BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
+    (62) checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR COMMA .
 
-    BY              shift and go to state 143
+    RPAREN          reduce using rule 62 (checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR COMMA .)
+    CONSTRAINT      reduce using rule 62 (checkBlock -> CONSTRAINT IDENTIFIER CHECK CHECKATTR COMMA .)
 
 
 state 137
 
-    (75) multi_params -> multi_1param . multi_params
-    (75) multi_params -> . multi_1param multi_params
-    (76) multi_params -> . empty
-    (77) multi_1param -> . idOrDtypeName COMMA
-    (78) multi_1param -> . idOrDtypeName
-    (79) empty -> .
-    (71) idOrDtypeName -> . IDENTIFIER
-    (72) idOrDtypeName -> . dtypeNames
+    (75) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN . multi_params RPAREN
+    (77) multi_params -> . multi_1param multi_params
+    (78) multi_params -> . empty
+    (79) multi_1param -> . idOrDtypeName COMMA
+    (80) multi_1param -> . idOrDtypeName
+    (81) empty -> .
+    (73) idOrDtypeName -> . IDENTIFIER
+    (74) idOrDtypeName -> . dtypeNames
     (20) dtypeNames -> . DTYPE_SOLO
     (21) dtypeNames -> . DTYPE_BOTH_1PARAM
     (22) dtypeNames -> . DTYPE_SOLO_1PARAM2
@@ -2279,8 +2319,8 @@ state 137
     (24) dtypeNames -> . DTYPE_PART2
     (25) dtypeNames -> . DTYPE_PART1
 
-    RPAREN          reduce using rule 79 (empty -> .)
-    IDENTIFIER      shift and go to state 126
+    RPAREN          reduce using rule 81 (empty -> .)
+    IDENTIFIER      shift and go to state 130
     DTYPE_SOLO      shift and go to state 8
     DTYPE_BOTH_1PARAM shift and go to state 14
     DTYPE_SOLO_1PARAM2 shift and go to state 6
@@ -2288,80 +2328,65 @@ state 137
     DTYPE_PART2     shift and go to state 12
     DTYPE_PART1     shift and go to state 5
 
-    multi_params                   shift and go to state 144
-    multi_1param                   shift and go to state 137
-    idOrDtypeName                  shift and go to state 139
-    dtypeNames                     shift and go to state 125
-    empty                          shift and go to state 140
+    multi_params                   shift and go to state 143
+    multi_1param                   shift and go to state 142
+    idOrDtypeName                  shift and go to state 144
+    dtypeNames                     shift and go to state 129
+    empty                          shift and go to state 145
 
 state 138
 
-    (73) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params . RPAREN
+    (70) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY . LPAREN idOrDtypeName RPAREN
+    (76) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY . LPAREN multi_params RPAREN
 
-    RPAREN          shift and go to state 145
+    LPAREN          shift and go to state 146
 
 
 state 139
 
-    (77) multi_1param -> idOrDtypeName . COMMA
-    (78) multi_1param -> idOrDtypeName .
+    (71) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY . LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
 
-    COMMA           shift and go to state 146
-    IDENTIFIER      reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_SOLO      reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_BOTH_1PARAM reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_PART2     reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_PART1     reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    RPAREN          reduce using rule 78 (multi_1param -> idOrDtypeName .)
+    LPAREN          shift and go to state 147
 
 
 state 140
 
-    (76) multi_params -> empty .
+    (54) retype -> COLON COLON idOrDtypeName idOrDtypeName .
 
-    RPAREN          reduce using rule 76 (multi_params -> empty .)
+    COMMA           reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    NOT             reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    NULL            reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    UNIQUE          reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    DEFAULT         reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    IDENTIFIER      reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    DQUOTES         reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    DTYPE_SOLO      reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    DTYPE_BOTH_1PARAM reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    DTYPE_PART2     reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    DTYPE_PART1     reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    RPAREN          reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
+    CONSTRAINT      reduce using rule 54 (retype -> COLON COLON idOrDtypeName idOrDtypeName .)
 
 
 state 141
 
-    (68) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN . idOrDtypeName RPAREN
-    (74) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN . multi_params RPAREN
-    (71) idOrDtypeName -> . IDENTIFIER
-    (72) idOrDtypeName -> . dtypeNames
-    (75) multi_params -> . multi_1param multi_params
-    (76) multi_params -> . empty
-    (20) dtypeNames -> . DTYPE_SOLO
-    (21) dtypeNames -> . DTYPE_BOTH_1PARAM
-    (22) dtypeNames -> . DTYPE_SOLO_1PARAM2
-    (23) dtypeNames -> . DTYPE_TIMEZONE_PARAM
-    (24) dtypeNames -> . DTYPE_PART2
-    (25) dtypeNames -> . DTYPE_PART1
-    (77) multi_1param -> . idOrDtypeName COMMA
-    (78) multi_1param -> . idOrDtypeName
-    (79) empty -> .
+    (65) sequenceBlock -> SEQUENCE IDENTIFIER OWNED . BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON
 
-    IDENTIFIER      shift and go to state 126
-    DTYPE_SOLO      shift and go to state 8
-    DTYPE_BOTH_1PARAM shift and go to state 14
-    DTYPE_SOLO_1PARAM2 shift and go to state 6
-    DTYPE_TIMEZONE_PARAM shift and go to state 15
-    DTYPE_PART2     shift and go to state 12
-    DTYPE_PART1     shift and go to state 5
-    RPAREN          reduce using rule 79 (empty -> .)
+    BY              shift and go to state 148
 
-    multi_params                   shift and go to state 147
-    multi_1param                   shift and go to state 137
-    idOrDtypeName                  shift and go to state 148
-    empty                          shift and go to state 140
-    dtypeNames                     shift and go to state 125
 
 state 142
 
-    (69) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN . idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
-    (71) idOrDtypeName -> . IDENTIFIER
-    (72) idOrDtypeName -> . dtypeNames
+    (77) multi_params -> multi_1param . multi_params
+    (77) multi_params -> . multi_1param multi_params
+    (78) multi_params -> . empty
+    (79) multi_1param -> . idOrDtypeName COMMA
+    (80) multi_1param -> . idOrDtypeName
+    (81) empty -> .
+    (73) idOrDtypeName -> . IDENTIFIER
+    (74) idOrDtypeName -> . dtypeNames
     (20) dtypeNames -> . DTYPE_SOLO
     (21) dtypeNames -> . DTYPE_BOTH_1PARAM
     (22) dtypeNames -> . DTYPE_SOLO_1PARAM2
@@ -2369,7 +2394,8 @@ state 142
     (24) dtypeNames -> . DTYPE_PART2
     (25) dtypeNames -> . DTYPE_PART1
 
-    IDENTIFIER      shift and go to state 126
+    RPAREN          reduce using rule 81 (empty -> .)
+    IDENTIFIER      shift and go to state 130
     DTYPE_SOLO      shift and go to state 8
     DTYPE_BOTH_1PARAM shift and go to state 14
     DTYPE_SOLO_1PARAM2 shift and go to state 6
@@ -2377,177 +2403,266 @@ state 142
     DTYPE_PART2     shift and go to state 12
     DTYPE_PART1     shift and go to state 5
 
-    idOrDtypeName                  shift and go to state 149
-    dtypeNames                     shift and go to state 125
+    multi_params                   shift and go to state 149
+    multi_1param                   shift and go to state 142
+    idOrDtypeName                  shift and go to state 144
+    dtypeNames                     shift and go to state 129
+    empty                          shift and go to state 145
 
 state 143
 
-    (63) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY . IDENTIFIER PERIOD IDENTIFIER SEMICOLON
+    (75) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params . RPAREN
 
-    IDENTIFIER      shift and go to state 150
+    RPAREN          shift and go to state 150
 
 
 state 144
 
-    (75) multi_params -> multi_1param multi_params .
+    (79) multi_1param -> idOrDtypeName . COMMA
+    (80) multi_1param -> idOrDtypeName .
 
-    RPAREN          reduce using rule 75 (multi_params -> multi_1param multi_params .)
+    COMMA           shift and go to state 151
+    IDENTIFIER      reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_SOLO      reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_BOTH_1PARAM reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_PART2     reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_PART1     reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    RPAREN          reduce using rule 80 (multi_1param -> idOrDtypeName .)
 
 
 state 145
 
-    (73) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN .
+    (78) multi_params -> empty .
 
-    SEMICOLON       reduce using rule 73 (multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN .)
+    RPAREN          reduce using rule 78 (multi_params -> empty .)
 
 
 state 146
 
-    (77) multi_1param -> idOrDtypeName COMMA .
+    (70) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN . idOrDtypeName RPAREN
+    (76) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN . multi_params RPAREN
+    (73) idOrDtypeName -> . IDENTIFIER
+    (74) idOrDtypeName -> . dtypeNames
+    (77) multi_params -> . multi_1param multi_params
+    (78) multi_params -> . empty
+    (20) dtypeNames -> . DTYPE_SOLO
+    (21) dtypeNames -> . DTYPE_BOTH_1PARAM
+    (22) dtypeNames -> . DTYPE_SOLO_1PARAM2
+    (23) dtypeNames -> . DTYPE_TIMEZONE_PARAM
+    (24) dtypeNames -> . DTYPE_PART2
+    (25) dtypeNames -> . DTYPE_PART1
+    (79) multi_1param -> . idOrDtypeName COMMA
+    (80) multi_1param -> . idOrDtypeName
+    (81) empty -> .
 
-    IDENTIFIER      reduce using rule 77 (multi_1param -> idOrDtypeName COMMA .)
-    DTYPE_SOLO      reduce using rule 77 (multi_1param -> idOrDtypeName COMMA .)
-    DTYPE_BOTH_1PARAM reduce using rule 77 (multi_1param -> idOrDtypeName COMMA .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 77 (multi_1param -> idOrDtypeName COMMA .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 77 (multi_1param -> idOrDtypeName COMMA .)
-    DTYPE_PART2     reduce using rule 77 (multi_1param -> idOrDtypeName COMMA .)
-    DTYPE_PART1     reduce using rule 77 (multi_1param -> idOrDtypeName COMMA .)
-    RPAREN          reduce using rule 77 (multi_1param -> idOrDtypeName COMMA .)
+    IDENTIFIER      shift and go to state 130
+    DTYPE_SOLO      shift and go to state 8
+    DTYPE_BOTH_1PARAM shift and go to state 14
+    DTYPE_SOLO_1PARAM2 shift and go to state 6
+    DTYPE_TIMEZONE_PARAM shift and go to state 15
+    DTYPE_PART2     shift and go to state 12
+    DTYPE_PART1     shift and go to state 5
+    RPAREN          reduce using rule 81 (empty -> .)
 
+    multi_params                   shift and go to state 152
+    multi_1param                   shift and go to state 142
+    idOrDtypeName                  shift and go to state 153
+    empty                          shift and go to state 145
+    dtypeNames                     shift and go to state 129
 
 state 147
 
-    (74) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params . RPAREN
+    (71) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN . idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (73) idOrDtypeName -> . IDENTIFIER
+    (74) idOrDtypeName -> . dtypeNames
+    (20) dtypeNames -> . DTYPE_SOLO
+    (21) dtypeNames -> . DTYPE_BOTH_1PARAM
+    (22) dtypeNames -> . DTYPE_SOLO_1PARAM2
+    (23) dtypeNames -> . DTYPE_TIMEZONE_PARAM
+    (24) dtypeNames -> . DTYPE_PART2
+    (25) dtypeNames -> . DTYPE_PART1
 
-    RPAREN          shift and go to state 151
+    IDENTIFIER      shift and go to state 130
+    DTYPE_SOLO      shift and go to state 8
+    DTYPE_BOTH_1PARAM shift and go to state 14
+    DTYPE_SOLO_1PARAM2 shift and go to state 6
+    DTYPE_TIMEZONE_PARAM shift and go to state 15
+    DTYPE_PART2     shift and go to state 12
+    DTYPE_PART1     shift and go to state 5
 
+    idOrDtypeName                  shift and go to state 154
+    dtypeNames                     shift and go to state 129
 
 state 148
 
-    (68) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName . RPAREN
-    (77) multi_1param -> idOrDtypeName . COMMA
-    (78) multi_1param -> idOrDtypeName .
+    (65) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY . IDENTIFIER PERIOD IDENTIFIER SEMICOLON
 
-  ! shift/reduce conflict for RPAREN resolved as shift
-    RPAREN          shift and go to state 152
-    COMMA           shift and go to state 146
-    IDENTIFIER      reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_SOLO      reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_BOTH_1PARAM reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_SOLO_1PARAM2 reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_TIMEZONE_PARAM reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_PART2     reduce using rule 78 (multi_1param -> idOrDtypeName .)
-    DTYPE_PART1     reduce using rule 78 (multi_1param -> idOrDtypeName .)
-
-  ! RPAREN          [ reduce using rule 78 (multi_1param -> idOrDtypeName .) ]
+    IDENTIFIER      shift and go to state 155
 
 
 state 149
 
-    (69) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName . RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (77) multi_params -> multi_1param multi_params .
 
-    RPAREN          shift and go to state 153
+    RPAREN          reduce using rule 77 (multi_params -> multi_1param multi_params .)
 
 
 state 150
 
-    (63) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER . PERIOD IDENTIFIER SEMICOLON
+    (75) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN .
 
-    PERIOD          shift and go to state 154
+    SEMICOLON       reduce using rule 75 (multi_attr_constr -> ADD CONSTRAINT IDENTIFIER UNIQUE LPAREN multi_params RPAREN .)
 
 
 state 151
 
-    (74) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN .
+    (79) multi_1param -> idOrDtypeName COMMA .
 
-    SEMICOLON       reduce using rule 74 (multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN .)
+    IDENTIFIER      reduce using rule 79 (multi_1param -> idOrDtypeName COMMA .)
+    DTYPE_SOLO      reduce using rule 79 (multi_1param -> idOrDtypeName COMMA .)
+    DTYPE_BOTH_1PARAM reduce using rule 79 (multi_1param -> idOrDtypeName COMMA .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 79 (multi_1param -> idOrDtypeName COMMA .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 79 (multi_1param -> idOrDtypeName COMMA .)
+    DTYPE_PART2     reduce using rule 79 (multi_1param -> idOrDtypeName COMMA .)
+    DTYPE_PART1     reduce using rule 79 (multi_1param -> idOrDtypeName COMMA .)
+    RPAREN          reduce using rule 79 (multi_1param -> idOrDtypeName COMMA .)
 
 
 state 152
 
-    (68) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN .
+    (76) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params . RPAREN
 
-    SEMICOLON       reduce using rule 68 (alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN .)
+    RPAREN          shift and go to state 156
 
 
 state 153
 
-    (69) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN . REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (70) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName . RPAREN
+    (79) multi_1param -> idOrDtypeName . COMMA
+    (80) multi_1param -> idOrDtypeName .
 
-    REFERENCES      shift and go to state 155
+  ! shift/reduce conflict for RPAREN resolved as shift
+    RPAREN          shift and go to state 157
+    COMMA           shift and go to state 151
+    IDENTIFIER      reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_SOLO      reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_BOTH_1PARAM reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_SOLO_1PARAM2 reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_TIMEZONE_PARAM reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_PART2     reduce using rule 80 (multi_1param -> idOrDtypeName .)
+    DTYPE_PART1     reduce using rule 80 (multi_1param -> idOrDtypeName .)
+
+  ! RPAREN          [ reduce using rule 80 (multi_1param -> idOrDtypeName .) ]
 
 
 state 154
 
-    (63) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD . IDENTIFIER SEMICOLON
+    (71) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName . RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
 
-    IDENTIFIER      shift and go to state 156
+    RPAREN          shift and go to state 158
 
 
 state 155
 
-    (69) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES . IDENTIFIER LPAREN IDENTIFIER RPAREN
+    (65) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER . PERIOD IDENTIFIER SEMICOLON
 
-    IDENTIFIER      shift and go to state 157
+    PERIOD          shift and go to state 159
 
 
 state 156
 
-    (63) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER . SEMICOLON
+    (76) multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN .
 
-    SEMICOLON       shift and go to state 158
+    SEMICOLON       reduce using rule 76 (multi_attr_constr -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN multi_params RPAREN .)
 
 
 state 157
 
-    (69) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER . LPAREN IDENTIFIER RPAREN
+    (70) alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN .
 
-    LPAREN          shift and go to state 159
+    SEMICOLON       reduce using rule 70 (alterBody -> ADD CONSTRAINT IDENTIFIER PRIMARY KEY LPAREN idOrDtypeName RPAREN .)
 
 
 state 158
 
-    (63) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .
+    (71) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN . REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN
 
-    SEQUENCE        reduce using rule 63 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
-    CREATE          reduce using rule 63 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
-    ALTER           reduce using rule 63 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
-    $end            reduce using rule 63 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
+    REFERENCES      shift and go to state 160
 
 
 state 159
 
-    (69) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN . IDENTIFIER RPAREN
+    (65) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD . IDENTIFIER SEMICOLON
 
-    IDENTIFIER      shift and go to state 160
+    IDENTIFIER      shift and go to state 161
 
 
 state 160
 
-    (69) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER . RPAREN
+    (71) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES . IDENTIFIER LPAREN IDENTIFIER RPAREN
 
-    RPAREN          shift and go to state 161
+    IDENTIFIER      shift and go to state 162
 
 
 state 161
 
-    (69) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN .
+    (65) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER . SEMICOLON
 
-    SEMICOLON       reduce using rule 69 (alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN .)
+    SEMICOLON       shift and go to state 163
+
+
+state 162
+
+    (71) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER . LPAREN IDENTIFIER RPAREN
+
+    LPAREN          shift and go to state 164
+
+
+state 163
+
+    (65) sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .
+
+    SEQUENCE        reduce using rule 65 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
+    CREATE          reduce using rule 65 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
+    ALTER           reduce using rule 65 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
+    $end            reduce using rule 65 (sequenceBlock -> SEQUENCE IDENTIFIER OWNED BY IDENTIFIER PERIOD IDENTIFIER SEMICOLON .)
+
+
+state 164
+
+    (71) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN . IDENTIFIER RPAREN
+
+    IDENTIFIER      shift and go to state 165
+
+
+state 165
+
+    (71) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER . RPAREN
+
+    RPAREN          shift and go to state 166
+
+
+state 166
+
+    (71) alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN .
+
+    SEMICOLON       reduce using rule 71 (alterBody -> ADD CONSTRAINT IDENTIFIER FOREIGN KEY LPAREN idOrDtypeName RPAREN REFERENCES IDENTIFIER LPAREN IDENTIFIER RPAREN .)
 
 WARNING: 
 WARNING: Conflicts:
 WARNING: 
 WARNING: shift/reduce conflict for COMMA in state 27 resolved as shift
 WARNING: shift/reduce conflict for DTYPE_PART2 in state 29 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 89 resolved as shift
-WARNING: shift/reduce conflict for IDENTIFIER in state 127 resolved as shift
-WARNING: shift/reduce conflict for DTYPE_SOLO in state 127 resolved as shift
-WARNING: shift/reduce conflict for DTYPE_BOTH_1PARAM in state 127 resolved as shift
-WARNING: shift/reduce conflict for DTYPE_SOLO_1PARAM2 in state 127 resolved as shift
-WARNING: shift/reduce conflict for DTYPE_TIMEZONE_PARAM in state 127 resolved as shift
-WARNING: shift/reduce conflict for DTYPE_PART2 in state 127 resolved as shift
-WARNING: shift/reduce conflict for DTYPE_PART1 in state 127 resolved as shift
-WARNING: shift/reduce conflict for RPAREN in state 148 resolved as shift
+WARNING: shift/reduce conflict for IDENTIFIER in state 90 resolved as shift
+WARNING: shift/reduce conflict for IDENTIFIER in state 131 resolved as shift
+WARNING: shift/reduce conflict for DTYPE_SOLO in state 131 resolved as shift
+WARNING: shift/reduce conflict for DTYPE_BOTH_1PARAM in state 131 resolved as shift
+WARNING: shift/reduce conflict for DTYPE_SOLO_1PARAM2 in state 131 resolved as shift
+WARNING: shift/reduce conflict for DTYPE_TIMEZONE_PARAM in state 131 resolved as shift
+WARNING: shift/reduce conflict for DTYPE_PART2 in state 131 resolved as shift
+WARNING: shift/reduce conflict for DTYPE_PART1 in state 131 resolved as shift
+WARNING: shift/reduce conflict for RPAREN in state 153 resolved as shift
 WARNING: reduce/reduce conflict in state 27 resolved using rule (attributeBlock -> attributeName dtypes)
 WARNING: rejected rule (empty -> <empty>) in state 27

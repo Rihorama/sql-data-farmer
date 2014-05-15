@@ -19,13 +19,6 @@ def fm_regex(table, attr):
 
     
     
-    quoted = ('VARCHAR','CHAR','TEXT','BIT','BOX','CIDR','CIRCLE','DATE','INET',
-              'LSEG','PATH','POINT','POLYGON','TIME','TIMESTAMP')
-    
-    #if the type has to be inserted in quotes, they are added
-    if attr.data_type in quoted:
-        value = "'" + str(value) + "'"
-    
     
     #NOTE: If the given regex allows shorter results than the given length,
     #      the final result will be created by adding empty space by db.
@@ -41,6 +34,15 @@ def fm_regex(table, attr):
     elif attr.data_type == "VARCHAR":
         length = attr.parameters[0]        
         value = value[:length]
+   
+   
+   
+    quoted = ('VARCHAR','CHAR','TEXT','BIT','BOX','CIDR','CIRCLE','DATE','INET',
+            'LSEG','PATH','POINT','POLYGON','TIME','TIMESTAMP')
+    
+    #if the type has to be inserted in quotes, they are added
+    if attr.data_type in quoted:
+        value = "'" + str(value) + "'"
 
     
     #if the data type requires to be inserted with a prefix like: bit'100110', it's added here
